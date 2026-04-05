@@ -28,7 +28,7 @@
     },
     {
       "id": 81,
-      "mlb_id": 700363,
+      "mlb_id": 694671,
       "name": "Wyatt Langford",
       "mlb_team": null,
       "position": null,
@@ -88,7 +88,7 @@
     },
     {
       "id": 87,
-      "mlb_id": 686263,
+      "mlb_id": 686668,
       "name": "Brenton Doyle",
       "mlb_team": null,
       "position": null,
@@ -108,7 +108,7 @@
     },
     {
       "id": 89,
-      "mlb_id": 807986,
+      "mlb_id": 808959,
       "name": "Munetaka Murakami",
       "mlb_team": null,
       "position": null,
@@ -128,7 +128,7 @@
     },
     {
       "id": 91,
-      "mlb_id": 680265,
+      "mlb_id": 680574,
       "name": "Matt McLain",
       "mlb_team": null,
       "position": null,
@@ -146,7 +146,7 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 160,
+      "bestBallScore": 189,
       "playerScores": [
         {
           "playerId": 79,
@@ -157,6 +157,16 @@
           "stolenBases": 0,
           "walks": 6,
           "hbp": 2
+        },
+        {
+          "playerId": 89,
+          "playerName": "Munetaka Murakami",
+          "totalScore": 24,
+          "gamesPlayed": 8,
+          "totalBases": 19,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 0
         },
         {
           "playerId": 85,
@@ -229,6 +239,26 @@
           "hbp": 0
         },
         {
+          "playerId": 91,
+          "playerName": "Matt McLain",
+          "totalScore": 15,
+          "gamesPlayed": 8,
+          "totalBases": 9,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 1
+        },
+        {
+          "playerId": 81,
+          "playerName": "Wyatt Langford",
+          "totalScore": 11,
+          "gamesPlayed": 8,
+          "totalBases": 11,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
           "playerId": 88,
           "playerName": "Jo Adell",
           "totalScore": 10,
@@ -239,48 +269,19 @@
           "hbp": 1
         },
         {
-          "playerId": 81,
-          "playerName": "Wyatt Langford",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
           "playerId": 87,
           "playerName": "Brenton Doyle",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 89,
-          "playerName": "Munetaka Murakami",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 91,
-          "playerName": "Matt McLain",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
+          "totalScore": 8,
+          "gamesPlayed": 8,
+          "totalBases": 5,
+          "stolenBases": 1,
+          "walks": 2,
           "hbp": 0
         }
       ],
       "countingPlayerIds": [
         79,
+        89,
         85,
         84,
         80,
@@ -288,13 +289,12 @@
         86,
         82,
         90,
-        88,
-        81
+        91
       ],
       "benchPlayerIds": [
-        87,
-        89,
-        91
+        81,
+        88,
+        87
       ]
     },
     {

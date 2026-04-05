@@ -28,7 +28,7 @@
     },
     {
       "id": 16,
-      "mlb_id": 700557,
+      "mlb_id": 701762,
       "name": "Nick Kurtz",
       "mlb_team": null,
       "position": null,
@@ -38,7 +38,7 @@
     },
     {
       "id": 17,
-      "mlb_id": 700526,
+      "mlb_id": 687263,
       "name": "Zach Neto",
       "mlb_team": null,
       "position": null,
@@ -78,7 +78,7 @@
     },
     {
       "id": 21,
-      "mlb_id": 694260,
+      "mlb_id": 696100,
       "name": "Hunter Goodman",
       "mlb_team": null,
       "position": null,
@@ -108,7 +108,7 @@
     },
     {
       "id": 24,
-      "mlb_id": 700862,
+      "mlb_id": 807712,
       "name": "Luke Keaschall",
       "mlb_team": null,
       "position": null,
@@ -118,7 +118,7 @@
     },
     {
       "id": 25,
-      "mlb_id": 700679,
+      "mlb_id": 805300,
       "name": "Jakob Marsee",
       "mlb_team": null,
       "position": null,
@@ -146,8 +146,18 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 120,
+      "bestBallScore": 163,
       "playerScores": [
+        {
+          "playerId": 17,
+          "playerName": "Zach Neto",
+          "totalScore": 26,
+          "gamesPlayed": 9,
+          "totalBases": 18,
+          "stolenBases": 1,
+          "walks": 7,
+          "hbp": 0
+        },
         {
           "playerId": 15,
           "playerName": "Gunnar Henderson",
@@ -189,6 +199,26 @@
           "hbp": 0
         },
         {
+          "playerId": 21,
+          "playerName": "Hunter Goodman",
+          "totalScore": 13,
+          "gamesPlayed": 8,
+          "totalBases": 11,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 24,
+          "playerName": "Luke Keaschall",
+          "totalScore": 12,
+          "gamesPlayed": 8,
+          "totalBases": 9,
+          "stolenBases": 1,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
           "playerId": 26,
           "playerName": "Yanier Diaz",
           "totalScore": 12,
@@ -219,6 +249,26 @@
           "hbp": 1
         },
         {
+          "playerId": 25,
+          "playerName": "Jakob Marsee",
+          "totalScore": 11,
+          "gamesPlayed": 8,
+          "totalBases": 7,
+          "stolenBases": 1,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 16,
+          "playerName": "Nick Kurtz",
+          "totalScore": 9,
+          "gamesPlayed": 7,
+          "totalBases": 2,
+          "stolenBases": 1,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
           "playerId": 23,
           "playerName": "Trevor Story",
           "totalScore": 8,
@@ -227,74 +277,24 @@
           "stolenBases": 0,
           "walks": 0,
           "hbp": 0
-        },
-        {
-          "playerId": 16,
-          "playerName": "Nick Kurtz",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 17,
-          "playerName": "Zach Neto",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 21,
-          "playerName": "Hunter Goodman",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 24,
-          "playerName": "Luke Keaschall",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 25,
-          "playerName": "Jakob Marsee",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
         }
       ],
       "countingPlayerIds": [
+        17,
         15,
         14,
         22,
         18,
-        26,
-        19,
-        20,
-        23,
-        16,
-        17
-      ],
-      "benchPlayerIds": [
         21,
         24,
-        25
+        26,
+        19,
+        20
+      ],
+      "benchPlayerIds": [
+        25,
+        16,
+        23
       ]
     },
     {

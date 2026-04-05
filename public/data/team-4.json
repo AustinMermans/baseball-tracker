@@ -78,7 +78,7 @@
     },
     {
       "id": 47,
-      "mlb_id": 697882,
+      "mlb_id": 681624,
       "name": "Andy Pages",
       "mlb_team": null,
       "position": null,
@@ -108,7 +108,7 @@
     },
     {
       "id": 50,
-      "mlb_id": 706185,
+      "mlb_id": 804606,
       "name": "Konnor Griffin",
       "mlb_team": null,
       "position": null,
@@ -128,7 +128,7 @@
     },
     {
       "id": 52,
-      "mlb_id": 701044,
+      "mlb_id": 695506,
       "name": "Jac Caglianone",
       "mlb_team": null,
       "position": null,
@@ -146,8 +146,18 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 123,
+      "bestBallScore": 154,
       "playerScores": [
+        {
+          "playerId": 47,
+          "playerName": "Andy Pages",
+          "totalScore": 27,
+          "gamesPlayed": 8,
+          "totalBases": 25,
+          "stolenBases": 1,
+          "walks": 1,
+          "hbp": 0
+        },
         {
           "playerId": 49,
           "playerName": "Bryan Reynolds",
@@ -187,6 +197,16 @@
           "stolenBases": 0,
           "walks": 4,
           "hbp": 0
+        },
+        {
+          "playerId": 52,
+          "playerName": "Jac Caglianone",
+          "totalScore": 14,
+          "gamesPlayed": 7,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 1
         },
         {
           "playerId": 44,
@@ -239,38 +259,18 @@
           "hbp": 0
         },
         {
-          "playerId": 46,
-          "playerName": "Seiya Suzuki",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 47,
-          "playerName": "Andy Pages",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
           "playerId": 50,
           "playerName": "Konnor Griffin",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
+          "totalScore": 4,
+          "gamesPlayed": 2,
+          "totalBases": 2,
           "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
+          "walks": 1,
+          "hbp": 1
         },
         {
-          "playerId": 52,
-          "playerName": "Jac Caglianone",
+          "playerId": 46,
+          "playerName": "Seiya Suzuki",
           "totalScore": 0,
           "gamesPlayed": 0,
           "totalBases": 0,
@@ -280,21 +280,21 @@
         }
       ],
       "countingPlayerIds": [
+        47,
         49,
         43,
         40,
         42,
+        52,
         44,
         48,
         51,
-        45,
-        41,
-        46
+        45
       ],
       "benchPlayerIds": [
-        47,
+        41,
         50,
-        52
+        46
       ]
     },
     {

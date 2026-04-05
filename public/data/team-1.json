@@ -48,7 +48,7 @@
     },
     {
       "id": 5,
-      "mlb_id": 691621,
+      "mlb_id": 701538,
       "name": "Jackson Merrill",
       "mlb_team": null,
       "position": null,
@@ -78,7 +78,7 @@
     },
     {
       "id": 8,
-      "mlb_id": 691159,
+      "mlb_id": 691016,
       "name": "Tyler Soderstrom",
       "mlb_team": null,
       "position": null,
@@ -108,7 +108,7 @@
     },
     {
       "id": 11,
-      "mlb_id": 694221,
+      "mlb_id": 686948,
       "name": "Drake Baldwin",
       "mlb_team": null,
       "position": null,
@@ -128,7 +128,7 @@
     },
     {
       "id": 13,
-      "mlb_id": 694244,
+      "mlb_id": 805779,
       "name": "Jacob Wilson",
       "mlb_team": null,
       "position": null,
@@ -146,8 +146,18 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 129,
+      "bestBallScore": 167,
       "playerScores": [
+        {
+          "playerId": 11,
+          "playerName": "Drake Baldwin",
+          "totalScore": 24,
+          "gamesPlayed": 9,
+          "totalBases": 19,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 1
+        },
         {
           "playerId": 2,
           "playerName": "Corbin Carroll",
@@ -219,6 +229,36 @@
           "hbp": 0
         },
         {
+          "playerId": 5,
+          "playerName": "Jackson Merrill",
+          "totalScore": 11,
+          "gamesPlayed": 7,
+          "totalBases": 9,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 8,
+          "playerName": "Tyler Soderstrom",
+          "totalScore": 11,
+          "gamesPlayed": 8,
+          "totalBases": 8,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 13,
+          "playerName": "Jacob Wilson",
+          "totalScore": 10,
+          "gamesPlayed": 8,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
           "playerId": 6,
           "playerName": "Josh Naylor",
           "totalScore": 8,
@@ -237,49 +277,10 @@
           "stolenBases": 0,
           "walks": 0,
           "hbp": 0
-        },
-        {
-          "playerId": 5,
-          "playerName": "Jackson Merrill",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 8,
-          "playerName": "Tyler Soderstrom",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 11,
-          "playerName": "Drake Baldwin",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 13,
-          "playerName": "Jacob Wilson",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
         }
       ],
       "countingPlayerIds": [
+        11,
         2,
         12,
         1,
@@ -287,14 +288,13 @@
         10,
         4,
         9,
-        6,
-        3,
-        5
+        5,
+        8
       ],
       "benchPlayerIds": [
-        8,
-        11,
-        13
+        13,
+        6,
+        3
       ]
     },
     {

@@ -28,7 +28,7 @@
     },
     {
       "id": 55,
-      "mlb_id": 691348,
+      "mlb_id": 691718,
       "name": "Pete Crow-Armstrong",
       "mlb_team": null,
       "position": null,
@@ -239,6 +239,16 @@
           "hbp": 0
         },
         {
+          "playerId": 55,
+          "playerName": "Pete Crow-Armstrong",
+          "totalScore": 13,
+          "gamesPlayed": 7,
+          "totalBases": 8,
+          "stolenBases": 3,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
           "playerId": 64,
           "playerName": "Matt Chapman",
           "totalScore": 13,
@@ -254,16 +264,6 @@
           "totalScore": 9,
           "gamesPlayed": 7,
           "totalBases": 9,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 55,
-          "playerName": "Pete Crow-Armstrong",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
           "stolenBases": 0,
           "walks": 0,
           "hbp": 0
@@ -289,11 +289,11 @@
         58,
         62,
         53,
-        64
+        55
       ],
       "benchPlayerIds": [
+        64,
         60,
-        55,
         65
       ]
     },
