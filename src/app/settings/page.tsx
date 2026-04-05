@@ -1,10 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { RefreshCw, Zap, Calendar } from 'lucide-react';
 
 export default function SettingsPage() {
   const [syncing, setSyncing] = useState(false);
@@ -13,51 +9,14 @@ export default function SettingsPage() {
   const [rangeStart, setRangeStart] = useState('2026-03-26');
   const [rangeEnd, setRangeEnd] = useState(new Date().toISOString().split('T')[0]);
 
-  const syncSingleDate = async () => {
-    if (!singleDate) return;
+  const doSync = async (body: object) => {
     setSyncing(true);
     setSyncResult(null);
     try {
       const res = await fetch('/api/stats/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date: singleDate }),
-      });
-      const data = await res.json();
-      setSyncResult(data.message || JSON.stringify(data));
-    } catch (e) {
-      setSyncResult(`Error: ${e}`);
-    } finally {
-      setSyncing(false);
-    }
-  };
-
-  const syncRange = async () => {
-    setSyncing(true);
-    setSyncResult(null);
-    try {
-      const res = await fetch('/api/stats/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ startDate: rangeStart, endDate: rangeEnd }),
-      });
-      const data = await res.json();
-      setSyncResult(data.message || JSON.stringify(data));
-    } catch (e) {
-      setSyncResult(`Error: ${e}`);
-    } finally {
-      setSyncing(false);
-    }
-  };
-
-  const syncYesterday = async () => {
-    setSyncing(true);
-    setSyncResult(null);
-    try {
-      const res = await fetch('/api/stats/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       setSyncResult(data.message || JSON.stringify(data));
@@ -69,139 +28,114 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-lg">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground text-sm">Manage stat sync and league configuration</p>
+        <h1 className="text-lg font-semibold">Settings</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">Sync stats and manage the league</p>
       </div>
 
-      {/* Quick Sync */}
-      <Card className="p-5 bg-card border-border">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-            <Zap className="w-4 h-4 text-primary" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-sm">Quick Sync</h2>
-            <p className="text-xs text-muted-foreground">Sync yesterday&apos;s stats from MLB</p>
-          </div>
+      {/* Quick sync */}
+      <div className="border border-border rounded-lg p-4 space-y-3">
+        <div>
+          <p className="text-sm font-medium">Quick Sync</p>
+          <p className="text-xs text-muted-foreground">Pull yesterday&apos;s stats from MLB</p>
         </div>
-        <Button onClick={syncYesterday} disabled={syncing} className="w-full" variant="default">
-          <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+        <button
+          onClick={() => doSync({})}
+          disabled={syncing}
+          className="w-full py-2 px-4 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+        >
           {syncing ? 'Syncing...' : 'Sync Yesterday'}
-        </Button>
-      </Card>
+        </button>
+      </div>
 
-      {/* Single Date Sync */}
-      <Card className="p-5 bg-card border-border">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
-            <Calendar className="w-4 h-4 text-blue-500" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-sm">Sync Single Date</h2>
-            <p className="text-xs text-muted-foreground">Pull stats for a specific game date</p>
-          </div>
+      {/* Single date */}
+      <div className="border border-border rounded-lg p-4 space-y-3">
+        <div>
+          <p className="text-sm font-medium">Sync Single Date</p>
+          <p className="text-xs text-muted-foreground">Pull stats for a specific game date</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <input
             type="date"
             value={singleDate}
             onChange={e => setSingleDate(e.target.value)}
-            className="flex-1 bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm"
+            className="flex-1 border border-border rounded-lg px-3 py-1.5 text-sm bg-background"
           />
-          <Button onClick={syncSingleDate} disabled={syncing || !singleDate} variant="secondary">
-            <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+          <button
+            onClick={() => doSync({ date: singleDate })}
+            disabled={syncing || !singleDate}
+            className="px-4 py-1.5 text-sm rounded-lg border border-border hover:bg-muted disabled:opacity-50 transition-colors"
+          >
             Sync
-          </Button>
+          </button>
         </div>
-      </Card>
+      </div>
 
-      {/* Range Sync (Backfill) */}
-      <Card className="p-5 bg-card border-border">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
-            <RefreshCw className="w-4 h-4 text-orange-500" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-sm">Backfill Range</h2>
-            <p className="text-xs text-muted-foreground">Sync all dates in a range (may take a while)</p>
-          </div>
+      {/* Range backfill */}
+      <div className="border border-border rounded-lg p-4 space-y-3">
+        <div>
+          <p className="text-sm font-medium">Backfill Range</p>
+          <p className="text-xs text-muted-foreground">Sync all dates in a range</p>
         </div>
-        <div className="flex gap-3 mb-3">
+        <div className="flex gap-2">
           <div className="flex-1">
-            <label className="text-xs text-muted-foreground mb-1 block">Start</label>
+            <label className="text-[11px] text-muted-foreground">Start</label>
             <input
               type="date"
               value={rangeStart}
               onChange={e => setRangeStart(e.target.value)}
-              className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm"
+              className="w-full border border-border rounded-lg px-3 py-1.5 text-sm bg-background"
             />
           </div>
           <div className="flex-1">
-            <label className="text-xs text-muted-foreground mb-1 block">End</label>
+            <label className="text-[11px] text-muted-foreground">End</label>
             <input
               type="date"
               value={rangeEnd}
               onChange={e => setRangeEnd(e.target.value)}
-              className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm"
+              className="w-full border border-border rounded-lg px-3 py-1.5 text-sm bg-background"
             />
           </div>
         </div>
-        <Button onClick={syncRange} disabled={syncing} variant="secondary" className="w-full">
-          <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
-          {syncing ? 'Syncing...' : 'Backfill Range'}
-        </Button>
-      </Card>
+        <button
+          onClick={() => doSync({ startDate: rangeStart, endDate: rangeEnd })}
+          disabled={syncing}
+          className="w-full py-2 px-4 text-sm rounded-lg border border-border hover:bg-muted disabled:opacity-50 transition-colors"
+        >
+          {syncing ? 'Syncing...' : 'Backfill'}
+        </button>
+      </div>
 
-      {/* Sync Result */}
+      {/* Result */}
       {syncResult && (
-        <Card className="p-4 bg-card border-border">
-          <div className="flex items-center gap-2 mb-2">
-            <Badge variant="default" className="text-[10px]">Result</Badge>
-          </div>
-          <p className="text-sm font-mono">{syncResult}</p>
-        </Card>
+        <div className="border border-border rounded-lg p-3 bg-muted/30">
+          <p className="text-xs font-medium text-muted-foreground mb-1">Result</p>
+          <p className="text-sm">{syncResult}</p>
+        </div>
       )}
 
-      {/* League Info */}
-      <Card className="p-5 bg-card border-border">
-        <h2 className="font-semibold text-sm mb-3">League Info</h2>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Format</span>
-            <span>Best Ball (10 of 13)</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Scoring</span>
-            <span>TB + SB + BB + HBP</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Buy-in</span>
-            <span>$25</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Period 1</span>
-            <span>Mar 26 - May 30</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Redraft 1</span>
-            <span>May 31</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Period 2</span>
-            <span>May 31 - Jul 30</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Redraft 2</span>
-            <span>Jul 31</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Period 3</span>
-            <span>Jul 31 - Sep 27</span>
-          </div>
+      {/* League info */}
+      <div className="border border-border rounded-lg p-4">
+        <p className="text-sm font-medium mb-3">League Info</p>
+        <div className="space-y-1.5 text-xs">
+          {[
+            ['Format', 'Best Ball (10 of 13)'],
+            ['Scoring', 'TB + SB + BB + HBP'],
+            ['Buy-in', '$25'],
+            ['Period 1', 'Mar 26 — May 30'],
+            ['Redraft 1', 'May 31'],
+            ['Period 2', 'May 31 — Jul 30'],
+            ['Redraft 2', 'Jul 31'],
+            ['Period 3', 'Jul 31 — Sep 27'],
+          ].map(([label, value]) => (
+            <div key={label} className="flex justify-between">
+              <span className="text-muted-foreground">{label}</span>
+              <span>{value}</span>
+            </div>
+          ))}
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

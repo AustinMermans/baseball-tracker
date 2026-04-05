@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
 import { fetchData } from '@/lib/data';
-import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 interface PlayerData {
   id: number;
   name: string;
   fantasyTeam: string;
+  teamId: number;
   draftRound: number;
   totalScore: number;
   gamesPlayed: number;
@@ -18,90 +18,103 @@ interface PlayerData {
   hbp: number;
 }
 
+type SortKey = 'totalScore' | 'totalBases' | 'stolenBases' | 'walks' | 'hbp' | 'gamesPlayed';
+
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerData[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState<'totalScore' | 'totalBases' | 'stolenBases' | 'walks' | 'hbp'>('totalScore');
+  const [sortBy, setSortBy] = useState<SortKey>('totalScore');
 
   useEffect(() => {
     fetchData<PlayerData[]>('/api/players').then(setPlayers).finally(() => setLoading(false));
   }, []);
 
   const filtered = players
-    .filter(p => p.name.toLowerCase().includes(search.toLowerCase()) ||
-                 p.fantasyTeam.toLowerCase().includes(search.toLowerCase()))
+    .filter(p =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.fantasyTeam.toLowerCase().includes(search.toLowerCase())
+    )
     .sort((a, b) => b[sortBy] - a[sortBy]);
 
-  if (loading) return <div className="text-muted-foreground">Loading players...</div>;
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="h-5 w-48 bg-muted rounded animate-pulse" />
+        <div className="h-96 bg-muted/50 rounded-lg animate-pulse" />
+      </div>
+    );
+  }
+
+  const sortHeader = (key: SortKey, label: string) => (
+    <th
+      className={`text-right text-[11px] font-medium px-3 py-2.5 cursor-pointer select-none transition-colors ${
+        sortBy === key ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+      }`}
+      onClick={() => setSortBy(key)}
+    >
+      {label}{sortBy === key ? ' ↓' : ''}
+    </th>
+  );
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Player Leaderboard</h1>
-        <p className="text-muted-foreground text-sm">All 104 rostered players, ranked by fantasy score</p>
+        <h1 className="text-lg font-semibold">Players</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          All 104 rostered players &middot; sorted by {sortBy === 'totalScore' ? 'total score' : sortBy}
+        </p>
       </div>
 
-      {/* Search & Sort */}
-      <div className="flex gap-3">
-        <input
-          type="text"
-          placeholder="Search players or teams..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="flex-1 bg-card border border-border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-        />
-        <select
-          value={sortBy}
-          onChange={e => setSortBy(e.target.value as typeof sortBy)}
-          className="bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-        >
-          <option value="totalScore">Total Score</option>
-          <option value="totalBases">Total Bases</option>
-          <option value="stolenBases">Stolen Bases</option>
-          <option value="walks">Walks</option>
-          <option value="hbp">HBP</option>
-        </select>
-      </div>
+      <input
+        type="text"
+        placeholder="Search players or teams..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        className="w-full max-w-sm bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+      />
 
-      <Card className="bg-card border-border overflow-hidden">
+      <div className="border border-border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border bg-muted/30">
-                <th className="text-left text-xs font-medium text-muted-foreground p-4 w-12">#</th>
-                <th className="text-left text-xs font-medium text-muted-foreground p-4">Player</th>
-                <th className="text-left text-xs font-medium text-muted-foreground p-4">Team</th>
-                <th className="text-right text-xs font-medium text-muted-foreground p-4">GP</th>
-                <th className="text-right text-xs font-medium text-muted-foreground p-4 cursor-pointer hover:text-foreground" onClick={() => setSortBy('totalBases')}>TB</th>
-                <th className="text-right text-xs font-medium text-muted-foreground p-4 cursor-pointer hover:text-foreground" onClick={() => setSortBy('stolenBases')}>SB</th>
-                <th className="text-right text-xs font-medium text-muted-foreground p-4 cursor-pointer hover:text-foreground" onClick={() => setSortBy('walks')}>BB</th>
-                <th className="text-right text-xs font-medium text-muted-foreground p-4 cursor-pointer hover:text-foreground" onClick={() => setSortBy('hbp')}>HBP</th>
-                <th className="text-right text-xs font-medium text-muted-foreground p-4 cursor-pointer hover:text-foreground" onClick={() => setSortBy('totalScore')}>Score</th>
+              <tr className="border-b border-border bg-muted/40">
+                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5 w-10">#</th>
+                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Player</th>
+                <th className="text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5">Team</th>
+                {sortHeader('gamesPlayed', 'GP')}
+                {sortHeader('totalBases', 'TB')}
+                {sortHeader('stolenBases', 'SB')}
+                {sortHeader('walks', 'BB')}
+                {sortHeader('hbp', 'HBP')}
+                {sortHeader('totalScore', 'PTS')}
               </tr>
             </thead>
             <tbody>
               {filtered.map((p, idx) => (
-                <tr key={p.id} className="border-b border-border/50 hover:bg-accent/30 transition-colors">
-                  <td className="p-4 text-sm text-muted-foreground font-mono">{idx + 1}</td>
-                  <td className="p-4">
-                    <span className="font-medium text-sm">{p.name}</span>
+                <tr key={p.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                  <td className="px-4 py-2 text-xs tabular-nums text-muted-foreground">{idx + 1}</td>
+                  <td className="px-4 py-2 text-sm font-medium">{p.name}</td>
+                  <td className="px-3 py-2">
+                    <Link
+                      href={`/teams/${p.teamId}`}
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {p.fantasyTeam}
+                    </Link>
                   </td>
-                  <td className="p-4">
-                    <Badge variant="secondary" className="text-[10px]">{p.fantasyTeam}</Badge>
-                  </td>
-                  <td className="p-4 text-right text-sm font-mono text-muted-foreground">{p.gamesPlayed}</td>
-                  <td className="p-4 text-right text-sm font-mono">{p.totalBases}</td>
-                  <td className="p-4 text-right text-sm font-mono">{p.stolenBases}</td>
-                  <td className="p-4 text-right text-sm font-mono">{p.walks}</td>
-                  <td className="p-4 text-right text-sm font-mono">{p.hbp}</td>
-                  <td className="p-4 text-right text-sm font-bold font-mono text-primary">{p.totalScore}</td>
+                  <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{p.gamesPlayed}</td>
+                  <td className="px-3 py-2 text-right text-xs tabular-nums">{p.totalBases}</td>
+                  <td className="px-3 py-2 text-right text-xs tabular-nums">{p.stolenBases}</td>
+                  <td className="px-3 py-2 text-right text-xs tabular-nums">{p.walks}</td>
+                  <td className="px-3 py-2 text-right text-xs tabular-nums">{p.hbp}</td>
+                  <td className="px-3 py-2 text-right text-xs tabular-nums font-semibold">{p.totalScore}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

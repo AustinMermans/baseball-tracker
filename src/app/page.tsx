@@ -2,18 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Card } from '@/components/ui/card';
 import { fetchData } from '@/lib/data';
-import { Badge } from '@/components/ui/badge';
-import { Trophy, TrendingUp, Calendar, Users } from 'lucide-react';
 
 interface Standing {
   team: { id: number; name: string };
-  periods: Array<{
-    periodId: number;
-    periodName: string;
-    bestBallScore: number;
-  }>;
+  periods: Array<{ periodId: number; periodName: string; bestBallScore: number }>;
   cumulativeScore: number;
 }
 
@@ -35,166 +28,118 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground text-sm">Loading league data...</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 rounded-xl bg-card animate-pulse" />
-          ))}
-        </div>
+      <div className="space-y-4">
+        <div className="h-5 w-48 bg-muted rounded animate-pulse" />
+        <div className="h-64 bg-muted/50 rounded-lg animate-pulse" />
       </div>
     );
   }
 
   const standings = data?.standings || [];
   const periods = data?.periods || [];
-  const leader = standings[0];
-
   const today = new Date().toISOString().split('T')[0];
   const currentPeriod = periods.find(p => p.startDate <= today && p.endDate >= today);
 
   return (
     <div className="space-y-8">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground text-sm">
-          {currentPeriod ? currentPeriod.name : 'Preseason'} &middot; 2026 Season
+      {/* Header */}
+      <div>
+        <h1 className="text-lg font-semibold">League Overview</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          {currentPeriod?.name || 'Preseason'} &middot; Best ball, top 10 of 13 &middot; TB + SB + BB + HBP
         </p>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5 bg-card border-border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-muted-foreground font-medium">Season Leader</p>
-              <p className="text-2xl font-bold mt-1">{leader?.team.name || '---'}</p>
-              <p className="text-xs text-primary mt-1">{leader?.cumulativeScore || 0} pts</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-yellow-500" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-5 bg-card border-border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-muted-foreground font-medium">Current Period</p>
-              <p className="text-2xl font-bold mt-1">{currentPeriod?.name.replace(' Third', '') || 'Pre'}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {currentPeriod ? `${currentPeriod.startDate} to ${currentPeriod.endDate}` : 'Season not started'}
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-blue-500" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-5 bg-card border-border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-muted-foreground font-medium">Teams</p>
-              <p className="text-2xl font-bold mt-1">8</p>
-              <p className="text-xs text-muted-foreground mt-1">104 total players</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Users className="w-5 h-5 text-primary" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-5 bg-card border-border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-muted-foreground font-medium">Scoring</p>
-              <p className="text-lg font-bold mt-1">Best Ball</p>
-              <p className="text-xs text-muted-foreground mt-1">TB + SB + BB + HBP</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-purple-500" />
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Standings Table */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">League Standings</h2>
-          <Link href="/standings" className="text-xs text-primary hover:underline">
-            View detailed standings
-          </Link>
-        </div>
-
-        <Card className="bg-card border-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left text-xs font-medium text-muted-foreground p-4 w-12">#</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground p-4">Team</th>
-                  {periods.map(p => (
-                    <th key={p.id} className="text-right text-xs font-medium text-muted-foreground p-4">
-                      {p.name.replace(' Third', '')}
-                    </th>
-                  ))}
-                  <th className="text-right text-xs font-medium text-muted-foreground p-4">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {standings.map((s, idx) => (
-                  <tr key={s.team.id} className="border-b border-border/50 hover:bg-accent/30 transition-colors">
-                    <td className="p-4">
-                      <span className={`text-sm font-bold ${
-                        idx === 0 ? 'text-yellow-500' :
-                        idx === 1 ? 'text-gray-400' :
-                        idx === 2 ? 'text-amber-600' :
-                        'text-muted-foreground'
-                      }`}>
-                        {idx + 1}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <Link href={`/teams/${s.team.id}`} className="font-medium text-sm hover:text-primary transition-colors">
-                        {s.team.name}
-                      </Link>
-                    </td>
-                    {s.periods.map(p => (
-                      <td key={p.periodId} className="p-4 text-right">
-                        <span className="text-sm font-mono">{p.bestBallScore}</span>
-                      </td>
-                    ))}
-                    <td className="p-4 text-right">
-                      <span className="text-sm font-bold font-mono text-primary">{s.cumulativeScore}</span>
-                    </td>
-                  </tr>
+      {/* Standings */}
+      <div className="border border-border rounded-lg overflow-hidden">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-border bg-muted/40">
+              <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5 w-10"></th>
+              <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Team</th>
+              {periods.map(p => (
+                <th key={p.id} className="text-right text-[11px] font-medium text-muted-foreground px-4 py-2.5">
+                  {p.name.replace(' Third', '')}
+                </th>
+              ))}
+              <th className="text-right text-[11px] font-medium text-muted-foreground px-4 py-2.5">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {standings.map((s, idx) => (
+              <tr
+                key={s.team.id}
+                className={`border-b border-border/60 hover:bg-muted/30 transition-colors ${
+                  idx === 0 ? 'bg-accent/30' : ''
+                }`}
+              >
+                <td className="px-4 py-2.5">
+                  <span className={`text-xs tabular-nums ${
+                    idx === 0 ? 'font-semibold text-primary' : 'text-muted-foreground'
+                  }`}>
+                    {idx + 1}
+                  </span>
+                </td>
+                <td className="px-4 py-2.5">
+                  <Link
+                    href={`/teams/${s.team.id}`}
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    {s.team.name}
+                    {idx === 0 && <span className="ml-1.5 text-[10px] text-primary font-normal">leader</span>}
+                  </Link>
+                </td>
+                {s.periods.map(p => (
+                  <td key={p.periodId} className="px-4 py-2.5 text-right">
+                    <span className="text-sm tabular-nums">{p.bestBallScore || '—'}</span>
+                  </td>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                <td className="px-4 py-2.5 text-right">
+                  <span className={`text-sm tabular-nums font-semibold ${idx === 0 ? 'text-primary' : ''}`}>
+                    {s.cumulativeScore}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {/* Team Quick Links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {standings.map((s, idx) => (
-          <Link key={s.team.id} href={`/teams/${s.team.id}`}>
-            <Card className="p-4 bg-card border-border hover:border-primary/30 transition-all cursor-pointer group">
+      {/* Period info */}
+      <div className="grid grid-cols-3 gap-4">
+        {periods.map((p, i) => {
+          const isCurrent = p.startDate <= today && p.endDate >= today;
+          const leader = [...standings].sort(
+            (a, b) => b.periods[i].bestBallScore - a.periods[i].bestBallScore
+          )[0];
+          return (
+            <div
+              key={p.id}
+              className={`p-4 rounded-lg border ${
+                isCurrent ? 'border-primary/30 bg-accent/20' : 'border-border'
+              }`}
+            >
               <div className="flex items-center justify-between mb-2">
-                <Badge variant={idx < 3 ? 'default' : 'secondary'} className="text-[10px]">
-                  #{idx + 1}
-                </Badge>
-                <span className="text-xs text-muted-foreground font-mono">{s.cumulativeScore}</span>
+                <span className="text-xs font-medium">{p.name}</span>
+                {isCurrent && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">
+                    active
+                  </span>
+                )}
               </div>
-              <p className="font-semibold text-sm group-hover:text-primary transition-colors">{s.team.name}</p>
-            </Card>
-          </Link>
-        ))}
+              <p className="text-[11px] text-muted-foreground">
+                {p.startDate.slice(5)} to {p.endDate.slice(5)}
+              </p>
+              {leader && leader.periods[i].bestBallScore > 0 && (
+                <p className="text-xs mt-2">
+                  <span className="text-muted-foreground">Lead: </span>
+                  <span className="font-medium">{leader.team.name}</span>
+                  <span className="text-muted-foreground ml-1">({leader.periods[i].bestBallScore})</span>
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

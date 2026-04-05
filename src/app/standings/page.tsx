@@ -2,130 +2,135 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Card } from '@/components/ui/card';
 import { fetchData } from '@/lib/data';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Standing {
   team: { id: number; name: string };
-  periods: Array<{
-    periodId: number;
-    periodName: string;
-    bestBallScore: number;
-  }>;
+  periods: Array<{ periodId: number; periodName: string; bestBallScore: number }>;
   cumulativeScore: number;
 }
 
+type StandingsData = {
+  standings: Standing[];
+  periods: Array<{ id: number; name: string; startDate: string; endDate: string }>;
+};
+
 export default function StandingsPage() {
-  const [data, setData] = useState<{ standings: Standing[]; periods: Array<{ id: number; name: string; startDate: string; endDate: string }> } | null>(null);
+  const [data, setData] = useState<StandingsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<'cumulative' | number>('cumulative');
 
   useEffect(() => {
-    fetchData<typeof data>('/api/standings').then(setData).finally(() => setLoading(false));
+    fetchData<StandingsData>('/api/standings').then(setData).finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="text-muted-foreground">Loading standings...</div>;
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="h-5 w-48 bg-muted rounded animate-pulse" />
+        <div className="h-64 bg-muted/50 rounded-lg animate-pulse" />
+      </div>
+    );
+  }
 
   const standings = data?.standings || [];
   const periods = data?.periods || [];
 
-  const getPeriodStandings = (periodIdx: number) => {
-    return [...standings].sort((a, b) =>
-      b.periods[periodIdx].bestBallScore - a.periods[periodIdx].bestBallScore
-    );
-  };
+  const displayStandings = view === 'cumulative'
+    ? standings
+    : [...standings].sort((a, b) =>
+        b.periods[view as number].bestBallScore - a.periods[view as number].bestBallScore
+      );
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Standings</h1>
-        <p className="text-muted-foreground text-sm">Period and cumulative standings</p>
+        <h1 className="text-lg font-semibold">Standings</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">Period and cumulative rankings</p>
       </div>
 
-      <Tabs defaultValue="cumulative">
-        <TabsList className="bg-muted/50">
-          <TabsTrigger value="cumulative">Cumulative</TabsTrigger>
-          {periods.map((p, i) => (
-            <TabsTrigger key={p.id} value={`period-${i}`}>
-              {p.name.replace(' Third', '')}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      {/* View toggles */}
+      <div className="flex gap-1">
+        <button
+          onClick={() => setView('cumulative')}
+          className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+            view === 'cumulative'
+              ? 'bg-accent text-accent-foreground font-medium'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          Cumulative
+        </button>
+        {periods.map((p, i) => (
+          <button
+            key={p.id}
+            onClick={() => setView(i)}
+            className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+              view === i
+                ? 'bg-accent text-accent-foreground font-medium'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {p.name.replace(' Third', '')}
+          </button>
+        ))}
+      </div>
 
-        <TabsContent value="cumulative">
-          <Card className="bg-card border-border overflow-hidden mt-4">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left text-xs font-medium text-muted-foreground p-4 w-12">#</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground p-4">Team</th>
+      {/* Table */}
+      <div className="border border-border rounded-lg overflow-hidden">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-border bg-muted/40">
+              <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5 w-10"></th>
+              <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Team</th>
+              {view === 'cumulative' ? (
+                <>
                   {periods.map(p => (
-                    <th key={p.id} className="text-right text-xs font-medium text-muted-foreground p-4">
+                    <th key={p.id} className="text-right text-[11px] font-medium text-muted-foreground px-4 py-2.5">
                       {p.name.replace(' Third', '')}
                     </th>
                   ))}
-                  <th className="text-right text-xs font-medium text-muted-foreground p-4">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {standings.map((s, idx) => (
-                  <tr key={s.team.id} className="border-b border-border/50 hover:bg-accent/30 transition-colors">
-                    <td className="p-4">
-                      <span className={`text-sm font-bold ${
-                        idx === 0 ? 'text-yellow-500' : idx === 1 ? 'text-gray-400' : idx === 2 ? 'text-amber-600' : 'text-muted-foreground'
-                      }`}>{idx + 1}</span>
-                    </td>
-                    <td className="p-4">
-                      <Link href={`/teams/${s.team.id}`} className="font-medium text-sm hover:text-primary">{s.team.name}</Link>
-                    </td>
+                  <th className="text-right text-[11px] font-medium text-muted-foreground px-4 py-2.5">Total</th>
+                </>
+              ) : (
+                <th className="text-right text-[11px] font-medium text-muted-foreground px-4 py-2.5">Score</th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {displayStandings.map((s, idx) => (
+              <tr key={s.team.id} className={`border-b border-border/50 hover:bg-muted/30 ${idx === 0 ? 'bg-accent/20' : ''}`}>
+                <td className="px-4 py-2.5">
+                  <span className={`text-xs tabular-nums ${idx === 0 ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                    {idx + 1}
+                  </span>
+                </td>
+                <td className="px-4 py-2.5">
+                  <Link href={`/teams/${s.team.id}`} className="text-sm font-medium hover:text-primary">
+                    {s.team.name}
+                  </Link>
+                </td>
+                {view === 'cumulative' ? (
+                  <>
                     {s.periods.map(p => (
-                      <td key={p.periodId} className="p-4 text-right text-sm font-mono">{p.bestBallScore}</td>
+                      <td key={p.periodId} className="px-4 py-2.5 text-right text-sm tabular-nums">
+                        {p.bestBallScore || '—'}
+                      </td>
                     ))}
-                    <td className="p-4 text-right text-sm font-bold font-mono text-primary">{s.cumulativeScore}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Card>
-        </TabsContent>
-
-        {periods.map((period, periodIdx) => (
-          <TabsContent key={period.id} value={`period-${periodIdx}`}>
-            <Card className="bg-card border-border overflow-hidden mt-4">
-              <div className="p-4 border-b border-border">
-                <h3 className="font-semibold text-sm">{period.name}</h3>
-                <p className="text-xs text-muted-foreground">{period.startDate} to {period.endDate}</p>
-              </div>
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border bg-muted/30">
-                    <th className="text-left text-xs font-medium text-muted-foreground p-4 w-12">#</th>
-                    <th className="text-left text-xs font-medium text-muted-foreground p-4">Team</th>
-                    <th className="text-right text-xs font-medium text-muted-foreground p-4">Best Ball Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {getPeriodStandings(periodIdx).map((s, idx) => (
-                    <tr key={s.team.id} className="border-b border-border/50 hover:bg-accent/30 transition-colors">
-                      <td className="p-4">
-                        <span className={`text-sm font-bold ${
-                          idx === 0 ? 'text-yellow-500' : idx === 1 ? 'text-gray-400' : idx === 2 ? 'text-amber-600' : 'text-muted-foreground'
-                        }`}>{idx + 1}</span>
-                      </td>
-                      <td className="p-4">
-                        <Link href={`/teams/${s.team.id}`} className="font-medium text-sm hover:text-primary">{s.team.name}</Link>
-                      </td>
-                      <td className="p-4 text-right text-sm font-bold font-mono text-primary">
-                        {s.periods[periodIdx].bestBallScore}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Card>
-          </TabsContent>
-        ))}
-      </Tabs>
+                    <td className="px-4 py-2.5 text-right text-sm tabular-nums font-semibold">
+                      {s.cumulativeScore}
+                    </td>
+                  </>
+                ) : (
+                  <td className="px-4 py-2.5 text-right text-sm tabular-nums font-semibold">
+                    {s.periods[view as number].bestBallScore}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -4,31 +4,32 @@
 
 @layer base {
   :root {
-    --background: 222 16% 4%;
-    --foreground: 210 40% 98%;
-    --card: 222 16% 7%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 16% 7%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 142 71% 45%;
-    --primary-foreground: 222 16% 4%;
-    --secondary: 222 14% 14%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 222 14% 14%;
-    --muted-foreground: 215 20% 55%;
-    --accent: 222 14% 18%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 222 14% 16%;
-    --input: 222 14% 16%;
-    --ring: 142 71% 45%;
-    --radius: 0.625rem;
-    --chart-1: 142 71% 45%;
-    --chart-2: 199 89% 48%;
-    --chart-3: 47 95% 53%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 24 95% 53%;
+    /* Obsidian light mode palette */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 13%;
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 13%;
+    --primary: 262 52% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 30%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 50%;
+    --accent: 262 52% 96%;
+    --accent-foreground: 262 52% 40%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 262 52% 55%;
+    --radius: 0.5rem;
+    --chart-1: 262 52% 55%;
+    --chart-2: 199 70% 48%;
+    --chart-3: 142 55% 42%;
+    --chart-4: 24 80% 52%;
+    --chart-5: 340 65% 52%;
   }
 
   * {
@@ -37,21 +38,18 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
-::-webkit-scrollbar-track {
-  background: hsl(var(--background));
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
-}
+
+/* Minimal scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 2px; }
+
+/* Smooth transitions */
+a, button { transition: color 0.15s, background-color 0.15s, border-color 0.15s; }

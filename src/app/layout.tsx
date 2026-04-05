@@ -3,70 +3,75 @@
 import './globals.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Trophy, Users, BarChart3, User, Settings, Zap } from 'lucide-react';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: BarChart3 },
-  { href: '/standings', label: 'Standings', icon: Trophy },
-  { href: '/teams/1', label: 'Teams', icon: Users },
-  { href: '/players', label: 'Players', icon: User },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/', label: 'Overview' },
+  { href: '/standings', label: 'Standings' },
+  { href: '/players', label: 'Players' },
+  { href: '/settings', label: 'Settings' },
 ];
+
+const teamNames = ['Cole', 'Markus', 'J Mill', 'Ryan', 'Joey', 'Jack', 'Austin', 'Bobby'];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen flex">
-        {/* Sidebar */}
-        <aside className="w-60 border-r border-border bg-card flex flex-col fixed h-screen">
-          <div className="p-5 border-b border-border">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-                <Zap className="w-4 h-4 text-primary" />
-              </div>
-              <div>
-                <h1 className="font-bold text-sm tracking-tight">Baseball Tracker</h1>
-                <p className="text-[10px] text-muted-foreground">Fantasy League 2026</p>
-              </div>
-            </Link>
-          </div>
+    <html lang="en">
+      <body className="min-h-screen">
+        {/* Top nav */}
+        <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-50">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="flex items-center justify-between h-12">
+              <Link href="/" className="text-sm font-semibold tracking-tight text-foreground">
+                Fantasy Baseball <span className="text-muted-foreground font-normal">&apos;26</span>
+              </Link>
 
-          <nav className="flex-1 p-3 space-y-1">
-            {navItems.map(({ href, label, icon: Icon }) => {
-              const isActive = href === '/'
-                ? pathname === '/'
-                : pathname.startsWith(href.split('/').slice(0, 2).join('/'));
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                    isActive
-                      ? 'bg-primary/10 text-primary font-medium'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
+              <nav className="flex items-center gap-1">
+                {navItems.map(({ href, label }) => {
+                  const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+                        active
+                          ? 'bg-accent text-accent-foreground font-medium'
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  );
+                })}
 
-          <div className="p-3 border-t border-border">
-            <div className="text-[10px] text-muted-foreground text-center">
-              8 Teams &middot; 104 Players
+                {/* Team dropdown as pills */}
+                <div className="ml-2 pl-2 border-l border-border flex items-center gap-1">
+                  {teamNames.map((name, i) => {
+                    const href = `/teams/${i + 1}`;
+                    const active = pathname === href;
+                    return (
+                      <Link
+                        key={i}
+                        href={href}
+                        className={`px-2 py-1 text-[11px] rounded transition-colors ${
+                          active
+                            ? 'bg-primary text-primary-foreground font-medium'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                        }`}
+                      >
+                        {name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </nav>
             </div>
           </div>
-        </aside>
+        </header>
 
-        {/* Main content */}
-        <main className="flex-1 ml-60 min-h-screen">
-          <div className="max-w-7xl mx-auto p-6">
-            {children}
-          </div>
+        <main className="max-w-6xl mx-auto px-6 py-8">
+          {children}
         </main>
       </body>
     </html>
