@@ -110,7 +110,7 @@ export default function Dashboard() {
         {periods.map((p, i) => {
           const isCurrent = p.startDate <= today && p.endDate >= today;
           const leader = [...standings].sort(
-            (a, b) => b.periods[i].bestBallScore - a.periods[i].bestBallScore
+            (a, b) => (b.periods[i]?.bestBallScore ?? 0) - (a.periods[i]?.bestBallScore ?? 0)
           )[0];
           return (
             <div
@@ -128,9 +128,9 @@ export default function Dashboard() {
                 )}
               </div>
               <p className="text-[11px] text-muted-foreground">
-                {p.startDate.slice(5)} to {p.endDate.slice(5)}
+                {p.startDate?.slice(5)} to {p.endDate?.slice(5)}
               </p>
-              {leader && leader.periods[i].bestBallScore > 0 && (
+              {leader && leader.periods[i]?.bestBallScore > 0 && (
                 <p className="text-xs mt-2">
                   <span className="text-muted-foreground">Lead: </span>
                   <span className="font-medium">{leader.team.name}</span>
