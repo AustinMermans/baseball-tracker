@@ -157,7 +157,7 @@ const rosters: Record<string, [string, number][]> = {
     ['Christian Yelich', 592885],
     ['Brandon Nimmo', 607043],
     ['Matt Chapman', 656305],
-    ['Kyle Stowers', 669261],
+    ['Kyle Stowers', 669065],
   ],
   'Jack': [
     ['Ronald Acuna Jr.', 660670],
@@ -200,7 +200,7 @@ const rosters: Record<string, [string, number][]> = {
     ['Shea Langeliers', 669127],
     ['Jeremy Pena', 665161],
     ['Jose Altuve', 514888],
-    ['Augustin Ramirez', 700538],
+    ['Augustin Ramirez', 682663],
     ['Taylor Ward', 621493],
     ['Spencer Torkelson', 679529],
   ],

@@ -51,8 +51,8 @@ export default function Dashboard() {
       </div>
 
       {/* Standings */}
-      <div className="border border-border rounded-lg overflow-hidden">
-        <table className="w-full">
+      <div className="border border-border rounded-lg overflow-x-auto">
+        <table className="w-full min-w-[500px]">
           <thead>
             <tr className="border-b border-border bg-muted/40">
               <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5 w-10"></th>
@@ -106,7 +106,7 @@ export default function Dashboard() {
       </div>
 
       {/* Period info */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {periods.map((p, i) => {
           const isCurrent = p.startDate <= today && p.endDate >= today;
           const leader = [...standings].sort(

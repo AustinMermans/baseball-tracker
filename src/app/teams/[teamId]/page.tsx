@@ -99,18 +99,16 @@ export default function TeamDetailPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-            <Link href="/standings" className="hover:text-foreground">Standings</Link>
-            <span>/</span>
-          </div>
-          <h1 className="text-lg font-semibold">{data.team.name}</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {cumulativeScore} total points &middot; 13 rostered, best 10 count
-          </p>
+      <div>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+          <Link href="/standings" className="hover:text-foreground">Standings</Link>
+          <span>/</span>
         </div>
-        <div className="flex gap-1">
+        <h1 className="text-lg font-semibold">{data.team.name}</h1>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          {cumulativeScore} total points &middot; 13 rostered, best 10 count
+        </p>
+        <div className="flex flex-wrap gap-1 mt-3">
           {teamNames.map((name, i) => (
             <Link
               key={i}
@@ -128,7 +126,7 @@ export default function TeamDetailPage() {
       </div>
 
       {/* Score summary */}
-      <div className="flex gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {data.periods.map((p, i) => (
           <button
             key={p.period.id}
@@ -209,8 +207,8 @@ export default function TeamDetailPage() {
         <h2 className="text-sm font-medium mb-3">
           Roster &middot; {pr?.period.name}
         </h2>
-        <div className="border border-border rounded-lg overflow-hidden">
-          <table className="w-full">
+        <div className="border border-border rounded-lg overflow-x-auto">
+          <table className="w-full min-w-[520px]">
             <thead>
               <tr className="border-b border-border bg-muted/40">
                 <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2 w-6"></th>

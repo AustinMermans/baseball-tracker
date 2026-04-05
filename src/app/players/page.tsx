@@ -46,6 +46,21 @@ export default function PlayersPage() {
     );
   }
 
+  const exportCSV = () => {
+    const header = 'Rank,Player,Fantasy Team,GP,TB,SB,BB,HBP,PTS';
+    const rows = filtered.map((p, i) =>
+      `${i + 1},"${p.name}","${p.fantasyTeam}",${p.gamesPlayed},${p.totalBases},${p.stolenBases},${p.walks},${p.hbp},${p.totalScore}`
+    );
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fantasy-baseball-players-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const sortHeader = (key: SortKey, label: string) => (
     <th
       className={`text-right text-[11px] font-medium px-3 py-2.5 cursor-pointer select-none transition-colors ${
@@ -66,13 +81,21 @@ export default function PlayersPage() {
         </p>
       </div>
 
-      <input
-        type="text"
-        placeholder="Search players or teams..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        className="w-full max-w-sm bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-      />
+      <div className="flex gap-2 items-center">
+        <input
+          type="text"
+          placeholder="Search players or teams..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="flex-1 max-w-sm bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+        />
+        <button
+          onClick={exportCSV}
+          className="px-3 py-2 text-xs font-medium rounded-lg border border-border hover:bg-muted transition-colors whitespace-nowrap"
+        >
+          Export CSV
+        </button>
+      </div>
 
       <div className="border border-border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
