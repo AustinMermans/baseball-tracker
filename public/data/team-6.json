@@ -1,0 +1,619 @@
+{
+  "team": {
+    "id": 6,
+    "name": "Jack",
+    "owner": "Jack",
+    "created_at": "2026-04-05 19:32:19"
+  },
+  "roster": [
+    {
+      "id": 66,
+      "mlb_id": 660670,
+      "name": "Ronald Acuna Jr.",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 1,
+      "is_active": 1
+    },
+    {
+      "id": 67,
+      "mlb_id": 692540,
+      "name": "Junior Caminero",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 2,
+      "is_active": 1
+    },
+    {
+      "id": 68,
+      "mlb_id": 606466,
+      "name": "Ketel Marte",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 3,
+      "is_active": 1
+    },
+    {
+      "id": 69,
+      "mlb_id": 607208,
+      "name": "Trea Turner",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 4,
+      "is_active": 1
+    },
+    {
+      "id": 70,
+      "mlb_id": 700244,
+      "name": "Roman Anthony",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 5,
+      "is_active": 1
+    },
+    {
+      "id": 71,
+      "mlb_id": 682985,
+      "name": "Riley Greene",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 6,
+      "is_active": 1
+    },
+    {
+      "id": 72,
+      "mlb_id": 668227,
+      "name": "Randy Arozarena",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 7,
+      "is_active": 1
+    },
+    {
+      "id": 73,
+      "mlb_id": 642715,
+      "name": "Willy Adames",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 8,
+      "is_active": 1
+    },
+    {
+      "id": 74,
+      "mlb_id": 682619,
+      "name": "Lawrence Butler",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 9,
+      "is_active": 1
+    },
+    {
+      "id": 75,
+      "mlb_id": 680757,
+      "name": "Steven Kwan",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 10,
+      "is_active": 1
+    },
+    {
+      "id": 76,
+      "mlb_id": 678883,
+      "name": "Cedanne Rafaela",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 11,
+      "is_active": 1
+    },
+    {
+      "id": 77,
+      "mlb_id": 650333,
+      "name": "Luis Arraez",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 12,
+      "is_active": 1
+    },
+    {
+      "id": 78,
+      "mlb_id": 671218,
+      "name": "Heliot Ramos",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 6,
+      "draft_round": 13,
+      "is_active": 1
+    }
+  ],
+  "periods": [
+    {
+      "period": {
+        "id": 1,
+        "name": "First Third",
+        "start_date": "2026-03-26",
+        "end_date": "2026-05-30",
+        "redraft_date": null
+      },
+      "bestBallScore": 127,
+      "playerScores": [
+        {
+          "playerId": 72,
+          "playerName": "Randy Arozarena",
+          "totalScore": 20,
+          "gamesPlayed": 9,
+          "totalBases": 12,
+          "stolenBases": 1,
+          "walks": 6,
+          "hbp": 1
+        },
+        {
+          "playerId": 69,
+          "playerName": "Trea Turner",
+          "totalScore": 17,
+          "gamesPlayed": 8,
+          "totalBases": 13,
+          "stolenBases": 1,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 66,
+          "playerName": "Ronald Acuna Jr.",
+          "totalScore": 15,
+          "gamesPlayed": 9,
+          "totalBases": 6,
+          "stolenBases": 2,
+          "walks": 7,
+          "hbp": 0
+        },
+        {
+          "playerId": 73,
+          "playerName": "Willy Adames",
+          "totalScore": 15,
+          "gamesPlayed": 8,
+          "totalBases": 12,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 77,
+          "playerName": "Luis Arraez",
+          "totalScore": 14,
+          "gamesPlayed": 8,
+          "totalBases": 12,
+          "stolenBases": 2,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 75,
+          "playerName": "Steven Kwan",
+          "totalScore": 13,
+          "gamesPlayed": 8,
+          "totalBases": 8,
+          "stolenBases": 1,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 68,
+          "playerName": "Ketel Marte",
+          "totalScore": 12,
+          "gamesPlayed": 9,
+          "totalBases": 8,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 71,
+          "playerName": "Riley Greene",
+          "totalScore": 12,
+          "gamesPlayed": 7,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 78,
+          "playerName": "Heliot Ramos",
+          "totalScore": 9,
+          "gamesPlayed": 8,
+          "totalBases": 7,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 67,
+          "playerName": "Junior Caminero",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 70,
+          "playerName": "Roman Anthony",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 74,
+          "playerName": "Lawrence Butler",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 76,
+          "playerName": "Cedanne Rafaela",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        72,
+        69,
+        66,
+        73,
+        77,
+        75,
+        68,
+        71,
+        78,
+        67
+      ],
+      "benchPlayerIds": [
+        70,
+        74,
+        76
+      ]
+    },
+    {
+      "period": {
+        "id": 2,
+        "name": "Second Third",
+        "start_date": "2026-05-31",
+        "end_date": "2026-07-30",
+        "redraft_date": "2026-05-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 66,
+          "playerName": "Ronald Acuna Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 67,
+          "playerName": "Junior Caminero",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 68,
+          "playerName": "Ketel Marte",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 69,
+          "playerName": "Trea Turner",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 70,
+          "playerName": "Roman Anthony",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 71,
+          "playerName": "Riley Greene",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 72,
+          "playerName": "Randy Arozarena",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 73,
+          "playerName": "Willy Adames",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 74,
+          "playerName": "Lawrence Butler",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 75,
+          "playerName": "Steven Kwan",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 76,
+          "playerName": "Cedanne Rafaela",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 77,
+          "playerName": "Luis Arraez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 78,
+          "playerName": "Heliot Ramos",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75
+      ],
+      "benchPlayerIds": [
+        76,
+        77,
+        78
+      ]
+    },
+    {
+      "period": {
+        "id": 3,
+        "name": "Third Third",
+        "start_date": "2026-07-31",
+        "end_date": "2026-09-27",
+        "redraft_date": "2026-07-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 66,
+          "playerName": "Ronald Acuna Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 67,
+          "playerName": "Junior Caminero",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 68,
+          "playerName": "Ketel Marte",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 69,
+          "playerName": "Trea Turner",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 70,
+          "playerName": "Roman Anthony",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 71,
+          "playerName": "Riley Greene",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 72,
+          "playerName": "Randy Arozarena",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 73,
+          "playerName": "Willy Adames",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 74,
+          "playerName": "Lawrence Butler",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 75,
+          "playerName": "Steven Kwan",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 76,
+          "playerName": "Cedanne Rafaela",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 77,
+          "playerName": "Luis Arraez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 78,
+          "playerName": "Heliot Ramos",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75
+      ],
+      "benchPlayerIds": [
+        76,
+        77,
+        78
+      ]
+    }
+  ]
+}

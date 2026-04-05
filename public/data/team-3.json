@@ -1,0 +1,619 @@
+{
+  "team": {
+    "id": 3,
+    "name": "J Mill",
+    "owner": "J Mill",
+    "created_at": "2026-04-05 19:32:19"
+  },
+  "roster": [
+    {
+      "id": 27,
+      "mlb_id": 665742,
+      "name": "Juan Soto",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 1,
+      "is_active": 1
+    },
+    {
+      "id": 28,
+      "mlb_id": 665487,
+      "name": "Fernando Tatis Jr.",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 2,
+      "is_active": 1
+    },
+    {
+      "id": 29,
+      "mlb_id": 596019,
+      "name": "Francisco Lindor",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 3,
+      "is_active": 1
+    },
+    {
+      "id": 30,
+      "mlb_id": 667670,
+      "name": "Brent Rooker",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 4,
+      "is_active": 1
+    },
+    {
+      "id": 31,
+      "mlb_id": 682928,
+      "name": "CJ Abrams",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 5,
+      "is_active": 1
+    },
+    {
+      "id": 32,
+      "mlb_id": 621439,
+      "name": "Byron Buxton",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 6,
+      "is_active": 1
+    },
+    {
+      "id": 33,
+      "mlb_id": 553993,
+      "name": "Eugenio Suarez",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 7,
+      "is_active": 1
+    },
+    {
+      "id": 34,
+      "mlb_id": 669257,
+      "name": "Will Smith",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 8,
+      "is_active": 1
+    },
+    {
+      "id": 35,
+      "mlb_id": 673357,
+      "name": "Luis Robert Jr.",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 9,
+      "is_active": 1
+    },
+    {
+      "id": 36,
+      "mlb_id": 621020,
+      "name": "Dansby Swanson",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 10,
+      "is_active": 1
+    },
+    {
+      "id": 37,
+      "mlb_id": 664023,
+      "name": "Ian Happ",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 11,
+      "is_active": 1
+    },
+    {
+      "id": 38,
+      "mlb_id": 575929,
+      "name": "Wilson Contreras",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 12,
+      "is_active": 1
+    },
+    {
+      "id": 39,
+      "mlb_id": 643446,
+      "name": "Jeff McNeil",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 3,
+      "draft_round": 13,
+      "is_active": 1
+    }
+  ],
+  "periods": [
+    {
+      "period": {
+        "id": 1,
+        "name": "First Third",
+        "start_date": "2026-03-26",
+        "end_date": "2026-05-30",
+        "redraft_date": null
+      },
+      "bestBallScore": 166,
+      "playerScores": [
+        {
+          "playerId": 31,
+          "playerName": "CJ Abrams",
+          "totalScore": 22,
+          "gamesPlayed": 7,
+          "totalBases": 17,
+          "stolenBases": 1,
+          "walks": 3,
+          "hbp": 1
+        },
+        {
+          "playerId": 29,
+          "playerName": "Francisco Lindor",
+          "totalScore": 21,
+          "gamesPlayed": 9,
+          "totalBases": 9,
+          "stolenBases": 1,
+          "walks": 10,
+          "hbp": 1
+        },
+        {
+          "playerId": 27,
+          "playerName": "Juan Soto",
+          "totalScore": 19,
+          "gamesPlayed": 8,
+          "totalBases": 16,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 37,
+          "playerName": "Ian Happ",
+          "totalScore": 19,
+          "gamesPlayed": 7,
+          "totalBases": 15,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 35,
+          "playerName": "Luis Robert Jr.",
+          "totalScore": 18,
+          "gamesPlayed": 8,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 8,
+          "hbp": 0
+        },
+        {
+          "playerId": 34,
+          "playerName": "Will Smith",
+          "totalScore": 15,
+          "gamesPlayed": 8,
+          "totalBases": 14,
+          "stolenBases": 0,
+          "walks": 1,
+          "hbp": 0
+        },
+        {
+          "playerId": 38,
+          "playerName": "Wilson Contreras",
+          "totalScore": 15,
+          "gamesPlayed": 8,
+          "totalBases": 8,
+          "stolenBases": 0,
+          "walks": 6,
+          "hbp": 1
+        },
+        {
+          "playerId": 28,
+          "playerName": "Fernando Tatis Jr.",
+          "totalScore": 14,
+          "gamesPlayed": 8,
+          "totalBases": 8,
+          "stolenBases": 2,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 33,
+          "playerName": "Eugenio Suarez",
+          "totalScore": 14,
+          "gamesPlayed": 8,
+          "totalBases": 13,
+          "stolenBases": 0,
+          "walks": 1,
+          "hbp": 0
+        },
+        {
+          "playerId": 32,
+          "playerName": "Byron Buxton",
+          "totalScore": 9,
+          "gamesPlayed": 7,
+          "totalBases": 7,
+          "stolenBases": 0,
+          "walks": 1,
+          "hbp": 1
+        },
+        {
+          "playerId": 36,
+          "playerName": "Dansby Swanson",
+          "totalScore": 8,
+          "gamesPlayed": 7,
+          "totalBases": 3,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 30,
+          "playerName": "Brent Rooker",
+          "totalScore": 7,
+          "gamesPlayed": 8,
+          "totalBases": 4,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 39,
+          "playerName": "Jeff McNeil",
+          "totalScore": 5,
+          "gamesPlayed": 7,
+          "totalBases": 3,
+          "stolenBases": 1,
+          "walks": 1,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        31,
+        29,
+        27,
+        37,
+        35,
+        34,
+        38,
+        28,
+        33,
+        32
+      ],
+      "benchPlayerIds": [
+        36,
+        30,
+        39
+      ]
+    },
+    {
+      "period": {
+        "id": 2,
+        "name": "Second Third",
+        "start_date": "2026-05-31",
+        "end_date": "2026-07-30",
+        "redraft_date": "2026-05-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 27,
+          "playerName": "Juan Soto",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 28,
+          "playerName": "Fernando Tatis Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 29,
+          "playerName": "Francisco Lindor",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 30,
+          "playerName": "Brent Rooker",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 31,
+          "playerName": "CJ Abrams",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 32,
+          "playerName": "Byron Buxton",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 33,
+          "playerName": "Eugenio Suarez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 34,
+          "playerName": "Will Smith",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 35,
+          "playerName": "Luis Robert Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 36,
+          "playerName": "Dansby Swanson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 37,
+          "playerName": "Ian Happ",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 38,
+          "playerName": "Wilson Contreras",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 39,
+          "playerName": "Jeff McNeil",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "benchPlayerIds": [
+        37,
+        38,
+        39
+      ]
+    },
+    {
+      "period": {
+        "id": 3,
+        "name": "Third Third",
+        "start_date": "2026-07-31",
+        "end_date": "2026-09-27",
+        "redraft_date": "2026-07-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 27,
+          "playerName": "Juan Soto",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 28,
+          "playerName": "Fernando Tatis Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 29,
+          "playerName": "Francisco Lindor",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 30,
+          "playerName": "Brent Rooker",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 31,
+          "playerName": "CJ Abrams",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 32,
+          "playerName": "Byron Buxton",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 33,
+          "playerName": "Eugenio Suarez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 34,
+          "playerName": "Will Smith",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 35,
+          "playerName": "Luis Robert Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 36,
+          "playerName": "Dansby Swanson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 37,
+          "playerName": "Ian Happ",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 38,
+          "playerName": "Wilson Contreras",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 39,
+          "playerName": "Jeff McNeil",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "benchPlayerIds": [
+        37,
+        38,
+        39
+      ]
+    }
+  ]
+}

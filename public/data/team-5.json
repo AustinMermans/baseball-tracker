@@ -1,0 +1,619 @@
+{
+  "team": {
+    "id": 5,
+    "name": "Joey",
+    "owner": "Joey",
+    "created_at": "2026-04-05 19:32:19"
+  },
+  "roster": [
+    {
+      "id": 53,
+      "mlb_id": 608070,
+      "name": "Jose Ramirez",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 1,
+      "is_active": 1
+    },
+    {
+      "id": 54,
+      "mlb_id": 663656,
+      "name": "Kyle Tucker",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 2,
+      "is_active": 1
+    },
+    {
+      "id": 55,
+      "mlb_id": 691348,
+      "name": "Pete Crow-Armstrong",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 3,
+      "is_active": 1
+    },
+    {
+      "id": 56,
+      "mlb_id": 518692,
+      "name": "Freddie Freeman",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 4,
+      "is_active": 1
+    },
+    {
+      "id": 57,
+      "mlb_id": 621566,
+      "name": "Matt Olson",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 5,
+      "is_active": 1
+    },
+    {
+      "id": 58,
+      "mlb_id": 661388,
+      "name": "William Contreras",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 6,
+      "is_active": 1
+    },
+    {
+      "id": 59,
+      "mlb_id": 641355,
+      "name": "Cody Bellinger",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 7,
+      "is_active": 1
+    },
+    {
+      "id": 60,
+      "mlb_id": 606192,
+      "name": "Teoscar Hernandez",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 8,
+      "is_active": 1
+    },
+    {
+      "id": 61,
+      "mlb_id": 650490,
+      "name": "Yandy Diaz",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 9,
+      "is_active": 1
+    },
+    {
+      "id": 62,
+      "mlb_id": 592885,
+      "name": "Christian Yelich",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 10,
+      "is_active": 1
+    },
+    {
+      "id": 63,
+      "mlb_id": 607043,
+      "name": "Brandon Nimmo",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 11,
+      "is_active": 1
+    },
+    {
+      "id": 64,
+      "mlb_id": 656305,
+      "name": "Matt Chapman",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 12,
+      "is_active": 1
+    },
+    {
+      "id": 65,
+      "mlb_id": 669261,
+      "name": "Kyle Stowers",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 5,
+      "draft_round": 13,
+      "is_active": 1
+    }
+  ],
+  "periods": [
+    {
+      "period": {
+        "id": 1,
+        "name": "First Third",
+        "start_date": "2026-03-26",
+        "end_date": "2026-05-30",
+        "redraft_date": null
+      },
+      "bestBallScore": 197,
+      "playerScores": [
+        {
+          "playerId": 61,
+          "playerName": "Yandy Diaz",
+          "totalScore": 28,
+          "gamesPlayed": 8,
+          "totalBases": 23,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 2
+        },
+        {
+          "playerId": 57,
+          "playerName": "Matt Olson",
+          "totalScore": 25,
+          "gamesPlayed": 9,
+          "totalBases": 22,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 63,
+          "playerName": "Brandon Nimmo",
+          "totalScore": 24,
+          "gamesPlayed": 8,
+          "totalBases": 18,
+          "stolenBases": 1,
+          "walks": 4,
+          "hbp": 1
+        },
+        {
+          "playerId": 59,
+          "playerName": "Cody Bellinger",
+          "totalScore": 21,
+          "gamesPlayed": 7,
+          "totalBases": 13,
+          "stolenBases": 2,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
+          "playerId": 54,
+          "playerName": "Kyle Tucker",
+          "totalScore": 19,
+          "gamesPlayed": 8,
+          "totalBases": 13,
+          "stolenBases": 2,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 56,
+          "playerName": "Freddie Freeman",
+          "totalScore": 19,
+          "gamesPlayed": 8,
+          "totalBases": 17,
+          "stolenBases": 0,
+          "walks": 1,
+          "hbp": 1
+        },
+        {
+          "playerId": 58,
+          "playerName": "William Contreras",
+          "totalScore": 17,
+          "gamesPlayed": 7,
+          "totalBases": 12,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 62,
+          "playerName": "Christian Yelich",
+          "totalScore": 16,
+          "gamesPlayed": 7,
+          "totalBases": 13,
+          "stolenBases": 1,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 53,
+          "playerName": "Jose Ramirez",
+          "totalScore": 15,
+          "gamesPlayed": 8,
+          "totalBases": 11,
+          "stolenBases": 2,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 64,
+          "playerName": "Matt Chapman",
+          "totalScore": 13,
+          "gamesPlayed": 8,
+          "totalBases": 11,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 60,
+          "playerName": "Teoscar Hernandez",
+          "totalScore": 9,
+          "gamesPlayed": 7,
+          "totalBases": 9,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 55,
+          "playerName": "Pete Crow-Armstrong",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 65,
+          "playerName": "Kyle Stowers",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        61,
+        57,
+        63,
+        59,
+        54,
+        56,
+        58,
+        62,
+        53,
+        64
+      ],
+      "benchPlayerIds": [
+        60,
+        55,
+        65
+      ]
+    },
+    {
+      "period": {
+        "id": 2,
+        "name": "Second Third",
+        "start_date": "2026-05-31",
+        "end_date": "2026-07-30",
+        "redraft_date": "2026-05-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 53,
+          "playerName": "Jose Ramirez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 54,
+          "playerName": "Kyle Tucker",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 55,
+          "playerName": "Pete Crow-Armstrong",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 56,
+          "playerName": "Freddie Freeman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 57,
+          "playerName": "Matt Olson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 58,
+          "playerName": "William Contreras",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 59,
+          "playerName": "Cody Bellinger",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 60,
+          "playerName": "Teoscar Hernandez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 61,
+          "playerName": "Yandy Diaz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 62,
+          "playerName": "Christian Yelich",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 63,
+          "playerName": "Brandon Nimmo",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 64,
+          "playerName": "Matt Chapman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 65,
+          "playerName": "Kyle Stowers",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ],
+      "benchPlayerIds": [
+        63,
+        64,
+        65
+      ]
+    },
+    {
+      "period": {
+        "id": 3,
+        "name": "Third Third",
+        "start_date": "2026-07-31",
+        "end_date": "2026-09-27",
+        "redraft_date": "2026-07-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 53,
+          "playerName": "Jose Ramirez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 54,
+          "playerName": "Kyle Tucker",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 55,
+          "playerName": "Pete Crow-Armstrong",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 56,
+          "playerName": "Freddie Freeman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 57,
+          "playerName": "Matt Olson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 58,
+          "playerName": "William Contreras",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 59,
+          "playerName": "Cody Bellinger",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 60,
+          "playerName": "Teoscar Hernandez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 61,
+          "playerName": "Yandy Diaz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 62,
+          "playerName": "Christian Yelich",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 63,
+          "playerName": "Brandon Nimmo",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 64,
+          "playerName": "Matt Chapman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 65,
+          "playerName": "Kyle Stowers",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ],
+      "benchPlayerIds": [
+        63,
+        64,
+        65
+      ]
+    }
+  ]
+}

@@ -1,0 +1,619 @@
+{
+  "team": {
+    "id": 8,
+    "name": "Bobby",
+    "owner": "Bobby",
+    "created_at": "2026-04-05 19:32:19"
+  },
+  "roster": [
+    {
+      "id": 92,
+      "mlb_id": 677594,
+      "name": "Julio Rodriguez",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 1,
+      "is_active": 1
+    },
+    {
+      "id": 93,
+      "mlb_id": 665489,
+      "name": "Vladimir Guerrero Jr.",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 2,
+      "is_active": 1
+    },
+    {
+      "id": 94,
+      "mlb_id": 670541,
+      "name": "Yordan Alvarez",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 3,
+      "is_active": 1
+    },
+    {
+      "id": 95,
+      "mlb_id": 665862,
+      "name": "Jazz Chisholm Jr.",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 4,
+      "is_active": 1
+    },
+    {
+      "id": 96,
+      "mlb_id": 668930,
+      "name": "Brice Turang",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 5,
+      "is_active": 1
+    },
+    {
+      "id": 97,
+      "mlb_id": 680776,
+      "name": "Jarren Duran",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 6,
+      "is_active": 1
+    },
+    {
+      "id": 98,
+      "mlb_id": 672695,
+      "name": "Geraldo Perdomo",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 7,
+      "is_active": 1
+    },
+    {
+      "id": 99,
+      "mlb_id": 669127,
+      "name": "Shea Langeliers",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 8,
+      "is_active": 1
+    },
+    {
+      "id": 100,
+      "mlb_id": 665161,
+      "name": "Jeremy Pena",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 9,
+      "is_active": 1
+    },
+    {
+      "id": 101,
+      "mlb_id": 514888,
+      "name": "Jose Altuve",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 10,
+      "is_active": 1
+    },
+    {
+      "id": 102,
+      "mlb_id": 700538,
+      "name": "Augustin Ramirez",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 11,
+      "is_active": 1
+    },
+    {
+      "id": 103,
+      "mlb_id": 621493,
+      "name": "Taylor Ward",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 12,
+      "is_active": 1
+    },
+    {
+      "id": 104,
+      "mlb_id": 679529,
+      "name": "Spencer Torkelson",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 8,
+      "draft_round": 13,
+      "is_active": 1
+    }
+  ],
+  "periods": [
+    {
+      "period": {
+        "id": 1,
+        "name": "First Third",
+        "start_date": "2026-03-26",
+        "end_date": "2026-05-30",
+        "redraft_date": null
+      },
+      "bestBallScore": 203,
+      "playerScores": [
+        {
+          "playerId": 94,
+          "playerName": "Yordan Alvarez",
+          "totalScore": 36,
+          "gamesPlayed": 9,
+          "totalBases": 23,
+          "stolenBases": 1,
+          "walks": 10,
+          "hbp": 2
+        },
+        {
+          "playerId": 99,
+          "playerName": "Shea Langeliers",
+          "totalScore": 27,
+          "gamesPlayed": 8,
+          "totalBases": 24,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 101,
+          "playerName": "Jose Altuve",
+          "totalScore": 27,
+          "gamesPlayed": 9,
+          "totalBases": 16,
+          "stolenBases": 1,
+          "walks": 10,
+          "hbp": 0
+        },
+        {
+          "playerId": 96,
+          "playerName": "Brice Turang",
+          "totalScore": 26,
+          "gamesPlayed": 7,
+          "totalBases": 19,
+          "stolenBases": 2,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 93,
+          "playerName": "Vladimir Guerrero Jr.",
+          "totalScore": 18,
+          "gamesPlayed": 8,
+          "totalBases": 11,
+          "stolenBases": 0,
+          "walks": 6,
+          "hbp": 1
+        },
+        {
+          "playerId": 103,
+          "playerName": "Taylor Ward",
+          "totalScore": 18,
+          "gamesPlayed": 8,
+          "totalBases": 12,
+          "stolenBases": 0,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
+          "playerId": 98,
+          "playerName": "Geraldo Perdomo",
+          "totalScore": 15,
+          "gamesPlayed": 9,
+          "totalBases": 11,
+          "stolenBases": 1,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 97,
+          "playerName": "Jarren Duran",
+          "totalScore": 13,
+          "gamesPlayed": 7,
+          "totalBases": 6,
+          "stolenBases": 2,
+          "walks": 4,
+          "hbp": 1
+        },
+        {
+          "playerId": 100,
+          "playerName": "Jeremy Pena",
+          "totalScore": 12,
+          "gamesPlayed": 5,
+          "totalBases": 9,
+          "stolenBases": 1,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 95,
+          "playerName": "Jazz Chisholm Jr.",
+          "totalScore": 11,
+          "gamesPlayed": 7,
+          "totalBases": 7,
+          "stolenBases": 3,
+          "walks": 1,
+          "hbp": 0
+        },
+        {
+          "playerId": 92,
+          "playerName": "Julio Rodriguez",
+          "totalScore": 10,
+          "gamesPlayed": 9,
+          "totalBases": 5,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 104,
+          "playerName": "Spencer Torkelson",
+          "totalScore": 6,
+          "gamesPlayed": 6,
+          "totalBases": 4,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 102,
+          "playerName": "Augustin Ramirez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        94,
+        99,
+        101,
+        96,
+        93,
+        103,
+        98,
+        97,
+        100,
+        95
+      ],
+      "benchPlayerIds": [
+        92,
+        104,
+        102
+      ]
+    },
+    {
+      "period": {
+        "id": 2,
+        "name": "Second Third",
+        "start_date": "2026-05-31",
+        "end_date": "2026-07-30",
+        "redraft_date": "2026-05-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 92,
+          "playerName": "Julio Rodriguez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 93,
+          "playerName": "Vladimir Guerrero Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 94,
+          "playerName": "Yordan Alvarez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 95,
+          "playerName": "Jazz Chisholm Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 96,
+          "playerName": "Brice Turang",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 97,
+          "playerName": "Jarren Duran",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 98,
+          "playerName": "Geraldo Perdomo",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 99,
+          "playerName": "Shea Langeliers",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 100,
+          "playerName": "Jeremy Pena",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 101,
+          "playerName": "Jose Altuve",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 102,
+          "playerName": "Augustin Ramirez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 103,
+          "playerName": "Taylor Ward",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 104,
+          "playerName": "Spencer Torkelson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101
+      ],
+      "benchPlayerIds": [
+        102,
+        103,
+        104
+      ]
+    },
+    {
+      "period": {
+        "id": 3,
+        "name": "Third Third",
+        "start_date": "2026-07-31",
+        "end_date": "2026-09-27",
+        "redraft_date": "2026-07-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 92,
+          "playerName": "Julio Rodriguez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 93,
+          "playerName": "Vladimir Guerrero Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 94,
+          "playerName": "Yordan Alvarez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 95,
+          "playerName": "Jazz Chisholm Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 96,
+          "playerName": "Brice Turang",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 97,
+          "playerName": "Jarren Duran",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 98,
+          "playerName": "Geraldo Perdomo",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 99,
+          "playerName": "Shea Langeliers",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 100,
+          "playerName": "Jeremy Pena",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 101,
+          "playerName": "Jose Altuve",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 102,
+          "playerName": "Augustin Ramirez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 103,
+          "playerName": "Taylor Ward",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 104,
+          "playerName": "Spencer Torkelson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101
+      ],
+      "benchPlayerIds": [
+        102,
+        103,
+        104
+      ]
+    }
+  ]
+}

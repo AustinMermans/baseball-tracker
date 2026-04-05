@@ -1,0 +1,619 @@
+{
+  "team": {
+    "id": 2,
+    "name": "Markus",
+    "owner": "Markus",
+    "created_at": "2026-04-05 19:32:19"
+  },
+  "roster": [
+    {
+      "id": 14,
+      "mlb_id": 592450,
+      "name": "Aaron Judge",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 1,
+      "is_active": 1
+    },
+    {
+      "id": 15,
+      "mlb_id": 683002,
+      "name": "Gunnar Henderson",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 2,
+      "is_active": 1
+    },
+    {
+      "id": 16,
+      "mlb_id": 700557,
+      "name": "Nick Kurtz",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 3,
+      "is_active": 1
+    },
+    {
+      "id": 17,
+      "mlb_id": 700526,
+      "name": "Zach Neto",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 4,
+      "is_active": 1
+    },
+    {
+      "id": 18,
+      "mlb_id": 592518,
+      "name": "Manny Machado",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 5,
+      "is_active": 1
+    },
+    {
+      "id": 19,
+      "mlb_id": 663586,
+      "name": "Austin Riley",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 6,
+      "is_active": 1
+    },
+    {
+      "id": 20,
+      "mlb_id": 686469,
+      "name": "Vinnie Pasquantino",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 7,
+      "is_active": 1
+    },
+    {
+      "id": 21,
+      "mlb_id": 694260,
+      "name": "Hunter Goodman",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 8,
+      "is_active": 1
+    },
+    {
+      "id": 22,
+      "mlb_id": 663538,
+      "name": "Nico Hoerner",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 9,
+      "is_active": 1
+    },
+    {
+      "id": 23,
+      "mlb_id": 596115,
+      "name": "Trevor Story",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 10,
+      "is_active": 1
+    },
+    {
+      "id": 24,
+      "mlb_id": 700862,
+      "name": "Luke Keaschall",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 11,
+      "is_active": 1
+    },
+    {
+      "id": 25,
+      "mlb_id": 700679,
+      "name": "Jakob Marsee",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 12,
+      "is_active": 1
+    },
+    {
+      "id": 26,
+      "mlb_id": 673237,
+      "name": "Yanier Diaz",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 2,
+      "draft_round": 13,
+      "is_active": 1
+    }
+  ],
+  "periods": [
+    {
+      "period": {
+        "id": 1,
+        "name": "First Third",
+        "start_date": "2026-03-26",
+        "end_date": "2026-05-30",
+        "redraft_date": null
+      },
+      "bestBallScore": 120,
+      "playerScores": [
+        {
+          "playerId": 15,
+          "playerName": "Gunnar Henderson",
+          "totalScore": 22,
+          "gamesPlayed": 8,
+          "totalBases": 16,
+          "stolenBases": 1,
+          "walks": 4,
+          "hbp": 1
+        },
+        {
+          "playerId": 14,
+          "playerName": "Aaron Judge",
+          "totalScore": 21,
+          "gamesPlayed": 7,
+          "totalBases": 16,
+          "stolenBases": 1,
+          "walks": 3,
+          "hbp": 1
+        },
+        {
+          "playerId": 22,
+          "playerName": "Nico Hoerner",
+          "totalScore": 20,
+          "gamesPlayed": 7,
+          "totalBases": 11,
+          "stolenBases": 4,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 18,
+          "playerName": "Manny Machado",
+          "totalScore": 15,
+          "gamesPlayed": 8,
+          "totalBases": 6,
+          "stolenBases": 0,
+          "walks": 9,
+          "hbp": 0
+        },
+        {
+          "playerId": 26,
+          "playerName": "Yanier Diaz",
+          "totalScore": 12,
+          "gamesPlayed": 7,
+          "totalBases": 9,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 19,
+          "playerName": "Austin Riley",
+          "totalScore": 11,
+          "gamesPlayed": 9,
+          "totalBases": 7,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 20,
+          "playerName": "Vinnie Pasquantino",
+          "totalScore": 11,
+          "gamesPlayed": 7,
+          "totalBases": 6,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 1
+        },
+        {
+          "playerId": 23,
+          "playerName": "Trevor Story",
+          "totalScore": 8,
+          "gamesPlayed": 8,
+          "totalBases": 8,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 16,
+          "playerName": "Nick Kurtz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 17,
+          "playerName": "Zach Neto",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 21,
+          "playerName": "Hunter Goodman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 24,
+          "playerName": "Luke Keaschall",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 25,
+          "playerName": "Jakob Marsee",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        15,
+        14,
+        22,
+        18,
+        26,
+        19,
+        20,
+        23,
+        16,
+        17
+      ],
+      "benchPlayerIds": [
+        21,
+        24,
+        25
+      ]
+    },
+    {
+      "period": {
+        "id": 2,
+        "name": "Second Third",
+        "start_date": "2026-05-31",
+        "end_date": "2026-07-30",
+        "redraft_date": "2026-05-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 14,
+          "playerName": "Aaron Judge",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 15,
+          "playerName": "Gunnar Henderson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 16,
+          "playerName": "Nick Kurtz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 17,
+          "playerName": "Zach Neto",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 18,
+          "playerName": "Manny Machado",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 19,
+          "playerName": "Austin Riley",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 20,
+          "playerName": "Vinnie Pasquantino",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 21,
+          "playerName": "Hunter Goodman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 22,
+          "playerName": "Nico Hoerner",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 23,
+          "playerName": "Trevor Story",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 24,
+          "playerName": "Luke Keaschall",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 25,
+          "playerName": "Jakob Marsee",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 26,
+          "playerName": "Yanier Diaz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "benchPlayerIds": [
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "period": {
+        "id": 3,
+        "name": "Third Third",
+        "start_date": "2026-07-31",
+        "end_date": "2026-09-27",
+        "redraft_date": "2026-07-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 14,
+          "playerName": "Aaron Judge",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 15,
+          "playerName": "Gunnar Henderson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 16,
+          "playerName": "Nick Kurtz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 17,
+          "playerName": "Zach Neto",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 18,
+          "playerName": "Manny Machado",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 19,
+          "playerName": "Austin Riley",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 20,
+          "playerName": "Vinnie Pasquantino",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 21,
+          "playerName": "Hunter Goodman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 22,
+          "playerName": "Nico Hoerner",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 23,
+          "playerName": "Trevor Story",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 24,
+          "playerName": "Luke Keaschall",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 25,
+          "playerName": "Jakob Marsee",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 26,
+          "playerName": "Yanier Diaz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "benchPlayerIds": [
+        24,
+        25,
+        26
+      ]
+    }
+  ]
+}

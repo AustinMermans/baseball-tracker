@@ -1,0 +1,68 @@
+name: Sync Stats & Deploy to GitHub Pages
+
+on:
+  schedule:
+    # Run daily at 7 AM UTC (midnight PT, after west coast games finish)
+    - cron: '0 7 * * *'
+  workflow_dispatch: # Manual trigger
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Seed database
+        run: npx tsx src/db/seed.ts
+
+      - name: Sync MLB stats
+        run: npx tsx scripts/sync-and-build.ts
+
+      - name: Prepare static build
+        run: |
+          # Remove API routes (incompatible with static export)
+          rm -rf src/app/api
+          # Copy static data into public
+          echo "Static data files:"
+          ls -la public/data/
+
+      - name: Build static site
+        env:
+          STATIC_EXPORT: 'true'
+          NEXT_PUBLIC_STATIC: 'true'
+          NEXT_PUBLIC_BASE_PATH: '/baseball-tracker'
+        run: npx next build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './out'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

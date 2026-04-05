@@ -1,0 +1,619 @@
+{
+  "team": {
+    "id": 7,
+    "name": "Austin",
+    "owner": "Austin",
+    "created_at": "2026-04-05 19:32:19"
+  },
+  "roster": [
+    {
+      "id": 79,
+      "mlb_id": 656941,
+      "name": "Kyle Schwarber",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 1,
+      "is_active": 1
+    },
+    {
+      "id": 80,
+      "mlb_id": 682829,
+      "name": "Elly De La Cruz",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 2,
+      "is_active": 1
+    },
+    {
+      "id": 81,
+      "mlb_id": 700363,
+      "name": "Wyatt Langford",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 3,
+      "is_active": 1
+    },
+    {
+      "id": 82,
+      "mlb_id": 547180,
+      "name": "Bryce Harper",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 4,
+      "is_active": 1
+    },
+    {
+      "id": 83,
+      "mlb_id": 543807,
+      "name": "George Springer",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 5,
+      "is_active": 1
+    },
+    {
+      "id": 84,
+      "mlb_id": 665833,
+      "name": "Oneil Cruz",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 6,
+      "is_active": 1
+    },
+    {
+      "id": 85,
+      "mlb_id": 608369,
+      "name": "Corey Seager",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 7,
+      "is_active": 1
+    },
+    {
+      "id": 86,
+      "mlb_id": 608324,
+      "name": "Alex Bregman",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 8,
+      "is_active": 1
+    },
+    {
+      "id": 87,
+      "mlb_id": 686263,
+      "name": "Brenton Doyle",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 9,
+      "is_active": 1
+    },
+    {
+      "id": 88,
+      "mlb_id": 666176,
+      "name": "Jo Adell",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 10,
+      "is_active": 1
+    },
+    {
+      "id": 89,
+      "mlb_id": 807986,
+      "name": "Munetaka Murakami",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 11,
+      "is_active": 1
+    },
+    {
+      "id": 90,
+      "mlb_id": 668939,
+      "name": "Adley Rutschman",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 12,
+      "is_active": 1
+    },
+    {
+      "id": 91,
+      "mlb_id": 680265,
+      "name": "Matt McLain",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 7,
+      "draft_round": 13,
+      "is_active": 1
+    }
+  ],
+  "periods": [
+    {
+      "period": {
+        "id": 1,
+        "name": "First Third",
+        "start_date": "2026-03-26",
+        "end_date": "2026-05-30",
+        "redraft_date": null
+      },
+      "bestBallScore": 160,
+      "playerScores": [
+        {
+          "playerId": 79,
+          "playerName": "Kyle Schwarber",
+          "totalScore": 25,
+          "gamesPlayed": 8,
+          "totalBases": 17,
+          "stolenBases": 0,
+          "walks": 6,
+          "hbp": 2
+        },
+        {
+          "playerId": 85,
+          "playerName": "Corey Seager",
+          "totalScore": 22,
+          "gamesPlayed": 8,
+          "totalBases": 17,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 84,
+          "playerName": "Oneil Cruz",
+          "totalScore": 20,
+          "gamesPlayed": 8,
+          "totalBases": 18,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 80,
+          "playerName": "Elly De La Cruz",
+          "totalScore": 19,
+          "gamesPlayed": 8,
+          "totalBases": 16,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 83,
+          "playerName": "George Springer",
+          "totalScore": 18,
+          "gamesPlayed": 8,
+          "totalBases": 12,
+          "stolenBases": 1,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 86,
+          "playerName": "Alex Bregman",
+          "totalScore": 16,
+          "gamesPlayed": 7,
+          "totalBases": 12,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 82,
+          "playerName": "Bryce Harper",
+          "totalScore": 15,
+          "gamesPlayed": 8,
+          "totalBases": 12,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 90,
+          "playerName": "Adley Rutschman",
+          "totalScore": 15,
+          "gamesPlayed": 7,
+          "totalBases": 11,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 88,
+          "playerName": "Jo Adell",
+          "totalScore": 10,
+          "gamesPlayed": 9,
+          "totalBases": 8,
+          "stolenBases": 0,
+          "walks": 1,
+          "hbp": 1
+        },
+        {
+          "playerId": 81,
+          "playerName": "Wyatt Langford",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 87,
+          "playerName": "Brenton Doyle",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 89,
+          "playerName": "Munetaka Murakami",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 91,
+          "playerName": "Matt McLain",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        79,
+        85,
+        84,
+        80,
+        83,
+        86,
+        82,
+        90,
+        88,
+        81
+      ],
+      "benchPlayerIds": [
+        87,
+        89,
+        91
+      ]
+    },
+    {
+      "period": {
+        "id": 2,
+        "name": "Second Third",
+        "start_date": "2026-05-31",
+        "end_date": "2026-07-30",
+        "redraft_date": "2026-05-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 79,
+          "playerName": "Kyle Schwarber",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 80,
+          "playerName": "Elly De La Cruz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 81,
+          "playerName": "Wyatt Langford",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 82,
+          "playerName": "Bryce Harper",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 83,
+          "playerName": "George Springer",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 84,
+          "playerName": "Oneil Cruz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 85,
+          "playerName": "Corey Seager",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 86,
+          "playerName": "Alex Bregman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 87,
+          "playerName": "Brenton Doyle",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 88,
+          "playerName": "Jo Adell",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 89,
+          "playerName": "Munetaka Murakami",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 90,
+          "playerName": "Adley Rutschman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 91,
+          "playerName": "Matt McLain",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88
+      ],
+      "benchPlayerIds": [
+        89,
+        90,
+        91
+      ]
+    },
+    {
+      "period": {
+        "id": 3,
+        "name": "Third Third",
+        "start_date": "2026-07-31",
+        "end_date": "2026-09-27",
+        "redraft_date": "2026-07-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 79,
+          "playerName": "Kyle Schwarber",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 80,
+          "playerName": "Elly De La Cruz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 81,
+          "playerName": "Wyatt Langford",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 82,
+          "playerName": "Bryce Harper",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 83,
+          "playerName": "George Springer",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 84,
+          "playerName": "Oneil Cruz",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 85,
+          "playerName": "Corey Seager",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 86,
+          "playerName": "Alex Bregman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 87,
+          "playerName": "Brenton Doyle",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 88,
+          "playerName": "Jo Adell",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 89,
+          "playerName": "Munetaka Murakami",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 90,
+          "playerName": "Adley Rutschman",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 91,
+          "playerName": "Matt McLain",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88
+      ],
+      "benchPlayerIds": [
+        89,
+        90,
+        91
+      ]
+    }
+  ]
+}

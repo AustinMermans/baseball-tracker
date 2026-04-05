@@ -1,0 +1,619 @@
+{
+  "team": {
+    "id": 1,
+    "name": "Cole",
+    "owner": "Cole",
+    "created_at": "2026-04-05 19:32:19"
+  },
+  "roster": [
+    {
+      "id": 1,
+      "mlb_id": 660271,
+      "name": "Shohei Ohtani",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 1,
+      "is_active": 1
+    },
+    {
+      "id": 2,
+      "mlb_id": 682998,
+      "name": "Corbin Carroll",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 2,
+      "is_active": 1
+    },
+    {
+      "id": 3,
+      "mlb_id": 694192,
+      "name": "Jackson Chourio",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 3,
+      "is_active": 1
+    },
+    {
+      "id": 4,
+      "mlb_id": 694497,
+      "name": "James Wood",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 4,
+      "is_active": 1
+    },
+    {
+      "id": 5,
+      "mlb_id": 691621,
+      "name": "Jackson Merrill",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 5,
+      "is_active": 1
+    },
+    {
+      "id": 6,
+      "mlb_id": 647304,
+      "name": "Josh Naylor",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 6,
+      "is_active": 1
+    },
+    {
+      "id": 7,
+      "mlb_id": 672580,
+      "name": "Maikel Garcia",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 7,
+      "is_active": 1
+    },
+    {
+      "id": 8,
+      "mlb_id": 691159,
+      "name": "Tyler Soderstrom",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 8,
+      "is_active": 1
+    },
+    {
+      "id": 9,
+      "mlb_id": 671739,
+      "name": "Michael Harris II",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 9,
+      "is_active": 1
+    },
+    {
+      "id": 10,
+      "mlb_id": 521692,
+      "name": "Salvador Perez",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 10,
+      "is_active": 1
+    },
+    {
+      "id": 11,
+      "mlb_id": 694221,
+      "name": "Drake Baldwin",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 11,
+      "is_active": 1
+    },
+    {
+      "id": 12,
+      "mlb_id": 645277,
+      "name": "Ozzie Albies",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 12,
+      "is_active": 1
+    },
+    {
+      "id": 13,
+      "mlb_id": 694244,
+      "name": "Jacob Wilson",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 1,
+      "draft_round": 13,
+      "is_active": 1
+    }
+  ],
+  "periods": [
+    {
+      "period": {
+        "id": 1,
+        "name": "First Third",
+        "start_date": "2026-03-26",
+        "end_date": "2026-05-30",
+        "redraft_date": null
+      },
+      "bestBallScore": 129,
+      "playerScores": [
+        {
+          "playerId": 2,
+          "playerName": "Corbin Carroll",
+          "totalScore": 22,
+          "gamesPlayed": 9,
+          "totalBases": 16,
+          "stolenBases": 0,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
+          "playerId": 12,
+          "playerName": "Ozzie Albies",
+          "totalScore": 20,
+          "gamesPlayed": 9,
+          "totalBases": 17,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 1,
+          "playerName": "Shohei Ohtani",
+          "totalScore": 18,
+          "gamesPlayed": 8,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 7,
+          "hbp": 1
+        },
+        {
+          "playerId": 7,
+          "playerName": "Maikel Garcia",
+          "totalScore": 18,
+          "gamesPlayed": 7,
+          "totalBases": 11,
+          "stolenBases": 1,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
+          "playerId": 10,
+          "playerName": "Salvador Perez",
+          "totalScore": 16,
+          "gamesPlayed": 7,
+          "totalBases": 13,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 4,
+          "playerName": "James Wood",
+          "totalScore": 14,
+          "gamesPlayed": 8,
+          "totalBases": 9,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 9,
+          "playerName": "Michael Harris II",
+          "totalScore": 13,
+          "gamesPlayed": 9,
+          "totalBases": 12,
+          "stolenBases": 0,
+          "walks": 1,
+          "hbp": 0
+        },
+        {
+          "playerId": 6,
+          "playerName": "Josh Naylor",
+          "totalScore": 8,
+          "gamesPlayed": 9,
+          "totalBases": 4,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 3,
+          "playerName": "Jackson Chourio",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 5,
+          "playerName": "Jackson Merrill",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 8,
+          "playerName": "Tyler Soderstrom",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 11,
+          "playerName": "Drake Baldwin",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 13,
+          "playerName": "Jacob Wilson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        2,
+        12,
+        1,
+        7,
+        10,
+        4,
+        9,
+        6,
+        3,
+        5
+      ],
+      "benchPlayerIds": [
+        8,
+        11,
+        13
+      ]
+    },
+    {
+      "period": {
+        "id": 2,
+        "name": "Second Third",
+        "start_date": "2026-05-31",
+        "end_date": "2026-07-30",
+        "redraft_date": "2026-05-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 1,
+          "playerName": "Shohei Ohtani",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 2,
+          "playerName": "Corbin Carroll",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 3,
+          "playerName": "Jackson Chourio",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 4,
+          "playerName": "James Wood",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 5,
+          "playerName": "Jackson Merrill",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 6,
+          "playerName": "Josh Naylor",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 7,
+          "playerName": "Maikel Garcia",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 8,
+          "playerName": "Tyler Soderstrom",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 9,
+          "playerName": "Michael Harris II",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 10,
+          "playerName": "Salvador Perez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 11,
+          "playerName": "Drake Baldwin",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 12,
+          "playerName": "Ozzie Albies",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 13,
+          "playerName": "Jacob Wilson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "benchPlayerIds": [
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "period": {
+        "id": 3,
+        "name": "Third Third",
+        "start_date": "2026-07-31",
+        "end_date": "2026-09-27",
+        "redraft_date": "2026-07-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 1,
+          "playerName": "Shohei Ohtani",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 2,
+          "playerName": "Corbin Carroll",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 3,
+          "playerName": "Jackson Chourio",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 4,
+          "playerName": "James Wood",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 5,
+          "playerName": "Jackson Merrill",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 6,
+          "playerName": "Josh Naylor",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 7,
+          "playerName": "Maikel Garcia",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 8,
+          "playerName": "Tyler Soderstrom",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 9,
+          "playerName": "Michael Harris II",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 10,
+          "playerName": "Salvador Perez",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 11,
+          "playerName": "Drake Baldwin",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 12,
+          "playerName": "Ozzie Albies",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 13,
+          "playerName": "Jacob Wilson",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "benchPlayerIds": [
+        11,
+        12,
+        13
+      ]
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
+import { fetchData } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Standing {
@@ -20,7 +21,7 @@ export default function StandingsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/standings').then(r => r.json()).then(setData).finally(() => setLoading(false));
+    fetchData<typeof data>('/api/standings').then(setData).finally(() => setLoading(false));
   }, []);
 
   if (loading) return <div className="text-muted-foreground">Loading standings...</div>;

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
+import { fetchData } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -40,7 +41,7 @@ export default function TeamDetailPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/teams/${teamId}`).then(r => r.json()).then(setData).finally(() => setLoading(false));
+    fetchData<TeamDetail>(`/api/teams/${teamId}`).then(setData).finally(() => setLoading(false));
   }, [teamId]);
 
   if (loading) return <div className="text-muted-foreground">Loading team...</div>;

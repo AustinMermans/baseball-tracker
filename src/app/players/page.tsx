@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
+import { fetchData } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 
 interface PlayerData {
@@ -24,7 +25,7 @@ export default function PlayersPage() {
   const [sortBy, setSortBy] = useState<'totalScore' | 'totalBases' | 'stolenBases' | 'walks' | 'hbp'>('totalScore');
 
   useEffect(() => {
-    fetch('/api/players').then(r => r.json()).then(setPlayers).finally(() => setLoading(false));
+    fetchData<PlayerData[]>('/api/players').then(setPlayers).finally(() => setLoading(false));
   }, []);
 
   const filtered = players

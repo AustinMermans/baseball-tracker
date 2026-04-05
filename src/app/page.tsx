@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
+import { fetchData } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, TrendingUp, Calendar, Users } from 'lucide-react';
 
@@ -26,8 +27,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/standings')
-      .then(r => r.json())
+    fetchData<StandingsResponse>('/api/standings')
       .then(setData)
       .catch(console.error)
       .finally(() => setLoading(false));

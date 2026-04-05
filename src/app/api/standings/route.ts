@@ -9,68 +9,67 @@ export async function GET() {
     const allTeams = await db.select().from(teams);
     const allPeriods = await db.select().from(seasonPeriods);
 
-    const standings = [];
+    const periodPlayerStats = new Map<number, Map<number, PlayerPeriodScore>>();
 
-    for (const team of allTeams) {
-      const teamPlayers = await db.select().from(players)
-        .where(and(eq(players.teamId, team.id), eq(players.isActive, 1)));
+    for (const period of allPeriods) {
+      const stats = await db.select({
+        playerId: dailyStats.playerId,
+        playerName: players.name,
+        teamId: players.teamId,
+        totalScore: sql<number>`COALESCE(SUM(${dailyStats.fantasyScore}), 0)`,
+        gamesPlayed: sql<number>`COUNT(${dailyStats.id})`,
+        totalBases: sql<number>`COALESCE(SUM(${dailyStats.totalBases}), 0)`,
+        stolenBases: sql<number>`COALESCE(SUM(${dailyStats.stolenBases}), 0)`,
+        walks: sql<number>`COALESCE(SUM(${dailyStats.walks}), 0)`,
+        hbp: sql<number>`COALESCE(SUM(${dailyStats.hbp}), 0)`,
+      })
+        .from(dailyStats)
+        .innerJoin(players, eq(dailyStats.playerId, players.id))
+        .where(and(
+          eq(players.isActive, 1),
+          gte(dailyStats.gameDate, period.startDate),
+          lte(dailyStats.gameDate, period.endDate),
+        ))
+        .groupBy(dailyStats.playerId);
 
-      const periodResults = [];
+      const map = new Map<number, PlayerPeriodScore>();
+      for (const s of stats) map.set(s.playerId, s);
+      periodPlayerStats.set(period.id, map);
+    }
+
+    const allPlayers = await db.select().from(players).where(eq(players.isActive, 1));
+    const teamPlayersMap = new Map<number, typeof allPlayers>();
+    for (const p of allPlayers) {
+      const tid = p.teamId ?? 0;
+      if (!teamPlayersMap.has(tid)) teamPlayersMap.set(tid, []);
+      teamPlayersMap.get(tid)!.push(p);
+    }
+
+    const standings = allTeams.map(team => {
+      const teamPlayers = teamPlayersMap.get(team.id) || [];
       let cumulativeScore = 0;
-
-      for (const period of allPeriods) {
-        const playerScores: PlayerPeriodScore[] = [];
-
-        for (const player of teamPlayers) {
-          const stats = await db.select({
-            totalScore: sql<number>`COALESCE(SUM(${dailyStats.fantasyScore}), 0)`,
-            gamesPlayed: sql<number>`COUNT(${dailyStats.id})`,
-            totalBases: sql<number>`COALESCE(SUM(${dailyStats.totalBases}), 0)`,
-            stolenBases: sql<number>`COALESCE(SUM(${dailyStats.stolenBases}), 0)`,
-            walks: sql<number>`COALESCE(SUM(${dailyStats.walks}), 0)`,
-            hbp: sql<number>`COALESCE(SUM(${dailyStats.hbp}), 0)`,
-          }).from(dailyStats).where(
-            and(
-              eq(dailyStats.playerId, player.id),
-              gte(dailyStats.gameDate, period.startDate),
-              lte(dailyStats.gameDate, period.endDate),
-            )
-          );
-
-          playerScores.push({
-            playerId: player.id,
-            playerName: player.name,
-            totalScore: stats[0]?.totalScore ?? 0,
-            gamesPlayed: stats[0]?.gamesPlayed ?? 0,
-            totalBases: stats[0]?.totalBases ?? 0,
-            stolenBases: stats[0]?.stolenBases ?? 0,
-            walks: stats[0]?.walks ?? 0,
-            hbp: stats[0]?.hbp ?? 0,
-          });
-        }
-
+      const periodResults = allPeriods.map(period => {
+        const periodStats = periodPlayerStats.get(period.id) || new Map();
+        const playerScores: PlayerPeriodScore[] = teamPlayers.map(player => {
+          const s = periodStats.get(player.id);
+          return {
+            playerId: player.id, playerName: player.name,
+            totalScore: s?.totalScore ?? 0, gamesPlayed: s?.gamesPlayed ?? 0,
+            totalBases: s?.totalBases ?? 0, stolenBases: s?.stolenBases ?? 0,
+            walks: s?.walks ?? 0, hbp: s?.hbp ?? 0,
+          };
+        });
         const bestBall = computeBestBall(playerScores);
-
-        periodResults.push({
-          periodId: period.id,
-          periodName: period.name,
+        cumulativeScore += bestBall.bestBallScore;
+        return {
+          periodId: period.id, periodName: period.name,
           bestBallScore: bestBall.bestBallScore,
           countingPlayerIds: bestBall.countingPlayerIds,
           benchPlayerIds: bestBall.benchPlayerIds,
-        });
-
-        cumulativeScore += bestBall.bestBallScore;
-      }
-
-      standings.push({
-        team: { id: team.id, name: team.name },
-        periods: periodResults,
-        cumulativeScore,
+        };
       });
-    }
-
-    // Sort by cumulative score descending
-    standings.sort((a, b) => b.cumulativeScore - a.cumulativeScore);
+      return { team: { id: team.id, name: team.name }, periods: periodResults, cumulativeScore };
+    }).sort((a, b) => b.cumulativeScore - a.cumulativeScore);
 
     return NextResponse.json({ standings, periods: allPeriods });
   } catch (error) {

@@ -1,0 +1,619 @@
+{
+  "team": {
+    "id": 4,
+    "name": "Ryan",
+    "owner": "Ryan",
+    "created_at": "2026-04-05 19:32:19"
+  },
+  "roster": [
+    {
+      "id": 40,
+      "mlb_id": 677951,
+      "name": "Bobby Witt Jr.",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 1,
+      "is_active": 1
+    },
+    {
+      "id": 41,
+      "mlb_id": 663728,
+      "name": "Cal Raleigh",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 2,
+      "is_active": 1
+    },
+    {
+      "id": 42,
+      "mlb_id": 624413,
+      "name": "Pete Alonso",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 3,
+      "is_active": 1
+    },
+    {
+      "id": 43,
+      "mlb_id": 605141,
+      "name": "Mookie Betts",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 4,
+      "is_active": 1
+    },
+    {
+      "id": 44,
+      "mlb_id": 646240,
+      "name": "Rafael Devers",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 5,
+      "is_active": 1
+    },
+    {
+      "id": 45,
+      "mlb_id": 666182,
+      "name": "Bo Bichette",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 6,
+      "is_active": 1
+    },
+    {
+      "id": 46,
+      "mlb_id": 673548,
+      "name": "Seiya Suzuki",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 7,
+      "is_active": 1
+    },
+    {
+      "id": 47,
+      "mlb_id": 697882,
+      "name": "Andy Pages",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 8,
+      "is_active": 1
+    },
+    {
+      "id": 48,
+      "mlb_id": 683737,
+      "name": "Michael Busch",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 9,
+      "is_active": 1
+    },
+    {
+      "id": 49,
+      "mlb_id": 668804,
+      "name": "Bryan Reynolds",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 10,
+      "is_active": 1
+    },
+    {
+      "id": 50,
+      "mlb_id": 706185,
+      "name": "Konnor Griffin",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 11,
+      "is_active": 1
+    },
+    {
+      "id": 51,
+      "mlb_id": 808982,
+      "name": "Jung Hoo Lee",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 12,
+      "is_active": 1
+    },
+    {
+      "id": 52,
+      "mlb_id": 701044,
+      "name": "Jac Caglianone",
+      "mlb_team": null,
+      "position": null,
+      "team_id": 4,
+      "draft_round": 13,
+      "is_active": 1
+    }
+  ],
+  "periods": [
+    {
+      "period": {
+        "id": 1,
+        "name": "First Third",
+        "start_date": "2026-03-26",
+        "end_date": "2026-05-30",
+        "redraft_date": null
+      },
+      "bestBallScore": 123,
+      "playerScores": [
+        {
+          "playerId": 49,
+          "playerName": "Bryan Reynolds",
+          "totalScore": 18,
+          "gamesPlayed": 8,
+          "totalBases": 15,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 43,
+          "playerName": "Mookie Betts",
+          "totalScore": 16,
+          "gamesPlayed": 8,
+          "totalBases": 12,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 1
+        },
+        {
+          "playerId": 40,
+          "playerName": "Bobby Witt Jr.",
+          "totalScore": 14,
+          "gamesPlayed": 7,
+          "totalBases": 7,
+          "stolenBases": 3,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 42,
+          "playerName": "Pete Alonso",
+          "totalScore": 14,
+          "gamesPlayed": 8,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 44,
+          "playerName": "Rafael Devers",
+          "totalScore": 13,
+          "gamesPlayed": 8,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 48,
+          "playerName": "Michael Busch",
+          "totalScore": 13,
+          "gamesPlayed": 7,
+          "totalBases": 8,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 51,
+          "playerName": "Jung Hoo Lee",
+          "totalScore": 13,
+          "gamesPlayed": 8,
+          "totalBases": 8,
+          "stolenBases": 0,
+          "walks": 5,
+          "hbp": 0
+        },
+        {
+          "playerId": 45,
+          "playerName": "Bo Bichette",
+          "totalScore": 12,
+          "gamesPlayed": 9,
+          "totalBases": 11,
+          "stolenBases": 0,
+          "walks": 1,
+          "hbp": 0
+        },
+        {
+          "playerId": 41,
+          "playerName": "Cal Raleigh",
+          "totalScore": 10,
+          "gamesPlayed": 9,
+          "totalBases": 5,
+          "stolenBases": 1,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 46,
+          "playerName": "Seiya Suzuki",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 47,
+          "playerName": "Andy Pages",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 50,
+          "playerName": "Konnor Griffin",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 52,
+          "playerName": "Jac Caglianone",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        49,
+        43,
+        40,
+        42,
+        44,
+        48,
+        51,
+        45,
+        41,
+        46
+      ],
+      "benchPlayerIds": [
+        47,
+        50,
+        52
+      ]
+    },
+    {
+      "period": {
+        "id": 2,
+        "name": "Second Third",
+        "start_date": "2026-05-31",
+        "end_date": "2026-07-30",
+        "redraft_date": "2026-05-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 40,
+          "playerName": "Bobby Witt Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 41,
+          "playerName": "Cal Raleigh",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 42,
+          "playerName": "Pete Alonso",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 43,
+          "playerName": "Mookie Betts",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 44,
+          "playerName": "Rafael Devers",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 45,
+          "playerName": "Bo Bichette",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 46,
+          "playerName": "Seiya Suzuki",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 47,
+          "playerName": "Andy Pages",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 48,
+          "playerName": "Michael Busch",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 49,
+          "playerName": "Bryan Reynolds",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 50,
+          "playerName": "Konnor Griffin",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 51,
+          "playerName": "Jung Hoo Lee",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 52,
+          "playerName": "Jac Caglianone",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "benchPlayerIds": [
+        50,
+        51,
+        52
+      ]
+    },
+    {
+      "period": {
+        "id": 3,
+        "name": "Third Third",
+        "start_date": "2026-07-31",
+        "end_date": "2026-09-27",
+        "redraft_date": "2026-07-31"
+      },
+      "bestBallScore": 0,
+      "playerScores": [
+        {
+          "playerId": 40,
+          "playerName": "Bobby Witt Jr.",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 41,
+          "playerName": "Cal Raleigh",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 42,
+          "playerName": "Pete Alonso",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 43,
+          "playerName": "Mookie Betts",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 44,
+          "playerName": "Rafael Devers",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 45,
+          "playerName": "Bo Bichette",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 46,
+          "playerName": "Seiya Suzuki",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 47,
+          "playerName": "Andy Pages",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 48,
+          "playerName": "Michael Busch",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 49,
+          "playerName": "Bryan Reynolds",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 50,
+          "playerName": "Konnor Griffin",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 51,
+          "playerName": "Jung Hoo Lee",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
+          "playerId": 52,
+          "playerName": "Jac Caglianone",
+          "totalScore": 0,
+          "gamesPlayed": 0,
+          "totalBases": 0,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        }
+      ],
+      "countingPlayerIds": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "benchPlayerIds": [
+        50,
+        51,
+        52
+      ]
+    }
+  ]
+}
