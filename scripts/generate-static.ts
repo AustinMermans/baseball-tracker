@@ -193,9 +193,7 @@ const playerRows = sqlite.prepare(`
     COALESCE(SUM(ds.total_bases), 0) as totalBases,
     COALESCE(SUM(ds.stolen_bases), 0) as stolenBases,
     COALESCE(SUM(ds.walks), 0) as walks,
-    COALESCE(SUM(ds.hbp), 0) as hbp,
-    COALESCE((SELECT SUM(fantasy_score) FROM (SELECT fantasy_score FROM daily_stats WHERE player_id = p.id ORDER BY game_date DESC LIMIT 3)), 0) as last3Score,
-    COALESCE((SELECT COUNT(*) FROM (SELECT id FROM daily_stats WHERE player_id = p.id ORDER BY game_date DESC LIMIT 3)), 0) as last3Games
+    COALESCE(SUM(ds.hbp), 0) as hbp
   FROM players p
   LEFT JOIN daily_stats ds ON ds.player_id = p.id
   WHERE p.is_active = 1
