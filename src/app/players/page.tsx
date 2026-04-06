@@ -16,9 +16,20 @@ interface PlayerData {
   stolenBases: number;
   walks: number;
   hbp: number;
+  last3Score: number;
+  last3Games: number;
 }
 
-type SortKey = 'totalScore' | 'totalBases' | 'stolenBases' | 'walks' | 'hbp' | 'gamesPlayed';
+type SortKey = 'totalScore' | 'totalBases' | 'stolenBases' | 'walks' | 'hbp' | 'gamesPlayed' | 'ptsPerGame';
+
+function getHotCold(player: PlayerData): 'hot' | 'cold' | null {
+  if (player.gamesPlayed < 4 || player.last3Games < 3) return null;
+  const avg = player.totalScore / player.gamesPlayed;
+  const recent = player.last3Score / player.last3Games;
+  if (recent > avg * 1.3) return 'hot';
+  if (recent < avg * 0.7) return 'cold';
+  return null;
+}
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerData[]>([]);
@@ -35,7 +46,14 @@ export default function PlayersPage() {
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.fantasyTeam.toLowerCase().includes(search.toLowerCase())
     )
-    .sort((a, b) => b[sortBy] - a[sortBy]);
+    .sort((a, b) => {
+      if (sortBy === 'ptsPerGame') {
+        const aAvg = a.gamesPlayed ? a.totalScore / a.gamesPlayed : 0;
+        const bAvg = b.gamesPlayed ? b.totalScore / b.gamesPlayed : 0;
+        return bAvg - aAvg;
+      }
+      return b[sortBy] - a[sortBy];
+    });
 
   if (loading) {
     return (
@@ -47,9 +65,9 @@ export default function PlayersPage() {
   }
 
   const exportCSV = () => {
-    const header = 'Rank,Player,Fantasy Team,GP,TB,SB,BB,HBP,PTS';
+    const header = 'Rank,Player,Fantasy Team,GP,TB,SB,BB,HBP,PTS,PTS/G';
     const rows = filtered.map((p, i) =>
-      `${i + 1},"${p.name}","${p.fantasyTeam}",${p.gamesPlayed},${p.totalBases},${p.stolenBases},${p.walks},${p.hbp},${p.totalScore}`
+      `${i + 1},"${p.name}","${p.fantasyTeam}",${p.gamesPlayed},${p.totalBases},${p.stolenBases},${p.walks},${p.hbp},${p.totalScore},${p.gamesPlayed ? (p.totalScore / p.gamesPlayed).toFixed(1) : '0.0'}`
     );
     const csv = [header, ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -63,7 +81,7 @@ export default function PlayersPage() {
 
   const sortHeader = (key: SortKey, label: string) => (
     <th
-      className={`text-right text-[11px] font-medium px-3 py-2.5 cursor-pointer select-none transition-colors ${
+      className={`text-right text-[11px] font-medium px-3 py-2.5 cursor-pointer select-none transition-colors whitespace-nowrap ${
         sortBy === key ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
       }`}
       onClick={() => setSortBy(key)}
@@ -77,7 +95,7 @@ export default function PlayersPage() {
       <div>
         <h1 className="text-lg font-semibold">Players</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          All 104 rostered players &middot; sorted by {sortBy === 'totalScore' ? 'total score' : sortBy}
+          {players.filter(p => p.gamesPlayed > 0).length} active of {players.length} rostered
         </p>
       </div>
 
@@ -97,32 +115,36 @@ export default function PlayersPage() {
         </button>
       </div>
 
-      <div className="border border-border rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border bg-muted/40">
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5 w-10">#</th>
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Player</th>
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5">Team</th>
-                {sortHeader('gamesPlayed', 'GP')}
-                {sortHeader('totalBases', 'TB')}
-                {sortHeader('stolenBases', 'SB')}
-                {sortHeader('walks', 'BB')}
-                {sortHeader('hbp', 'HBP')}
-                {sortHeader('totalScore', 'PTS')}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((p, idx) => (
+      <div className="border border-border rounded-lg overflow-x-auto">
+        <table className="w-full min-w-[600px]">
+          <thead>
+            <tr className="border-b border-border bg-muted/40">
+              <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5 w-10">#</th>
+              <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Player</th>
+              <th className="text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5">Team</th>
+              {sortHeader('gamesPlayed', 'GP')}
+              {sortHeader('totalBases', 'TB')}
+              {sortHeader('stolenBases', 'SB')}
+              {sortHeader('walks', 'BB')}
+              {sortHeader('hbp', 'HBP')}
+              {sortHeader('totalScore', 'PTS')}
+              {sortHeader('ptsPerGame', 'PTS/G')}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((p, idx) => {
+              const trend = getHotCold(p);
+              const ptsPerGame = p.gamesPlayed ? (p.totalScore / p.gamesPlayed).toFixed(1) : '—';
+              return (
                 <tr key={p.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                   <td className="px-4 py-2 text-xs tabular-nums text-muted-foreground">{idx + 1}</td>
-                  <td className="px-4 py-2 text-sm font-medium">{p.name}</td>
+                  <td className="px-4 py-2">
+                    <span className="text-sm font-medium">{p.name}</span>
+                    {trend === 'hot' && <span className="ml-1.5 text-[10px] text-red-500" title="Scoring 30%+ above average last 3 games">▲</span>}
+                    {trend === 'cold' && <span className="ml-1.5 text-[10px] text-blue-500" title="Scoring 30%+ below average last 3 games">▼</span>}
+                  </td>
                   <td className="px-3 py-2">
-                    <Link
-                      href={`/teams/${p.teamId}`}
-                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link href={`/teams/${p.teamId}`} className="text-xs text-muted-foreground hover:text-primary transition-colors">
                       {p.fantasyTeam}
                     </Link>
                   </td>
@@ -132,11 +154,12 @@ export default function PlayersPage() {
                   <td className="px-3 py-2 text-right text-xs tabular-nums">{p.walks}</td>
                   <td className="px-3 py-2 text-right text-xs tabular-nums">{p.hbp}</td>
                   <td className="px-3 py-2 text-right text-xs tabular-nums font-semibold">{p.totalScore}</td>
+                  <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{ptsPerGame}</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );

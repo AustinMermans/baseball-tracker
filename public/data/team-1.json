@@ -146,14 +146,14 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 154,
+      "bestBallScore": 167,
       "playerScores": [
         {
           "playerId": 11,
           "playerName": "Drake Baldwin",
-          "totalScore": 23,
-          "gamesPlayed": 8,
-          "totalBases": 18,
+          "totalScore": 24,
+          "gamesPlayed": 9,
+          "totalBases": 19,
           "stolenBases": 0,
           "walks": 4,
           "hbp": 1
@@ -161,11 +161,21 @@
         {
           "playerId": 2,
           "playerName": "Corbin Carroll",
-          "totalScore": 20,
-          "gamesPlayed": 8,
+          "totalScore": 22,
+          "gamesPlayed": 9,
           "totalBases": 16,
           "stolenBases": 0,
-          "walks": 4,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
+          "playerId": 12,
+          "playerName": "Ozzie Albies",
+          "totalScore": 20,
+          "gamesPlayed": 9,
+          "totalBases": 17,
+          "stolenBases": 0,
+          "walks": 3,
           "hbp": 0
         },
         {
@@ -209,23 +219,13 @@
           "hbp": 0
         },
         {
-          "playerId": 12,
-          "playerName": "Ozzie Albies",
-          "totalScore": 14,
-          "gamesPlayed": 8,
-          "totalBases": 11,
-          "stolenBases": 0,
-          "walks": 3,
-          "hbp": 0
-        },
-        {
           "playerId": 9,
           "playerName": "Michael Harris II",
-          "totalScore": 12,
-          "gamesPlayed": 8,
+          "totalScore": 13,
+          "gamesPlayed": 9,
           "totalBases": 12,
           "stolenBases": 0,
-          "walks": 0,
+          "walks": 1,
           "hbp": 0
         },
         {
@@ -239,6 +239,26 @@
           "hbp": 0
         },
         {
+          "playerId": 8,
+          "playerName": "Tyler Soderstrom",
+          "totalScore": 11,
+          "gamesPlayed": 8,
+          "totalBases": 8,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
+          "playerId": 13,
+          "playerName": "Jacob Wilson",
+          "totalScore": 10,
+          "gamesPlayed": 8,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 0,
+          "hbp": 0
+        },
+        {
           "playerId": 6,
           "playerName": "Josh Naylor",
           "totalScore": 8,
@@ -246,26 +266,6 @@
           "totalBases": 4,
           "stolenBases": 0,
           "walks": 4,
-          "hbp": 0
-        },
-        {
-          "playerId": 13,
-          "playerName": "Jacob Wilson",
-          "totalScore": 8,
-          "gamesPlayed": 7,
-          "totalBases": 8,
-          "stolenBases": 0,
-          "walks": 0,
-          "hbp": 0
-        },
-        {
-          "playerId": 8,
-          "playerName": "Tyler Soderstrom",
-          "totalScore": 7,
-          "gamesPlayed": 7,
-          "totalBases": 5,
-          "stolenBases": 0,
-          "walks": 2,
           "hbp": 0
         },
         {
@@ -282,18 +282,18 @@
       "countingPlayerIds": [
         11,
         2,
+        12,
         1,
         7,
         10,
         4,
-        12,
         9,
         5,
-        6
+        8
       ],
       "benchPlayerIds": [
         13,
-        8,
+        6,
         3
       ]
     },

@@ -3,7 +3,7 @@
 import './globals.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const navItems = [
   { href: '/', label: 'Overview' },
@@ -13,13 +13,30 @@ const navItems = [
 
 const teamNames = ['Cole', 'Markus', 'J Mill', 'Ryan', 'Joey', 'Jack', 'Austin', 'Bobby'];
 
+function LastUpdated() {
+  const [lastDate, setLastDate] = useState<string | null>(null);
+  useEffect(() => {
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+    fetch(`${basePath}/data/meta.json`)
+      .then(r => r.json())
+      .then(d => setLastDate(d.lastGameDate))
+      .catch(() => {});
+  }, []);
+  if (!lastDate) return null;
+  return <span className="text-[11px] text-muted-foreground">Stats through {lastDate}</span>;
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <html lang="en">
-      <body className="min-h-screen">
+      <head>
+        <link rel="icon" href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/favicon.svg`} type="image/svg+xml" />
+        <title>Fantasy Baseball &apos;26</title>
+      </head>
+      <body className="min-h-screen flex flex-col">
         <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             {/* Top row */}
@@ -119,9 +136,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex-1">
           {children}
         </main>
+
+        <footer className="border-t border-border mt-auto">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+            <span className="text-[11px] text-muted-foreground">
+              Best ball &middot; TB + SB + BB + HBP &middot; Top 10 of 13
+            </span>
+            <LastUpdated />
+          </div>
+        </footer>
       </body>
     </html>
   );
