@@ -146,67 +146,77 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 207,
+      "bestBallScore": 227,
       "playerScores": [
         {
           "playerId": 94,
           "playerName": "Yordan Alvarez",
-          "totalScore": 36,
+          "totalScore": 42,
           "gamesPlayed": 9,
-          "totalBases": 23,
+          "totalBases": 27,
           "stolenBases": 1,
-          "walks": 10,
+          "walks": 12,
           "hbp": 2
+        },
+        {
+          "playerId": 101,
+          "playerName": "Jose Altuve",
+          "totalScore": 31,
+          "gamesPlayed": 9,
+          "totalBases": 19,
+          "stolenBases": 1,
+          "walks": 11,
+          "hbp": 0
+        },
+        {
+          "playerId": 96,
+          "playerName": "Brice Turang",
+          "totalScore": 29,
+          "gamesPlayed": 8,
+          "totalBases": 19,
+          "stolenBases": 3,
+          "walks": 7,
+          "hbp": 0
         },
         {
           "playerId": 99,
           "playerName": "Shea Langeliers",
           "totalScore": 27,
           "gamesPlayed": 8,
-          "totalBases": 24,
+          "totalBases": 26,
           "stolenBases": 0,
-          "walks": 3,
+          "walks": 1,
           "hbp": 0
         },
         {
-          "playerId": 101,
-          "playerName": "Jose Altuve",
-          "totalScore": 27,
+          "playerId": 103,
+          "playerName": "Taylor Ward",
+          "totalScore": 22,
           "gamesPlayed": 9,
           "totalBases": 16,
-          "stolenBases": 1,
-          "walks": 10,
-          "hbp": 0
-        },
-        {
-          "playerId": 96,
-          "playerName": "Brice Turang",
-          "totalScore": 26,
-          "gamesPlayed": 7,
-          "totalBases": 19,
-          "stolenBases": 2,
-          "walks": 5,
+          "stolenBases": 0,
+          "walks": 6,
           "hbp": 0
         },
         {
           "playerId": 93,
           "playerName": "Vladimir Guerrero Jr.",
-          "totalScore": 18,
-          "gamesPlayed": 8,
-          "totalBases": 11,
+          "totalScore": 20,
+          "gamesPlayed": 9,
+          "totalBases": 12,
           "stolenBases": 0,
-          "walks": 6,
+          "walks": 7,
           "hbp": 1
         },
         {
-          "playerId": 103,
-          "playerName": "Taylor Ward",
-          "totalScore": 18,
+          "playerId": 97,
+          "playerName": "Jarren Duran",
+          "totalScore": 15,
           "gamesPlayed": 8,
-          "totalBases": 12,
-          "stolenBases": 0,
-          "walks": 6,
-          "hbp": 0
+          "totalBases": 8,
+          "stolenBases": 2,
+          "walks": 4,
+          "hbp": 1
         },
         {
           "playerId": 98,
@@ -229,26 +239,6 @@
           "hbp": 1
         },
         {
-          "playerId": 97,
-          "playerName": "Jarren Duran",
-          "totalScore": 13,
-          "gamesPlayed": 7,
-          "totalBases": 6,
-          "stolenBases": 2,
-          "walks": 4,
-          "hbp": 1
-        },
-        {
-          "playerId": 100,
-          "playerName": "Jeremy Pena",
-          "totalScore": 12,
-          "gamesPlayed": 5,
-          "totalBases": 9,
-          "stolenBases": 1,
-          "walks": 2,
-          "hbp": 0
-        },
-        {
           "playerId": 95,
           "playerName": "Jazz Chisholm Jr.",
           "totalScore": 11,
@@ -261,11 +251,21 @@
         {
           "playerId": 92,
           "playerName": "Julio Rodriguez",
-          "totalScore": 10,
+          "totalScore": 9,
           "gamesPlayed": 9,
           "totalBases": 5,
           "stolenBases": 0,
-          "walks": 5,
+          "walks": 4,
+          "hbp": 0
+        },
+        {
+          "playerId": 100,
+          "playerName": "Jeremy Pena",
+          "totalScore": 9,
+          "gamesPlayed": 4,
+          "totalBases": 7,
+          "stolenBases": 1,
+          "walks": 1,
           "hbp": 0
         },
         {
@@ -281,19 +281,19 @@
       ],
       "countingPlayerIds": [
         94,
-        99,
         101,
         96,
-        93,
+        99,
         103,
+        93,
+        97,
         98,
         102,
-        97,
-        100
+        95
       ],
       "benchPlayerIds": [
-        95,
         92,
+        100,
         104
       ]
     },

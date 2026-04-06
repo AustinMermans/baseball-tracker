@@ -146,64 +146,64 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 189,
+      "bestBallScore": 204,
       "playerScores": [
         {
           "playerId": 79,
           "playerName": "Kyle Schwarber",
-          "totalScore": 25,
-          "gamesPlayed": 8,
+          "totalScore": 26,
+          "gamesPlayed": 9,
           "totalBases": 17,
           "stolenBases": 0,
-          "walks": 6,
+          "walks": 7,
           "hbp": 2
+        },
+        {
+          "playerId": 84,
+          "playerName": "Oneil Cruz",
+          "totalScore": 26,
+          "gamesPlayed": 9,
+          "totalBases": 23,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 1
         },
         {
           "playerId": 89,
           "playerName": "Munetaka Murakami",
-          "totalScore": 24,
-          "gamesPlayed": 8,
+          "totalScore": 25,
+          "gamesPlayed": 9,
           "totalBases": 19,
           "stolenBases": 0,
-          "walks": 5,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
+          "playerId": 80,
+          "playerName": "Elly De La Cruz",
+          "totalScore": 22,
+          "gamesPlayed": 9,
+          "totalBases": 18,
+          "stolenBases": 1,
+          "walks": 3,
           "hbp": 0
         },
         {
           "playerId": 85,
           "playerName": "Corey Seager",
           "totalScore": 22,
-          "gamesPlayed": 8,
+          "gamesPlayed": 9,
           "totalBases": 17,
           "stolenBases": 0,
           "walks": 5,
           "hbp": 0
         },
         {
-          "playerId": 84,
-          "playerName": "Oneil Cruz",
-          "totalScore": 20,
-          "gamesPlayed": 8,
-          "totalBases": 18,
-          "stolenBases": 0,
-          "walks": 2,
-          "hbp": 0
-        },
-        {
-          "playerId": 80,
-          "playerName": "Elly De La Cruz",
-          "totalScore": 19,
-          "gamesPlayed": 8,
-          "totalBases": 16,
-          "stolenBases": 0,
-          "walks": 3,
-          "hbp": 0
-        },
-        {
           "playerId": 83,
           "playerName": "George Springer",
-          "totalScore": 18,
-          "gamesPlayed": 8,
-          "totalBases": 12,
+          "totalScore": 19,
+          "gamesPlayed": 9,
+          "totalBases": 13,
           "stolenBases": 1,
           "walks": 5,
           "hbp": 0
@@ -211,18 +211,28 @@
         {
           "playerId": 86,
           "playerName": "Alex Bregman",
-          "totalScore": 16,
-          "gamesPlayed": 7,
+          "totalScore": 17,
+          "gamesPlayed": 8,
           "totalBases": 12,
           "stolenBases": 0,
-          "walks": 4,
+          "walks": 5,
           "hbp": 0
+        },
+        {
+          "playerId": 91,
+          "playerName": "Matt McLain",
+          "totalScore": 17,
+          "gamesPlayed": 9,
+          "totalBases": 9,
+          "stolenBases": 1,
+          "walks": 6,
+          "hbp": 1
         },
         {
           "playerId": 82,
           "playerName": "Bryce Harper",
           "totalScore": 15,
-          "gamesPlayed": 8,
+          "gamesPlayed": 9,
           "totalBases": 12,
           "stolenBases": 0,
           "walks": 3,
@@ -239,31 +249,21 @@
           "hbp": 0
         },
         {
-          "playerId": 91,
-          "playerName": "Matt McLain",
-          "totalScore": 15,
-          "gamesPlayed": 8,
-          "totalBases": 9,
-          "stolenBases": 0,
-          "walks": 5,
-          "hbp": 1
-        },
-        {
           "playerId": 81,
           "playerName": "Wyatt Langford",
-          "totalScore": 11,
-          "gamesPlayed": 8,
+          "totalScore": 12,
+          "gamesPlayed": 9,
           "totalBases": 11,
-          "stolenBases": 0,
+          "stolenBases": 1,
           "walks": 0,
           "hbp": 0
         },
         {
           "playerId": 88,
           "playerName": "Jo Adell",
-          "totalScore": 10,
+          "totalScore": 11,
           "gamesPlayed": 9,
-          "totalBases": 8,
+          "totalBases": 9,
           "stolenBases": 0,
           "walks": 1,
           "hbp": 1
@@ -272,7 +272,7 @@
           "playerId": 87,
           "playerName": "Brenton Doyle",
           "totalScore": 8,
-          "gamesPlayed": 8,
+          "gamesPlayed": 9,
           "totalBases": 5,
           "stolenBases": 1,
           "walks": 2,
@@ -281,15 +281,15 @@
       ],
       "countingPlayerIds": [
         79,
-        89,
-        85,
         84,
+        89,
         80,
+        85,
         83,
         86,
+        91,
         82,
-        90,
-        91
+        90
       ],
       "benchPlayerIds": [
         81,

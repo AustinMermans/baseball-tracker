@@ -146,24 +146,34 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 149,
+      "bestBallScore": 165,
       "playerScores": [
         {
           "playerId": 72,
           "playerName": "Randy Arozarena",
+          "totalScore": 25,
+          "gamesPlayed": 10,
+          "totalBases": 13,
+          "stolenBases": 2,
+          "walks": 8,
+          "hbp": 2
+        },
+        {
+          "playerId": 67,
+          "playerName": "Junior Caminero",
           "totalScore": 20,
           "gamesPlayed": 9,
-          "totalBases": 12,
-          "stolenBases": 1,
-          "walks": 6,
-          "hbp": 1
+          "totalBases": 13,
+          "stolenBases": 0,
+          "walks": 7,
+          "hbp": 0
         },
         {
           "playerId": 69,
           "playerName": "Trea Turner",
-          "totalScore": 17,
-          "gamesPlayed": 8,
-          "totalBases": 13,
+          "totalScore": 19,
+          "gamesPlayed": 9,
+          "totalBases": 15,
           "stolenBases": 1,
           "walks": 3,
           "hbp": 0
@@ -171,41 +181,41 @@
         {
           "playerId": 70,
           "playerName": "Roman Anthony",
-          "totalScore": 16,
-          "gamesPlayed": 8,
+          "totalScore": 17,
+          "gamesPlayed": 9,
           "totalBases": 13,
           "stolenBases": 0,
-          "walks": 3,
+          "walks": 4,
           "hbp": 0
+        },
+        {
+          "playerId": 75,
+          "playerName": "Steven Kwan",
+          "totalScore": 16,
+          "gamesPlayed": 9,
+          "totalBases": 10,
+          "stolenBases": 1,
+          "walks": 4,
+          "hbp": 1
         },
         {
           "playerId": 66,
           "playerName": "Ronald Acuna Jr.",
           "totalScore": 15,
           "gamesPlayed": 9,
-          "totalBases": 6,
-          "stolenBases": 2,
+          "totalBases": 7,
+          "stolenBases": 1,
           "walks": 7,
           "hbp": 0
         },
         {
-          "playerId": 67,
-          "playerName": "Junior Caminero",
+          "playerId": 68,
+          "playerName": "Ketel Marte",
           "totalScore": 15,
-          "gamesPlayed": 8,
-          "totalBases": 9,
+          "gamesPlayed": 9,
+          "totalBases": 11,
           "stolenBases": 0,
-          "walks": 6,
-          "hbp": 0
-        },
-        {
-          "playerId": 73,
-          "playerName": "Willy Adames",
-          "totalScore": 15,
-          "gamesPlayed": 8,
-          "totalBases": 12,
-          "stolenBases": 0,
-          "walks": 3,
+          "walks": 4,
           "hbp": 0
         },
         {
@@ -219,30 +229,20 @@
           "hbp": 0
         },
         {
-          "playerId": 75,
-          "playerName": "Steven Kwan",
-          "totalScore": 13,
-          "gamesPlayed": 8,
-          "totalBases": 8,
-          "stolenBases": 1,
-          "walks": 4,
-          "hbp": 0
-        },
-        {
-          "playerId": 68,
-          "playerName": "Ketel Marte",
-          "totalScore": 12,
-          "gamesPlayed": 9,
-          "totalBases": 8,
-          "stolenBases": 0,
-          "walks": 4,
-          "hbp": 0
-        },
-        {
           "playerId": 71,
           "playerName": "Riley Greene",
           "totalScore": 12,
           "gamesPlayed": 7,
+          "totalBases": 10,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 0
+        },
+        {
+          "playerId": 73,
+          "playerName": "Willy Adames",
+          "totalScore": 12,
+          "gamesPlayed": 8,
           "totalBases": 10,
           "stolenBases": 0,
           "walks": 2,
@@ -261,9 +261,9 @@
         {
           "playerId": 78,
           "playerName": "Heliot Ramos",
-          "totalScore": 9,
+          "totalScore": 8,
           "gamesPlayed": 8,
-          "totalBases": 7,
+          "totalBases": 6,
           "stolenBases": 0,
           "walks": 2,
           "hbp": 0
@@ -271,9 +271,9 @@
         {
           "playerId": 74,
           "playerName": "Lawrence Butler",
-          "totalScore": 8,
+          "totalScore": 4,
           "gamesPlayed": 7,
-          "totalBases": 7,
+          "totalBases": 3,
           "stolenBases": 0,
           "walks": 1,
           "hbp": 0
@@ -281,15 +281,15 @@
       ],
       "countingPlayerIds": [
         72,
+        67,
         69,
         70,
-        66,
-        67,
-        73,
-        77,
         75,
+        66,
         68,
-        71
+        77,
+        71,
+        73
       ],
       "benchPlayerIds": [
         76,
