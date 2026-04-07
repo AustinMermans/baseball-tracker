@@ -146,34 +146,54 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 215,
+      "bestBallScore": 248,
       "playerScores": [
         {
           "playerId": 61,
           "playerName": "Yandy Diaz",
-          "totalScore": 30,
-          "gamesPlayed": 9,
-          "totalBases": 24,
-          "stolenBases": 0,
+          "totalScore": 33,
+          "gamesPlayed": 10,
+          "totalBases": 26,
+          "stolenBases": 1,
           "walks": 4,
           "hbp": 2
         },
         {
+          "playerId": 56,
+          "playerName": "Freddie Freeman",
+          "totalScore": 27,
+          "gamesPlayed": 10,
+          "totalBases": 24,
+          "stolenBases": 0,
+          "walks": 2,
+          "hbp": 1
+        },
+        {
           "playerId": 63,
           "playerName": "Brandon Nimmo",
-          "totalScore": 26,
-          "gamesPlayed": 9,
+          "totalScore": 27,
+          "gamesPlayed": 10,
           "totalBases": 20,
           "stolenBases": 1,
-          "walks": 4,
+          "walks": 5,
           "hbp": 1
+        },
+        {
+          "playerId": 62,
+          "playerName": "Christian Yelich",
+          "totalScore": 26,
+          "gamesPlayed": 9,
+          "totalBases": 22,
+          "stolenBases": 1,
+          "walks": 3,
+          "hbp": 0
         },
         {
           "playerId": 57,
           "playerName": "Matt Olson",
-          "totalScore": 23,
-          "gamesPlayed": 9,
-          "totalBases": 18,
+          "totalScore": 24,
+          "gamesPlayed": 10,
+          "totalBases": 19,
           "stolenBases": 0,
           "walks": 5,
           "hbp": 0
@@ -181,11 +201,31 @@
         {
           "playerId": 58,
           "playerName": "William Contreras",
-          "totalScore": 22,
-          "gamesPlayed": 8,
-          "totalBases": 15,
+          "totalScore": 24,
+          "gamesPlayed": 9,
+          "totalBases": 16,
           "stolenBases": 0,
-          "walks": 7,
+          "walks": 8,
+          "hbp": 0
+        },
+        {
+          "playerId": 54,
+          "playerName": "Kyle Tucker",
+          "totalScore": 23,
+          "gamesPlayed": 10,
+          "totalBases": 14,
+          "stolenBases": 3,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
+          "playerId": 60,
+          "playerName": "Teoscar Hernandez",
+          "totalScore": 22,
+          "gamesPlayed": 9,
+          "totalBases": 19,
+          "stolenBases": 1,
+          "walks": 2,
           "hbp": 0
         },
         {
@@ -199,41 +239,11 @@
           "hbp": 0
         },
         {
-          "playerId": 62,
-          "playerName": "Christian Yelich",
-          "totalScore": 21,
-          "gamesPlayed": 8,
-          "totalBases": 18,
-          "stolenBases": 1,
-          "walks": 2,
-          "hbp": 0
-        },
-        {
-          "playerId": 56,
-          "playerName": "Freddie Freeman",
-          "totalScore": 20,
-          "gamesPlayed": 9,
-          "totalBases": 18,
-          "stolenBases": 0,
-          "walks": 1,
-          "hbp": 1
-        },
-        {
-          "playerId": 54,
-          "playerName": "Kyle Tucker",
-          "totalScore": 19,
-          "gamesPlayed": 9,
-          "totalBases": 13,
-          "stolenBases": 2,
-          "walks": 4,
-          "hbp": 0
-        },
-        {
           "playerId": 64,
           "playerName": "Matt Chapman",
-          "totalScore": 17,
-          "gamesPlayed": 8,
-          "totalBases": 14,
+          "totalScore": 21,
+          "gamesPlayed": 9,
+          "totalBases": 18,
           "stolenBases": 0,
           "walks": 3,
           "hbp": 0
@@ -241,28 +251,18 @@
         {
           "playerId": 53,
           "playerName": "Jose Ramirez",
-          "totalScore": 16,
-          "gamesPlayed": 9,
+          "totalScore": 18,
+          "gamesPlayed": 10,
           "totalBases": 11,
           "stolenBases": 2,
-          "walks": 3,
-          "hbp": 0
-        },
-        {
-          "playerId": 60,
-          "playerName": "Teoscar Hernandez",
-          "totalScore": 15,
-          "gamesPlayed": 8,
-          "totalBases": 14,
-          "stolenBases": 0,
-          "walks": 1,
+          "walks": 5,
           "hbp": 0
         },
         {
           "playerId": 55,
           "playerName": "Pete Crow-Armstrong",
           "totalScore": 14,
-          "gamesPlayed": 8,
+          "gamesPlayed": 9,
           "totalBases": 9,
           "stolenBases": 3,
           "walks": 2,
@@ -281,18 +281,18 @@
       ],
       "countingPlayerIds": [
         61,
+        56,
         63,
+        62,
         57,
         58,
-        59,
-        62,
-        56,
         54,
-        64,
-        53
+        60,
+        59,
+        64
       ],
       "benchPlayerIds": [
-        60,
+        53,
         55,
         65
       ]
