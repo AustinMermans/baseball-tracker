@@ -146,37 +146,57 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 228,
+      "bestBallScore": 259,
       "playerScores": [
+        {
+          "playerId": 22,
+          "playerName": "Nico Hoerner",
+          "totalScore": 38,
+          "gamesPlayed": 11,
+          "totalBases": 23,
+          "stolenBases": 5,
+          "walks": 8,
+          "hbp": 2
+        },
+        {
+          "playerId": 15,
+          "playerName": "Gunnar Henderson",
+          "totalScore": 35,
+          "gamesPlayed": 12,
+          "totalBases": 27,
+          "stolenBases": 1,
+          "walks": 6,
+          "hbp": 1
+        },
         {
           "playerId": 17,
           "playerName": "Zach Neto",
-          "totalScore": 34,
-          "gamesPlayed": 11,
-          "totalBases": 25,
+          "totalScore": 35,
+          "gamesPlayed": 12,
+          "totalBases": 26,
           "stolenBases": 1,
           "walks": 8,
           "hbp": 0
         },
         {
-          "playerId": 15,
-          "playerName": "Gunnar Henderson",
-          "totalScore": 32,
-          "gamesPlayed": 11,
-          "totalBases": 25,
+          "playerId": 14,
+          "playerName": "Aaron Judge",
+          "totalScore": 24,
+          "gamesPlayed": 9,
+          "totalBases": 17,
           "stolenBases": 1,
           "walks": 5,
           "hbp": 1
         },
         {
-          "playerId": 22,
-          "playerName": "Nico Hoerner",
-          "totalScore": 31,
-          "gamesPlayed": 10,
-          "totalBases": 16,
-          "stolenBases": 5,
-          "walks": 8,
-          "hbp": 2
+          "playerId": 21,
+          "playerName": "Hunter Goodman",
+          "totalScore": 24,
+          "gamesPlayed": 12,
+          "totalBases": 18,
+          "stolenBases": 1,
+          "walks": 4,
+          "hbp": 1
         },
         {
           "playerId": 18,
@@ -189,81 +209,61 @@
           "hbp": 0
         },
         {
-          "playerId": 14,
-          "playerName": "Aaron Judge",
-          "totalScore": 22,
-          "gamesPlayed": 8,
-          "totalBases": 16,
-          "stolenBases": 1,
-          "walks": 4,
-          "hbp": 1
-        },
-        {
           "playerId": 24,
           "playerName": "Luke Keaschall",
-          "totalScore": 19,
-          "gamesPlayed": 11,
-          "totalBases": 14,
-          "stolenBases": 1,
+          "totalScore": 21,
+          "gamesPlayed": 12,
+          "totalBases": 15,
+          "stolenBases": 2,
           "walks": 4,
           "hbp": 0
         },
         {
           "playerId": 25,
           "playerName": "Jakob Marsee",
-          "totalScore": 18,
-          "gamesPlayed": 10,
-          "totalBases": 9,
+          "totalScore": 21,
+          "gamesPlayed": 11,
+          "totalBases": 11,
           "stolenBases": 5,
           "walks": 4,
-          "hbp": 0
+          "hbp": 1
         },
         {
           "playerId": 16,
           "playerName": "Nick Kurtz",
-          "totalScore": 17,
-          "gamesPlayed": 8,
-          "totalBases": 7,
+          "totalScore": 19,
+          "gamesPlayed": 9,
+          "totalBases": 9,
           "stolenBases": 2,
           "walks": 8,
           "hbp": 0
         },
         {
+          "playerId": 19,
+          "playerName": "Austin Riley",
+          "totalScore": 19,
+          "gamesPlayed": 12,
+          "totalBases": 11,
+          "stolenBases": 1,
+          "walks": 7,
+          "hbp": 0
+        },
+        {
           "playerId": 20,
           "playerName": "Vinnie Pasquantino",
-          "totalScore": 16,
-          "gamesPlayed": 10,
-          "totalBases": 9,
+          "totalScore": 17,
+          "gamesPlayed": 11,
+          "totalBases": 10,
           "stolenBases": 0,
           "walks": 6,
           "hbp": 1
         },
         {
-          "playerId": 21,
-          "playerName": "Hunter Goodman",
-          "totalScore": 16,
-          "gamesPlayed": 11,
-          "totalBases": 14,
-          "stolenBases": 0,
-          "walks": 2,
-          "hbp": 0
-        },
-        {
-          "playerId": 19,
-          "playerName": "Austin Riley",
-          "totalScore": 14,
-          "gamesPlayed": 11,
-          "totalBases": 9,
-          "stolenBases": 0,
-          "walks": 5,
-          "hbp": 0
-        },
-        {
           "playerId": 23,
           "playerName": "Trevor Story",
-          "totalScore": 12,
-          "gamesPlayed": 11,
-          "totalBases": 12,
+          "totalScore": 13,
+          "gamesPlayed": 12,
+          "totalBases": 13,
           "stolenBases": 0,
           "walks": 0,
           "hbp": 0
@@ -280,19 +280,19 @@
         }
       ],
       "countingPlayerIds": [
-        17,
-        15,
         22,
-        18,
+        15,
+        17,
         14,
+        21,
+        18,
         24,
         25,
         16,
-        20,
-        21
+        19
       ],
       "benchPlayerIds": [
-        19,
+        20,
         23,
         26
       ]
