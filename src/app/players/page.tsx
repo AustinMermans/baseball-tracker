@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { fetchData } from '@/lib/data';
 import Link from 'next/link';
+import { BumpChart } from '@/components/bump-chart';
 
 interface PlayerData {
   id: number;
@@ -20,14 +21,30 @@ interface PlayerData {
 
 type SortKey = 'totalScore' | 'totalBases' | 'stolenBases' | 'walks' | 'hbp' | 'gamesPlayed';
 
+interface RankingsData {
+  playerRankings: Array<{
+    playerId: number;
+    playerName: string;
+    weeks: Array<{ week: string; score: number; rank: number }>;
+  }>;
+  weeks: string[];
+}
+
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerData[]>([]);
+  const [rankings, setRankings] = useState<RankingsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<SortKey>('totalScore');
 
   useEffect(() => {
-    fetchData<PlayerData[]>('/api/players').then(setPlayers).finally(() => setLoading(false));
+    Promise.all([
+      fetchData<PlayerData[]>('/api/players'),
+      fetchData<RankingsData>('/api/rankings'),
+    ]).then(([playersData, rankingsData]) => {
+      setPlayers(playersData);
+      setRankings(rankingsData);
+    }).finally(() => setLoading(false));
   }, []);
 
   const filtered = players
@@ -80,6 +97,20 @@ export default function PlayersPage() {
           All 104 rostered players &middot; sorted by {sortBy === 'totalScore' ? 'total score' : sortBy}
         </p>
       </div>
+
+      {rankings && rankings.weeks.length > 1 && (
+        <BumpChart
+          entries={rankings.playerRankings.map(p => ({
+            id: p.playerId,
+            name: p.playerName,
+            weeks: p.weeks,
+          }))}
+          weeks={rankings.weeks}
+          maxRank={10}
+          title="Top 10 Players"
+          subtitle="Cumulative fantasy score rankings by week"
+        />
+      )}
 
       <div className="flex gap-2 items-center">
         <input

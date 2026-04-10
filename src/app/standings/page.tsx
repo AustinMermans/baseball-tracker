@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { fetchData } from '@/lib/data';
+import { BumpChart } from '@/components/bump-chart';
 
 interface Standing {
   team: { id: number; name: string };
@@ -15,13 +16,35 @@ type StandingsData = {
   periods: Array<{ id: number; name: string; startDate: string; endDate: string }>;
 };
 
+interface RankingsData {
+  teamRankings: Array<{
+    teamId: number;
+    teamName: string;
+    weeks: Array<{ week: string; score: number; rank: number }>;
+  }>;
+  playerRankings: Array<{
+    playerId: number;
+    playerName: string;
+    weeks: Array<{ week: string; score: number; rank: number }>;
+  }>;
+  weeks: string[];
+}
+
 export default function StandingsPage() {
   const [data, setData] = useState<StandingsData | null>(null);
+  const [rankings, setRankings] = useState<RankingsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'cumulative' | number>('cumulative');
+  const [chartView, setChartView] = useState<'teams' | 'players'>('teams');
 
   useEffect(() => {
-    fetchData<StandingsData>('/api/standings').then(setData).finally(() => setLoading(false));
+    Promise.all([
+      fetchData<StandingsData>('/api/standings'),
+      fetchData<RankingsData>('/api/rankings'),
+    ]).then(([standingsData, rankingsData]) => {
+      setData(standingsData);
+      setRankings(rankingsData);
+    }).finally(() => setLoading(false));
   }, []);
 
   if (loading) {
@@ -48,6 +71,60 @@ export default function StandingsPage() {
         <h1 className="text-lg font-semibold">Standings</h1>
         <p className="text-xs text-muted-foreground mt-0.5">Period and cumulative rankings</p>
       </div>
+
+      {/* Bump Charts */}
+      {rankings && rankings.weeks.length > 1 && (
+        <div className="space-y-4">
+          <div className="flex gap-1">
+            <button
+              onClick={() => setChartView('teams')}
+              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+                chartView === 'teams'
+                  ? 'bg-accent text-accent-foreground font-medium'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Team Rankings
+            </button>
+            <button
+              onClick={() => setChartView('players')}
+              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+                chartView === 'players'
+                  ? 'bg-accent text-accent-foreground font-medium'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Top 10 Players
+            </button>
+          </div>
+
+          {chartView === 'teams' ? (
+            <BumpChart
+              entries={rankings.teamRankings.map(t => ({
+                id: t.teamId,
+                name: t.teamName,
+                weeks: t.weeks,
+              }))}
+              weeks={rankings.weeks}
+              maxRank={rankings.teamRankings.length}
+              title="Rankings Race"
+              subtitle="Cumulative best-ball score rankings by week"
+            />
+          ) : (
+            <BumpChart
+              entries={rankings.playerRankings.map(p => ({
+                id: p.playerId,
+                name: p.playerName,
+                weeks: p.weeks,
+              }))}
+              weeks={rankings.weeks}
+              maxRank={10}
+              title="Top 10 Players"
+              subtitle="Cumulative fantasy score rankings by week"
+            />
+          )}
+        </div>
+      )}
 
       {/* View toggles */}
       <div className="flex gap-1">
@@ -131,6 +208,7 @@ export default function StandingsPage() {
           </tbody>
         </table>
       </div>
+
     </div>
   );
 }

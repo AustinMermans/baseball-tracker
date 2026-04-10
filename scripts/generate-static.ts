@@ -208,6 +208,128 @@ const playersOut = playerRows.map(p => ({
 
 fs.writeFileSync(path.join(outDir, 'players.json'), JSON.stringify(playersOut, null, 2));
 
+// --- Generate rankings.json (week-by-week bump chart data) ---
+
+console.log('Generating rankings.json...');
+
+const allDates = sqlite.prepare('SELECT DISTINCT game_date FROM daily_stats ORDER BY game_date').all() as any[];
+const gameDates = allDates.map((d: any) => d.game_date);
+
+if (gameDates.length > 0) {
+  const firstDate = new Date(gameDates[0]);
+  const weeks: { label: string; endDate: string }[] = [];
+  const weekStart = new Date(firstDate);
+
+  const fmtShort = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}`;
+
+  while (weekStart.toISOString().split('T')[0] <= gameDates[gameDates.length - 1]) {
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    const startStr = weekStart.toISOString().split('T')[0];
+    const endStr = weekEnd.toISOString().split('T')[0];
+    const actualEnd = endStr > gameDates[gameDates.length - 1] ? gameDates[gameDates.length - 1] : endStr;
+    if (gameDates.some((d: string) => d >= startStr && d <= endStr)) {
+      weeks.push({
+        label: `Wk ${weeks.length + 1} (${fmtShort(weekStart)}–${fmtShort(new Date(actualEnd))})`,
+        endDate: actualEnd,
+      });
+    }
+    weekStart.setDate(weekStart.getDate() + 7);
+  }
+
+  // Team rankings per week
+  const teamRankings = teams.map(t => ({ teamId: t.id, teamName: t.name, weeks: [] as any[] }));
+
+  for (const week of weeks) {
+    const stats = sqlite.prepare(`
+      SELECT ds.player_id as playerId, p.name as playerName, p.team_id as teamId,
+        COALESCE(SUM(ds.fantasy_score), 0) as totalScore,
+        COUNT(ds.id) as gamesPlayed,
+        COALESCE(SUM(ds.total_bases), 0) as totalBases,
+        COALESCE(SUM(ds.stolen_bases), 0) as stolenBases,
+        COALESCE(SUM(ds.walks), 0) as walks,
+        COALESCE(SUM(ds.hbp), 0) as hbp
+      FROM daily_stats ds
+      JOIN players p ON ds.player_id = p.id
+      WHERE p.is_active = 1 AND ds.game_date <= ?
+      GROUP BY ds.player_id
+    `).all(week.endDate) as PlayerPeriodScore[];
+
+    const playersByTeam = new Map<number, PlayerPeriodScore[]>();
+    for (const s of stats) {
+      const tid = (s as any).teamId ?? 0;
+      if (!playersByTeam.has(tid)) playersByTeam.set(tid, []);
+      playersByTeam.get(tid)!.push(s);
+    }
+
+    const teamScores = teams.map(t => ({
+      teamId: t.id,
+      score: computeBestBall(playersByTeam.get(t.id) || []).bestBallScore,
+    })).sort((a, b) => b.score - a.score);
+
+    teamScores.forEach((ts, idx) => {
+      const entry = teamRankings.find(tr => tr.teamId === ts.teamId)!;
+      entry.weeks.push({ week: week.label, score: ts.score, rank: idx + 1 });
+    });
+  }
+
+  // Dynamic top 10 players - track anyone who appears in top 10 any week
+  const OFF_CHART_RANK = 13;
+  const weeklyTop10 = new Map<string, any[]>();
+  const everTop10 = new Set<number>();
+
+  for (const week of weeks) {
+    const stats = sqlite.prepare(`
+      SELECT ds.player_id as playerId, p.name as playerName,
+        COALESCE(SUM(ds.fantasy_score), 0) as totalScore
+      FROM daily_stats ds
+      JOIN players p ON ds.player_id = p.id
+      WHERE p.is_active = 1 AND ds.game_date <= ?
+      GROUP BY ds.player_id
+      ORDER BY totalScore DESC
+    `).all(week.endDate) as any[];
+
+    const ranked = stats.map((s: any, idx: number) => ({ ...s, rank: idx + 1 }));
+    weeklyTop10.set(week.label, ranked);
+    ranked.slice(0, 10).forEach((s: any) => everTop10.add(s.playerId));
+  }
+
+  const playerRankings: any[] = [];
+
+  for (const pid of everTop10) {
+    let playerName = '';
+    const weekData: any[] = [];
+
+    for (const week of weeks) {
+      const ranked = weeklyTop10.get(week.label) || [];
+      const entry = ranked.find((r: any) => r.playerId === pid);
+      if (entry) {
+        playerName = entry.playerName;
+        weekData.push({
+          week: week.label,
+          score: entry.totalScore,
+          rank: entry.rank <= 10 ? entry.rank : OFF_CHART_RANK,
+        });
+      }
+    }
+
+    if (playerName) {
+      playerRankings.push({ playerId: pid, playerName, weeks: weekData });
+    }
+  }
+
+  playerRankings.sort((a: any, b: any) => {
+    const bestA = Math.min(...a.weeks.map((w: any) => w.rank));
+    const bestB = Math.min(...b.weeks.map((w: any) => w.rank));
+    return bestA - bestB;
+  });
+
+  fs.writeFileSync(
+    path.join(outDir, 'rankings.json'),
+    JSON.stringify({ teamRankings, playerRankings, weeks: weeks.map(w => w.label) }, null, 2)
+  );
+}
+
 // --- Generate meta.json (last updated timestamp) ---
 
 const lastStat = sqlite.prepare('SELECT MAX(game_date) as lastDate FROM daily_stats').get() as any;
