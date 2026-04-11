@@ -146,24 +146,24 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 211,
+      "bestBallScore": 237,
       "playerScores": [
         {
           "playerId": 47,
           "playerName": "Andy Pages",
-          "totalScore": 34,
-          "gamesPlayed": 12,
-          "totalBases": 31,
+          "totalScore": 42,
+          "gamesPlayed": 13,
+          "totalBases": 38,
           "stolenBases": 1,
-          "walks": 2,
+          "walks": 3,
           "hbp": 0
         },
         {
           "playerId": 40,
           "playerName": "Bobby Witt Jr.",
-          "totalScore": 31,
-          "gamesPlayed": 12,
-          "totalBases": 16,
+          "totalScore": 33,
+          "gamesPlayed": 13,
+          "totalBases": 18,
           "stolenBases": 8,
           "walks": 7,
           "hbp": 0
@@ -171,9 +171,9 @@
         {
           "playerId": 49,
           "playerName": "Bryan Reynolds",
-          "totalScore": 25,
-          "gamesPlayed": 12,
-          "totalBases": 17,
+          "totalScore": 29,
+          "gamesPlayed": 13,
+          "totalBases": 21,
           "stolenBases": 0,
           "walks": 8,
           "hbp": 0
@@ -181,9 +181,9 @@
         {
           "playerId": 44,
           "playerName": "Rafael Devers",
-          "totalScore": 21,
-          "gamesPlayed": 11,
-          "totalBases": 17,
+          "totalScore": 22,
+          "gamesPlayed": 12,
+          "totalBases": 18,
           "stolenBases": 0,
           "walks": 4,
           "hbp": 0
@@ -191,19 +191,29 @@
         {
           "playerId": 41,
           "playerName": "Cal Raleigh",
-          "totalScore": 19,
-          "gamesPlayed": 13,
+          "totalScore": 21,
+          "gamesPlayed": 14,
           "totalBases": 12,
           "stolenBases": 1,
-          "walks": 6,
+          "walks": 8,
           "hbp": 0
         },
         {
           "playerId": 42,
           "playerName": "Pete Alonso",
-          "totalScore": 19,
-          "gamesPlayed": 12,
+          "totalScore": 20,
+          "gamesPlayed": 13,
           "totalBases": 14,
+          "stolenBases": 0,
+          "walks": 6,
+          "hbp": 0
+        },
+        {
+          "playerId": 51,
+          "playerName": "Jung Hoo Lee",
+          "totalScore": 20,
+          "gamesPlayed": 12,
+          "totalBases": 15,
           "stolenBases": 0,
           "walks": 5,
           "hbp": 0
@@ -211,9 +221,9 @@
         {
           "playerId": 52,
           "playerName": "Jac Caglianone",
-          "totalScore": 17,
-          "gamesPlayed": 11,
-          "totalBases": 11,
+          "totalScore": 19,
+          "gamesPlayed": 12,
+          "totalBases": 13,
           "stolenBases": 0,
           "walks": 4,
           "hbp": 2
@@ -229,40 +239,30 @@
           "hbp": 1
         },
         {
+          "playerId": 45,
+          "playerName": "Bo Bichette",
+          "totalScore": 15,
+          "gamesPlayed": 13,
+          "totalBases": 12,
+          "stolenBases": 0,
+          "walks": 3,
+          "hbp": 0
+        },
+        {
           "playerId": 48,
           "playerName": "Michael Busch",
           "totalScore": 15,
-          "gamesPlayed": 11,
+          "gamesPlayed": 12,
           "totalBases": 8,
           "stolenBases": 0,
           "walks": 7,
           "hbp": 0
         },
         {
-          "playerId": 45,
-          "playerName": "Bo Bichette",
-          "totalScore": 14,
-          "gamesPlayed": 12,
-          "totalBases": 11,
-          "stolenBases": 0,
-          "walks": 3,
-          "hbp": 0
-        },
-        {
-          "playerId": 51,
-          "playerName": "Jung Hoo Lee",
-          "totalScore": 14,
-          "gamesPlayed": 11,
-          "totalBases": 9,
-          "stolenBases": 0,
-          "walks": 5,
-          "hbp": 0
-        },
-        {
           "playerId": 50,
           "playerName": "Konnor Griffin",
           "totalScore": 7,
-          "gamesPlayed": 6,
+          "gamesPlayed": 7,
           "totalBases": 4,
           "stolenBases": 0,
           "walks": 2,
@@ -271,11 +271,11 @@
         {
           "playerId": 46,
           "playerName": "Seiya Suzuki",
-          "totalScore": 0,
-          "gamesPlayed": 0,
-          "totalBases": 0,
+          "totalScore": 2,
+          "gamesPlayed": 1,
+          "totalBases": 1,
           "stolenBases": 0,
-          "walks": 0,
+          "walks": 1,
           "hbp": 0
         }
       ],
@@ -286,13 +286,13 @@
         44,
         41,
         42,
+        51,
         52,
         43,
-        48,
         45
       ],
       "benchPlayerIds": [
-        51,
+        48,
         50,
         46
       ]
