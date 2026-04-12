@@ -19,17 +19,44 @@ if (!fs.existsSync(dbPath)) {
 const sqlite = new Database(dbPath, { readonly: true });
 fs.mkdirSync(outDir, { recursive: true });
 
+// --- Slugify (mirrors src/lib/utils.ts) ---
+
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 // --- Helpers ---
 
 interface PlayerPeriodScore {
   playerId: number;
   playerName: string;
+  slug: string;
   totalScore: number;
   gamesPlayed: number;
   totalBases: number;
   stolenBases: number;
   walks: number;
   hbp: number;
+  atBats: number;
+  hits: number;
+  doubles: number;
+  triples: number;
+  homeRuns: number;
+  runs: number;
+  rbi: number;
+  strikeouts: number;
+  plateAppearances: number;
+  sacFlies: number;
+  sacBunts: number;
+  caughtStealing: number;
+  intentionalWalks: number;
+  groundIntoDoublePlay: number;
+  leftOnBase: number;
 }
 
 function computeBestBall(playerScores: PlayerPeriodScore[]) {
@@ -49,6 +76,35 @@ const teams = sqlite.prepare('SELECT * FROM teams').all() as any[];
 const periods = sqlite.prepare('SELECT * FROM season_periods').all() as any[];
 const players = sqlite.prepare('SELECT * FROM players WHERE is_active = 1').all() as any[];
 
+// --- Expanded stats query fragment ---
+
+const EXPANDED_STATS_SELECT = `
+  ds.player_id as playerId,
+  p.name as playerName,
+  p.team_id as teamId,
+  COALESCE(SUM(ds.fantasy_score), 0) as totalScore,
+  COUNT(ds.id) as gamesPlayed,
+  COALESCE(SUM(ds.total_bases), 0) as totalBases,
+  COALESCE(SUM(ds.stolen_bases), 0) as stolenBases,
+  COALESCE(SUM(ds.walks), 0) as walks,
+  COALESCE(SUM(ds.hbp), 0) as hbp,
+  COALESCE(SUM(ds.at_bats), 0) as atBats,
+  COALESCE(SUM(ds.hits), 0) as hits,
+  COALESCE(SUM(ds.doubles), 0) as doubles,
+  COALESCE(SUM(ds.triples), 0) as triples,
+  COALESCE(SUM(ds.home_runs), 0) as homeRuns,
+  COALESCE(SUM(ds.runs), 0) as runs,
+  COALESCE(SUM(ds.rbi), 0) as rbi,
+  COALESCE(SUM(ds.strikeouts), 0) as strikeouts,
+  COALESCE(SUM(ds.plate_appearances), 0) as plateAppearances,
+  COALESCE(SUM(ds.sac_flies), 0) as sacFlies,
+  COALESCE(SUM(ds.sac_bunts), 0) as sacBunts,
+  COALESCE(SUM(ds.caught_stealing), 0) as caughtStealing,
+  COALESCE(SUM(ds.intentional_walks), 0) as intentionalWalks,
+  COALESCE(SUM(ds.ground_into_double_play), 0) as groundIntoDoublePlay,
+  COALESCE(SUM(ds.left_on_base), 0) as leftOnBase
+`;
+
 // --- Generate standings.json ---
 
 console.log('Generating standings.json...');
@@ -57,16 +113,7 @@ const statsByPeriod = new Map<number, Map<number, PlayerPeriodScore>>();
 
 for (const period of periods) {
   const rows = sqlite.prepare(`
-    SELECT
-      ds.player_id as playerId,
-      p.name as playerName,
-      p.team_id as teamId,
-      COALESCE(SUM(ds.fantasy_score), 0) as totalScore,
-      COUNT(ds.id) as gamesPlayed,
-      COALESCE(SUM(ds.total_bases), 0) as totalBases,
-      COALESCE(SUM(ds.stolen_bases), 0) as stolenBases,
-      COALESCE(SUM(ds.walks), 0) as walks,
-      COALESCE(SUM(ds.hbp), 0) as hbp
+    SELECT ${EXPANDED_STATS_SELECT}
     FROM daily_stats ds
     JOIN players p ON ds.player_id = p.id
     WHERE p.is_active = 1
@@ -77,7 +124,7 @@ for (const period of periods) {
 
   const map = new Map<number, PlayerPeriodScore>();
   for (const r of rows) {
-    map.set(r.playerId, r);
+    map.set(r.playerId, { ...r, slug: slugify(r.playerName) });
   }
   statsByPeriod.set(period.id, map);
 }
@@ -93,12 +140,28 @@ const standings = teams.map(team => {
       return {
         playerId: player.id,
         playerName: player.name,
+        slug: slugify(player.name),
         totalScore: s?.totalScore ?? 0,
         gamesPlayed: s?.gamesPlayed ?? 0,
         totalBases: s?.totalBases ?? 0,
         stolenBases: s?.stolenBases ?? 0,
         walks: s?.walks ?? 0,
         hbp: s?.hbp ?? 0,
+        atBats: s?.atBats ?? 0,
+        hits: s?.hits ?? 0,
+        doubles: s?.doubles ?? 0,
+        triples: s?.triples ?? 0,
+        homeRuns: s?.homeRuns ?? 0,
+        runs: s?.runs ?? 0,
+        rbi: s?.rbi ?? 0,
+        strikeouts: s?.strikeouts ?? 0,
+        plateAppearances: s?.plateAppearances ?? 0,
+        sacFlies: s?.sacFlies ?? 0,
+        sacBunts: s?.sacBunts ?? 0,
+        caughtStealing: s?.caughtStealing ?? 0,
+        intentionalWalks: s?.intentionalWalks ?? 0,
+        groundIntoDoublePlay: s?.groundIntoDoublePlay ?? 0,
+        leftOnBase: s?.leftOnBase ?? 0,
       };
     });
 
@@ -132,7 +195,10 @@ console.log('Generating teams.json...');
 
 const teamsData = teams.map(team => ({
   ...team,
-  roster: players.filter(p => p.team_id === team.id).sort((a: any, b: any) => a.draft_round - b.draft_round),
+  roster: players
+    .filter(p => p.team_id === team.id)
+    .sort((a: any, b: any) => a.draft_round - b.draft_round)
+    .map((p: any) => ({ ...p, slug: slugify(p.name) })),
 }));
 fs.writeFileSync(path.join(outDir, 'teams.json'), JSON.stringify(teamsData, null, 2));
 
@@ -150,12 +216,28 @@ for (const team of teams) {
       return {
         playerId: player.id,
         playerName: player.name,
+        slug: slugify(player.name),
         totalScore: s?.totalScore ?? 0,
         gamesPlayed: s?.gamesPlayed ?? 0,
         totalBases: s?.totalBases ?? 0,
         stolenBases: s?.stolenBases ?? 0,
         walks: s?.walks ?? 0,
         hbp: s?.hbp ?? 0,
+        atBats: s?.atBats ?? 0,
+        hits: s?.hits ?? 0,
+        doubles: s?.doubles ?? 0,
+        triples: s?.triples ?? 0,
+        homeRuns: s?.homeRuns ?? 0,
+        runs: s?.runs ?? 0,
+        rbi: s?.rbi ?? 0,
+        strikeouts: s?.strikeouts ?? 0,
+        plateAppearances: s?.plateAppearances ?? 0,
+        sacFlies: s?.sacFlies ?? 0,
+        sacBunts: s?.sacBunts ?? 0,
+        caughtStealing: s?.caughtStealing ?? 0,
+        intentionalWalks: s?.intentionalWalks ?? 0,
+        groundIntoDoublePlay: s?.groundIntoDoublePlay ?? 0,
+        leftOnBase: s?.leftOnBase ?? 0,
       };
     });
 
@@ -173,7 +255,9 @@ for (const team of teams) {
     path.join(outDir, `team-${team.id}.json`),
     JSON.stringify({
       team,
-      roster: roster.sort((a: any, b: any) => a.draft_round - b.draft_round),
+      roster: roster
+        .sort((a: any, b: any) => a.draft_round - b.draft_round)
+        .map((p: any) => ({ ...p, slug: slugify(p.name) })),
       periods: periodResults,
     }, null, 2)
   );
@@ -188,12 +272,7 @@ const playerRows = sqlite.prepare(`
   SELECT
     p.id, p.mlb_id as mlbId, p.name, p.mlb_team as mlbTeam,
     p.position, p.team_id as teamId, p.draft_round as draftRound,
-    COALESCE(SUM(ds.fantasy_score), 0) as totalScore,
-    COUNT(ds.id) as gamesPlayed,
-    COALESCE(SUM(ds.total_bases), 0) as totalBases,
-    COALESCE(SUM(ds.stolen_bases), 0) as stolenBases,
-    COALESCE(SUM(ds.walks), 0) as walks,
-    COALESCE(SUM(ds.hbp), 0) as hbp
+    ${EXPANDED_STATS_SELECT.replace(/ds\.player_id as playerId,\n\s+p\.name as playerName,\n\s+p\.team_id as teamId,/, '')}
   FROM players p
   LEFT JOIN daily_stats ds ON ds.player_id = p.id
   WHERE p.is_active = 1
@@ -203,10 +282,113 @@ const playerRows = sqlite.prepare(`
 
 const playersOut = playerRows.map(p => ({
   ...p,
+  slug: slugify(p.name),
   fantasyTeam: teamMap.get(p.teamId) ?? 'Unknown',
 }));
 
 fs.writeFileSync(path.join(outDir, 'players.json'), JSON.stringify(playersOut, null, 2));
+
+// --- Generate player-{slug}.json for each player ---
+
+console.log('Generating player detail files...');
+
+// Get all game rows
+const allGameRows = sqlite.prepare(`
+  SELECT
+    ds.player_id as playerId,
+    ds.game_date as gameDate,
+    ds.game_pk as gamePk,
+    ds.at_bats as atBats, ds.hits, ds.doubles, ds.triples,
+    ds.home_runs as homeRuns, ds.total_bases as totalBases,
+    ds.stolen_bases as stolenBases, ds.walks as baseOnBalls,
+    ds.hbp as hitByPitch, ds.runs, ds.rbi,
+    ds.strikeouts, ds.plate_appearances as plateAppearances,
+    ds.sac_bunts as sacBunts, ds.sac_flies as sacFlies,
+    ds.ground_into_double_play as groundIntoDoublePlay,
+    ds.ground_into_triple_play as groundIntoTriplePlay,
+    ds.left_on_base as leftOnBase, ds.ground_outs as groundOuts,
+    ds.fly_outs as flyOuts, ds.line_outs as lineOuts,
+    ds.pop_outs as popOuts, ds.air_outs as airOuts,
+    ds.catchers_interference as catchersInterference,
+    ds.caught_stealing as caughtStealing,
+    ds.intentional_walks as intentionalWalks,
+    ds.pickoffs, ds.fantasy_score as fantasyScore
+  FROM daily_stats ds
+  ORDER BY ds.player_id, ds.game_date
+`).all() as any[];
+
+// Group games by player
+const gamesByPlayer = new Map<number, any[]>();
+for (const g of allGameRows) {
+  if (!gamesByPlayer.has(g.playerId)) gamesByPlayer.set(g.playerId, []);
+  gamesByPlayer.get(g.playerId)!.push(g);
+}
+
+// Sort players alphabetically for prev/next nav
+const sortedPlayers = [...players].sort((a: any, b: any) => a.name.localeCompare(b.name));
+
+// Compute overall rankings by total fantasy score
+const playerRankByScore = playersOut.map((p, idx) => ({ id: p.id, rank: idx + 1 }));
+const rankMap = new Map(playerRankByScore.map(r => [r.id, r.rank]));
+
+for (let i = 0; i < sortedPlayers.length; i++) {
+  const player = sortedPlayers[i];
+  const slug = slugify(player.name);
+  const games = gamesByPlayer.get(player.id) || [];
+
+  // Season totals
+  const seasonTotals = {
+    gamesPlayed: games.length,
+    atBats: 0, hits: 0, doubles: 0, triples: 0, homeRuns: 0,
+    totalBases: 0, stolenBases: 0, baseOnBalls: 0, hitByPitch: 0,
+    runs: 0, rbi: 0, strikeouts: 0, plateAppearances: 0,
+    sacBunts: 0, sacFlies: 0, groundIntoDoublePlay: 0, groundIntoTriplePlay: 0,
+    leftOnBase: 0, groundOuts: 0, flyOuts: 0, lineOuts: 0,
+    popOuts: 0, airOuts: 0, catchersInterference: 0,
+    caughtStealing: 0, intentionalWalks: 0, pickoffs: 0,
+    fantasyScore: 0,
+  };
+
+  for (const g of games) {
+    for (const key of Object.keys(seasonTotals) as (keyof typeof seasonTotals)[]) {
+      if (key === 'gamesPlayed') continue;
+      (seasonTotals as any)[key] += g[key] ?? 0;
+    }
+  }
+
+  const prev = i > 0 ? sortedPlayers[i - 1] : null;
+  const next = i < sortedPlayers.length - 1 ? sortedPlayers[i + 1] : null;
+
+  const detail = {
+    player: {
+      id: player.id,
+      mlbId: player.mlb_id,
+      name: player.name,
+      slug,
+      mlbTeam: player.mlb_team,
+      position: player.position,
+      teamId: player.team_id,
+      fantasyTeam: teamMap.get(player.team_id) ?? 'Unknown',
+      draftRound: player.draft_round,
+      overallRank: rankMap.get(player.id) ?? sortedPlayers.length,
+    },
+    seasonTotals,
+    games: games.map(g => {
+      const { playerId, ...rest } = g;
+      return rest;
+    }),
+    navigation: {
+      prevSlug: prev ? slugify(prev.name) : null,
+      prevName: prev?.name ?? null,
+      nextSlug: next ? slugify(next.name) : null,
+      nextName: next?.name ?? null,
+    },
+  };
+
+  fs.writeFileSync(path.join(outDir, `player-${slug}.json`), JSON.stringify(detail, null, 2));
+}
+
+console.log(`Generated ${sortedPlayers.length} player detail files`);
 
 // --- Generate rankings.json (week-by-week bump chart data) ---
 
@@ -273,60 +455,9 @@ if (gameDates.length > 0) {
     });
   }
 
-  // Dynamic top 10 players - track anyone who appears in top 10 any week
-  const OFF_CHART_RANK = 13;
-  const weeklyTop10 = new Map<string, any[]>();
-  const everTop10 = new Set<number>();
-
-  for (const week of weeks) {
-    const stats = sqlite.prepare(`
-      SELECT ds.player_id as playerId, p.name as playerName,
-        COALESCE(SUM(ds.fantasy_score), 0) as totalScore
-      FROM daily_stats ds
-      JOIN players p ON ds.player_id = p.id
-      WHERE p.is_active = 1 AND ds.game_date <= ?
-      GROUP BY ds.player_id
-      ORDER BY totalScore DESC
-    `).all(week.endDate) as any[];
-
-    const ranked = stats.map((s: any, idx: number) => ({ ...s, rank: idx + 1 }));
-    weeklyTop10.set(week.label, ranked);
-    ranked.slice(0, 10).forEach((s: any) => everTop10.add(s.playerId));
-  }
-
-  const playerRankings: any[] = [];
-
-  for (const pid of everTop10) {
-    let playerName = '';
-    const weekData: any[] = [];
-
-    for (const week of weeks) {
-      const ranked = weeklyTop10.get(week.label) || [];
-      const entry = ranked.find((r: any) => r.playerId === pid);
-      if (entry) {
-        playerName = entry.playerName;
-        weekData.push({
-          week: week.label,
-          score: entry.totalScore,
-          rank: entry.rank <= 10 ? entry.rank : OFF_CHART_RANK,
-        });
-      }
-    }
-
-    if (playerName) {
-      playerRankings.push({ playerId: pid, playerName, weeks: weekData });
-    }
-  }
-
-  playerRankings.sort((a: any, b: any) => {
-    const bestA = Math.min(...a.weeks.map((w: any) => w.rank));
-    const bestB = Math.min(...b.weeks.map((w: any) => w.rank));
-    return bestA - bestB;
-  });
-
   fs.writeFileSync(
     path.join(outDir, 'rankings.json'),
-    JSON.stringify({ teamRankings, playerRankings, weeks: weeks.map(w => w.label) }, null, 2)
+    JSON.stringify({ teamRankings, weeks: weeks.map(w => w.label) }, null, 2)
   );
 }
 

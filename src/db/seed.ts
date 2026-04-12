@@ -32,7 +32,30 @@ sqlite.exec(`
     stolen_bases INTEGER DEFAULT 0,
     walks INTEGER DEFAULT 0,
     hbp INTEGER DEFAULT 0,
-    fantasy_score INTEGER DEFAULT 0
+    fantasy_score INTEGER DEFAULT 0,
+    at_bats INTEGER DEFAULT 0,
+    hits INTEGER DEFAULT 0,
+    doubles INTEGER DEFAULT 0,
+    triples INTEGER DEFAULT 0,
+    home_runs INTEGER DEFAULT 0,
+    plate_appearances INTEGER DEFAULT 0,
+    runs INTEGER DEFAULT 0,
+    rbi INTEGER DEFAULT 0,
+    strikeouts INTEGER DEFAULT 0,
+    sac_bunts INTEGER DEFAULT 0,
+    sac_flies INTEGER DEFAULT 0,
+    ground_into_double_play INTEGER DEFAULT 0,
+    ground_into_triple_play INTEGER DEFAULT 0,
+    left_on_base INTEGER DEFAULT 0,
+    ground_outs INTEGER DEFAULT 0,
+    fly_outs INTEGER DEFAULT 0,
+    line_outs INTEGER DEFAULT 0,
+    pop_outs INTEGER DEFAULT 0,
+    air_outs INTEGER DEFAULT 0,
+    catchers_interference INTEGER DEFAULT 0,
+    caught_stealing INTEGER DEFAULT 0,
+    intentional_walks INTEGER DEFAULT 0,
+    pickoffs INTEGER DEFAULT 0
   );
   CREATE UNIQUE INDEX IF NOT EXISTS player_date_idx ON daily_stats(player_id, game_date);
   CREATE TABLE IF NOT EXISTS team_daily_scores (

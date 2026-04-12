@@ -29,6 +29,11 @@ export function dataUrl(path: string): string {
     return `${basePath}/data/team-${teamMatch[1]}.json`;
   }
 
+  const playerMatch = path.match(/^\/api\/players\/([a-z0-9-]+)$/);
+  if (playerMatch) {
+    return `${basePath}/data/player-${playerMatch[1]}.json`;
+  }
+
   return `${basePath}${staticMap[path] || path}`;
 }
 

@@ -22,6 +22,22 @@ export interface BattingStats {
   hitByPitch: number;
   runs: number;
   rbi: number;
+  strikeOuts: number;
+  plateAppearances: number;
+  sacBunts: number;
+  sacFlies: number;
+  groundIntoDoublePlay: number;
+  groundIntoTriplePlay: number;
+  leftOnBase: number;
+  groundOuts: number;
+  flyOuts: number;
+  lineOuts: number;
+  popOuts: number;
+  airOuts: number;
+  catchersInterference: number;
+  caughtStealing: number;
+  intentionalWalks: number;
+  pickoffs: number;
 }
 
 export interface BoxscorePlayer {
@@ -71,6 +87,22 @@ export async function getBoxscoreBatting(gamePk: number): Promise<Map<number, Ba
           hitByPitch: batting.hitByPitch || 0,
           runs: batting.runs || 0,
           rbi: batting.rbi || 0,
+          strikeOuts: batting.strikeOuts || 0,
+          plateAppearances: batting.plateAppearances || 0,
+          sacBunts: batting.sacBunts || 0,
+          sacFlies: batting.sacFlies || 0,
+          groundIntoDoublePlay: batting.groundIntoDoublePlay || 0,
+          groundIntoTriplePlay: batting.groundIntoTriplePlay || 0,
+          leftOnBase: batting.leftOnBase || 0,
+          groundOuts: batting.groundOuts || 0,
+          flyOuts: batting.flyOuts || 0,
+          lineOuts: batting.lineOuts || 0,
+          popOuts: batting.popOuts || 0,
+          airOuts: batting.airOuts || 0,
+          catchersInterference: batting.catchersInterference || 0,
+          caughtStealing: batting.caughtStealing || 0,
+          intentionalWalks: batting.intentionalWalks || 0,
+          pickoffs: batting.pickoffs || 0,
         });
       }
     }

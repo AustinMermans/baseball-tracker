@@ -4,19 +4,34 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { fetchData } from '@/lib/data';
-import {
-  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
-} from 'recharts';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { avg, obp, slg, fmtRate } from '@/lib/stats';
 
 interface PlayerScore {
   playerId: number;
   playerName: string;
+  slug: string;
   totalScore: number;
   gamesPlayed: number;
   totalBases: number;
   stolenBases: number;
   walks: number;
   hbp: number;
+  atBats: number;
+  hits: number;
+  doubles: number;
+  triples: number;
+  homeRuns: number;
+  runs: number;
+  rbi: number;
+  strikeouts: number;
+  plateAppearances: number;
+  sacFlies: number;
+  sacBunts: number;
+  caughtStealing: number;
+  intentionalWalks: number;
+  groundIntoDoublePlay: number;
+  leftOnBase: number;
 }
 
 interface PeriodResult {
@@ -29,20 +44,8 @@ interface PeriodResult {
 
 interface TeamDetail {
   team: { id: number; name: string };
-  roster: Array<{ id: number; name: string; draftRound: number }>;
+  roster: Array<{ id: number; name: string; draftRound: number; slug: string }>;
   periods: PeriodResult[];
-}
-
-interface DailyData {
-  teamDaily: Array<{
-    gameDate: string;
-    totalScore: number;
-    totalTB: number;
-    totalSB: number;
-    totalBB: number;
-    totalHBP: number;
-    playersActive: number;
-  }>;
 }
 
 const teamNames = ['Cole', 'Markus', 'J Mill', 'Ryan', 'Joey', 'Jack', 'Austin', 'Bobby'];
@@ -51,18 +54,14 @@ export default function TeamDetailPage() {
   const params = useParams();
   const teamId = params.teamId as string;
   const [data, setData] = useState<TeamDetail | null>(null);
-  const [daily, setDaily] = useState<DailyData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activePeriod, setActivePeriod] = useState(0);
+  const [statsView, setStatsView] = useState<'key' | 'all'>('key');
 
   useEffect(() => {
-    Promise.all([
-      fetchData<TeamDetail>(`/api/teams/${teamId}`),
-      fetch(`/api/teams/${teamId}/daily`).then(r => r.json()).catch(() => null),
-    ]).then(([teamData, dailyData]) => {
-      setData(teamData);
-      setDaily(dailyData);
-    }).finally(() => setLoading(false));
+    fetchData<TeamDetail>(`/api/teams/${teamId}`)
+      .then(setData)
+      .finally(() => setLoading(false));
   }, [teamId]);
 
   if (loading) {
@@ -79,22 +78,6 @@ export default function TeamDetailPage() {
   const id = parseInt(teamId);
   const pr = data.periods[activePeriod];
   const cumulativeScore = data.periods.reduce((sum, p) => sum + p.bestBallScore, 0);
-
-  // Build cumulative chart data
-  const chartData = daily?.teamDaily?.map(d => ({
-    date: d.gameDate.slice(5), // MM-DD
-    score: d.totalScore,
-    tb: d.totalTB,
-    sb: d.totalSB,
-    bb: d.totalBB,
-  })) || [];
-
-  // Build running total
-  let runningTotal = 0;
-  const cumulativeChart = chartData.map(d => {
-    runningTotal += d.score;
-    return { ...d, cumulative: runningTotal };
-  });
 
   return (
     <div className="space-y-8">
@@ -151,123 +134,194 @@ export default function TeamDetailPage() {
         </div>
       </div>
 
-      {/* Trend Chart */}
-      {cumulativeChart.length > 0 && (
-        <div>
-          <h2 className="text-sm font-medium mb-3">Scoring Trend</h2>
-          <div className="border border-border rounded-lg p-4">
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={cumulativeChart}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
-                  tickLine={false}
-                  axisLine={false}
-                  width={35}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '6px',
-                    fontSize: '12px',
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="cumulative"
-                  stroke="hsl(var(--primary))"
-                  strokeWidth={2}
-                  dot={false}
-                  name="Cumulative"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="hsl(var(--chart-2))"
-                  strokeWidth={1.5}
-                  dot={false}
-                  name="Daily"
-                  strokeDasharray="4 2"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+      {/* Roster Tabs */}
+      <Tabs defaultValue="fantasy">
+        <div className="flex items-center gap-3 mb-3">
+          <h2 className="text-sm font-medium">
+            Roster &middot; {pr?.period.name}
+          </h2>
+          <TabsList className="h-7">
+            <TabsTrigger value="fantasy" className="text-[11px] px-2.5 py-1 h-auto">Fantasy Scoring</TabsTrigger>
+            <TabsTrigger value="stats" className="text-[11px] px-2.5 py-1 h-auto">Player Stats</TabsTrigger>
+          </TabsList>
         </div>
-      )}
 
-      {/* Roster Table */}
-      <div>
-        <h2 className="text-sm font-medium mb-3">
-          Roster &middot; {pr?.period.name}
-        </h2>
-        <div className="border border-border rounded-lg overflow-x-auto">
-          <table className="w-full min-w-[520px]">
-            <thead>
-              <tr className="border-b border-border bg-muted/40">
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2 w-6"></th>
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2">Player</th>
-                <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">GP</th>
-                <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">TB</th>
-                <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">SB</th>
-                <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">BB</th>
-                <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">HBP</th>
-                <th className="text-right text-[11px] font-medium text-muted-foreground px-4 py-2">PTS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pr?.playerScores.map((ps, idx) => {
-                const counting = pr.countingPlayerIds.includes(ps.playerId);
-                return (
-                  <tr
-                    key={ps.playerId}
-                    className={`border-b border-border/50 ${counting ? '' : 'text-muted-foreground'}`}
-                  >
-                    <td className="px-4 py-2">
-                      <div className={`w-1.5 h-1.5 rounded-full ${
-                        counting ? 'bg-primary' : 'bg-border'
-                      }`} />
-                    </td>
-                    <td className="px-4 py-2">
-                      <span className="text-sm">{ps.playerName}</span>
-                      {idx === 0 && counting && (
-                        <span className="ml-1.5 text-[10px] text-primary">MVP</span>
-                      )}
-                      {!counting && (
-                        <span className="ml-1.5 text-[10px] text-muted-foreground/60">bench</span>
-                      )}
-                    </td>
-                    <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">
-                      {ps.gamesPlayed}
-                    </td>
-                    <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.totalBases}</td>
-                    <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.stolenBases}</td>
-                    <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.walks}</td>
-                    <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.hbp}</td>
-                    <td className="px-4 py-2 text-right text-xs tabular-nums font-semibold">
-                      {ps.totalScore}
-                    </td>
+        {/* Fantasy Scoring Tab */}
+        <TabsContent value="fantasy">
+          <div className="border border-border rounded-lg overflow-x-auto">
+            <table className="w-full min-w-[520px]">
+              <thead>
+                <tr className="border-b border-border bg-muted/40">
+                  <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2 w-6"></th>
+                  <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2">Player</th>
+                  <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">GP</th>
+                  <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">TB</th>
+                  <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">SB</th>
+                  <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">BB</th>
+                  <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">HBP</th>
+                  <th className="text-right text-[11px] font-medium text-muted-foreground px-4 py-2">PTS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pr?.playerScores.map((ps, idx) => {
+                  const counting = pr.countingPlayerIds.includes(ps.playerId);
+                  return (
+                    <tr
+                      key={ps.playerId}
+                      className={`border-b border-border/50 ${counting ? '' : 'text-muted-foreground'}`}
+                    >
+                      <td className="px-4 py-2">
+                        <div className={`w-1.5 h-1.5 rounded-full ${
+                          counting ? 'bg-primary' : 'bg-border'
+                        }`} />
+                      </td>
+                      <td className="px-4 py-2">
+                        <Link href={`/players/${ps.slug}`} className="text-sm hover:text-primary transition-colors">
+                          {ps.playerName}
+                        </Link>
+                        {idx === 0 && counting && (
+                          <span className="ml-1.5 text-[10px] text-primary">MVP</span>
+                        )}
+                        {!counting && (
+                          <span className="ml-1.5 text-[10px] text-muted-foreground/60">bench</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">
+                        {ps.gamesPlayed}
+                      </td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.totalBases}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.stolenBases}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.walks}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.hbp}</td>
+                      <td className="px-4 py-2 text-right text-xs tabular-nums font-semibold">
+                        {ps.totalScore}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr className="bg-muted/30">
+                  <td colSpan={7} className="px-4 py-2 text-xs font-medium">Best Ball Total</td>
+                  <td className="px-4 py-2 text-right text-xs tabular-nums font-semibold text-primary">
+                    {pr?.bestBallScore}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </TabsContent>
+
+        {/* Player Stats Tab */}
+        <TabsContent value="stats">
+          <div className="flex gap-1 mb-3">
+            <button
+              onClick={() => setStatsView('key')}
+              className={`px-2 py-1 text-[11px] rounded transition-colors ${
+                statsView === 'key' ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >Key</button>
+            <button
+              onClick={() => setStatsView('all')}
+              className={`px-2 py-1 text-[11px] rounded transition-colors ${
+                statsView === 'all' ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >All</button>
+          </div>
+          <div className="border border-border rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[520px]">
+                <thead>
+                  <tr className="border-b border-border bg-muted/40">
+                    <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2">Player</th>
+                    {statsView === 'key' ? (
+                      <>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">AB</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">H</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">HR</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">SB</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">BB</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">AVG</th>
+                      </>
+                    ) : (
+                      <>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">PA</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">AB</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">H</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">2B</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">3B</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">HR</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">R</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">RBI</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">BB</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">IBB</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">SO</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">SB</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">CS</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">HBP</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">SF</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">AVG</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">OBP</th>
+                        <th className="text-right text-[11px] font-medium text-muted-foreground px-3 py-2">SLG</th>
+                      </>
+                    )}
                   </tr>
-                );
-              })}
-            </tbody>
-            <tfoot>
-              <tr className="bg-muted/30">
-                <td colSpan={7} className="px-4 py-2 text-xs font-medium">Best Ball Total</td>
-                <td className="px-4 py-2 text-right text-xs tabular-nums font-semibold text-primary">
-                  {pr?.bestBallScore}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
+                </thead>
+                <tbody>
+                  {pr?.playerScores.map(ps => (
+                    <tr key={ps.playerId} className="border-b border-border/50 hover:bg-muted/30">
+                      <td className="px-4 py-2">
+                        <Link href={`/players/${ps.slug}`} className="text-sm hover:text-primary transition-colors">
+                          {ps.playerName}
+                        </Link>
+                      </td>
+                      {statsView === 'key' ? (
+                        <>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.atBats}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.hits}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.homeRuns}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.stolenBases}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.walks}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">
+                            {fmtRate(avg(ps.hits, ps.atBats))}
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.plateAppearances}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.atBats}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.hits}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.doubles}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.triples}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.homeRuns}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.runs}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.rbi}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.walks}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.intentionalWalks}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.strikeouts}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.stolenBases}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.caughtStealing}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.hbp}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums">{ps.sacFlies}</td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">
+                            {fmtRate(avg(ps.hits, ps.atBats))}
+                          </td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">
+                            {fmtRate(obp(ps.hits, ps.walks, ps.hbp, ps.atBats, ps.sacFlies))}
+                          </td>
+                          <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">
+                            {fmtRate(slg(ps.totalBases, ps.atBats))}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Draft Order */}
       <div>
@@ -276,7 +330,9 @@ export default function TeamDetailPage() {
           {data.roster.map((p, i) => (
             <div key={p.id} className="px-3 py-2 border-b border-border/50 flex items-center justify-between">
               <span className="text-xs text-muted-foreground tabular-nums w-5">{i + 1}.</span>
-              <span className="text-xs flex-1">{p.name}</span>
+              <Link href={`/players/${p.slug}`} className="text-xs flex-1 hover:text-primary transition-colors">
+                {p.name}
+              </Link>
             </div>
           ))}
         </div>

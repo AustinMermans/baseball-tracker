@@ -12,11 +12,33 @@ const sqlite = new Database(dbPath);
 sqlite.pragma('journal_mode = WAL');
 
 interface BattingLine {
+  atBats: number;
+  hits: number;
+  doubles: number;
+  triples: number;
+  homeRuns: number;
   totalBases: number;
   stolenBases: number;
   baseOnBalls: number;
   hitByPitch: number;
-  atBats: number;
+  runs: number;
+  rbi: number;
+  strikeOuts: number;
+  plateAppearances: number;
+  sacBunts: number;
+  sacFlies: number;
+  groundIntoDoublePlay: number;
+  groundIntoTriplePlay: number;
+  leftOnBase: number;
+  groundOuts: number;
+  flyOuts: number;
+  lineOuts: number;
+  popOuts: number;
+  airOuts: number;
+  catchersInterference: number;
+  caughtStealing: number;
+  intentionalWalks: number;
+  pickoffs: number;
 }
 
 async function getSchedule(date: string) {
@@ -45,11 +67,33 @@ async function getBoxscore(gamePk: number): Promise<Map<number, BattingLine>> {
       const b = p.stats?.batting;
       if (b && (b.atBats > 0 || b.baseOnBalls > 0 || b.hitByPitch > 0)) {
         result.set(p.person.id, {
+          atBats: b.atBats || 0,
+          hits: b.hits || 0,
+          doubles: b.doubles || 0,
+          triples: b.triples || 0,
+          homeRuns: b.homeRuns || 0,
           totalBases: b.totalBases || 0,
           stolenBases: b.stolenBases || 0,
           baseOnBalls: b.baseOnBalls || 0,
           hitByPitch: b.hitByPitch || 0,
-          atBats: b.atBats || 0,
+          runs: b.runs || 0,
+          rbi: b.rbi || 0,
+          strikeOuts: b.strikeOuts || 0,
+          plateAppearances: b.plateAppearances || 0,
+          sacBunts: b.sacBunts || 0,
+          sacFlies: b.sacFlies || 0,
+          groundIntoDoublePlay: b.groundIntoDoublePlay || 0,
+          groundIntoTriplePlay: b.groundIntoTriplePlay || 0,
+          leftOnBase: b.leftOnBase || 0,
+          groundOuts: b.groundOuts || 0,
+          flyOuts: b.flyOuts || 0,
+          lineOuts: b.lineOuts || 0,
+          popOuts: b.popOuts || 0,
+          airOuts: b.airOuts || 0,
+          catchersInterference: b.catchersInterference || 0,
+          caughtStealing: b.caughtStealing || 0,
+          intentionalWalks: b.intentionalWalks || 0,
+          pickoffs: b.pickoffs || 0,
         });
       }
     }
@@ -70,10 +114,9 @@ async function syncDate(date: string, mlbIdToPlayerId: Map<number, number>) {
       if (!mlbIdToPlayerId.has(mlbId)) continue;
       const existing = dayStats.get(mlbId);
       if (existing) {
-        existing.totalBases += stats.totalBases;
-        existing.stolenBases += stats.stolenBases;
-        existing.baseOnBalls += stats.baseOnBalls;
-        existing.hitByPitch += stats.hitByPitch;
+        for (const key of Object.keys(stats) as (keyof BattingLine)[]) {
+          (existing as any)[key] += stats[key];
+        }
       } else {
         dayStats.set(mlbId, { ...stats });
       }
@@ -81,21 +124,44 @@ async function syncDate(date: string, mlbIdToPlayerId: Map<number, number>) {
   }
 
   const upsert = sqlite.prepare(`
-    INSERT INTO daily_stats (player_id, game_date, total_bases, stolen_bases, walks, hbp, fantasy_score)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO daily_stats (
+      player_id, game_date, total_bases, stolen_bases, walks, hbp, fantasy_score,
+      at_bats, hits, doubles, triples, home_runs, plate_appearances,
+      runs, rbi, strikeouts, sac_bunts, sac_flies,
+      ground_into_double_play, ground_into_triple_play, left_on_base,
+      ground_outs, fly_outs, line_outs, pop_outs, air_outs,
+      catchers_interference, caught_stealing, intentional_walks, pickoffs
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(player_id, game_date) DO UPDATE SET
-      total_bases = excluded.total_bases,
-      stolen_bases = excluded.stolen_bases,
-      walks = excluded.walks,
-      hbp = excluded.hbp,
-      fantasy_score = excluded.fantasy_score
+      total_bases = excluded.total_bases, stolen_bases = excluded.stolen_bases,
+      walks = excluded.walks, hbp = excluded.hbp, fantasy_score = excluded.fantasy_score,
+      at_bats = excluded.at_bats, hits = excluded.hits, doubles = excluded.doubles,
+      triples = excluded.triples, home_runs = excluded.home_runs,
+      plate_appearances = excluded.plate_appearances, runs = excluded.runs,
+      rbi = excluded.rbi, strikeouts = excluded.strikeouts,
+      sac_bunts = excluded.sac_bunts, sac_flies = excluded.sac_flies,
+      ground_into_double_play = excluded.ground_into_double_play,
+      ground_into_triple_play = excluded.ground_into_triple_play,
+      left_on_base = excluded.left_on_base, ground_outs = excluded.ground_outs,
+      fly_outs = excluded.fly_outs, line_outs = excluded.line_outs,
+      pop_outs = excluded.pop_outs, air_outs = excluded.air_outs,
+      catchers_interference = excluded.catchers_interference,
+      caught_stealing = excluded.caught_stealing,
+      intentional_walks = excluded.intentional_walks, pickoffs = excluded.pickoffs
   `);
 
   let count = 0;
   for (const [mlbId, stats] of dayStats) {
     const playerId = mlbIdToPlayerId.get(mlbId)!;
     const score = stats.totalBases + stats.stolenBases + stats.baseOnBalls + stats.hitByPitch;
-    upsert.run(playerId, date, stats.totalBases, stats.stolenBases, stats.baseOnBalls, stats.hitByPitch, score);
+    upsert.run(
+      playerId, date, stats.totalBases, stats.stolenBases, stats.baseOnBalls, stats.hitByPitch, score,
+      stats.atBats, stats.hits, stats.doubles, stats.triples, stats.homeRuns, stats.plateAppearances,
+      stats.runs, stats.rbi, stats.strikeOuts, stats.sacBunts, stats.sacFlies,
+      stats.groundIntoDoublePlay, stats.groundIntoTriplePlay, stats.leftOnBase,
+      stats.groundOuts, stats.flyOuts, stats.lineOuts, stats.popOuts, stats.airOuts,
+      stats.catchersInterference, stats.caughtStealing, stats.intentionalWalks, stats.pickoffs,
+    );
     count++;
   }
 
