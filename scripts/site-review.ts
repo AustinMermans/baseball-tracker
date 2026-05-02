@@ -35,7 +35,7 @@ const PROBES: Probe[] = [
     path: '/players',
     label: 'players-key',
     after: async (page) => {
-      await page.getByRole('button', { name: /^key$/i }).click();
+      await page.getByRole('tab', { name: /^key$/i }).click();
       await page.waitForTimeout(300);
       return 'key-view';
     },
@@ -44,7 +44,7 @@ const PROBES: Probe[] = [
     path: '/players',
     label: 'players-all',
     after: async (page) => {
-      await page.getByRole('button', { name: /^all$/i }).click();
+      await page.getByRole('tab', { name: /^all$/i }).click();
       await page.waitForTimeout(300);
       return 'all-view';
     },

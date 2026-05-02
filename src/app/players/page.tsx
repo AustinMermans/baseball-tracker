@@ -211,10 +211,10 @@ export default function PlayersPage() {
       <div className="border border-border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="sticky top-12 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-              <tr className="border-b border-border bg-muted/40">
-                <th className="sticky left-0 z-10 bg-muted/40 backdrop-blur text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-9">#</th>
-                <th className="sticky left-9 z-10 bg-muted/40 backdrop-blur text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5">Player</th>
+            <thead className="sticky top-12 z-20 bg-muted/95 backdrop-blur supports-[backdrop-filter]:bg-muted">
+              <tr className="border-b border-border">
+                <th className="sticky left-0 z-30 bg-muted text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-9">#</th>
+                <th className="sticky left-9 z-30 bg-muted text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5 shadow-[1px_0_0_0_hsl(var(--border))]">Player</th>
                 <th className="text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5">Team</th>
                 {view === 'fantasy' && (
                   <>
@@ -265,15 +265,17 @@ export default function PlayersPage() {
             <tbody>
               {filtered.map((p, idx) => {
                 const isDrafted = p.teamId != null;
-                const rowBg = isDrafted ? 'bg-muted/20' : 'bg-background';
-                const rowHoverBg = isDrafted ? 'hover:bg-muted/40' : 'hover:bg-muted/30';
+                // Sticky cells need an opaque bg so scrolled-away columns
+                // don't show through. We use --card (drafted) vs --background
+                // (everyone else) — both are solid in this theme.
+                const stickyBg = isDrafted ? 'bg-card' : 'bg-background';
                 return (
                 <tr
                   key={p.id}
-                  className={`border-b border-border/50 transition-colors ${rowBg} ${rowHoverBg}`}
+                  className={`border-b border-border/50 transition-colors group ${isDrafted ? 'bg-muted/30' : ''} hover:bg-muted/40`}
                 >
-                  <td className={`sticky left-0 z-[1] ${rowBg} px-3 py-2 text-xs tabular-nums text-muted-foreground w-9`}>{idx + 1}</td>
-                  <td className={`sticky left-9 z-[1] ${rowBg} px-3 py-2 text-sm font-medium`}>
+                  <td className={`sticky left-0 z-[2] ${stickyBg} group-hover:bg-muted/40 px-3 py-2 text-xs tabular-nums text-muted-foreground w-9`}>{idx + 1}</td>
+                  <td className={`sticky left-9 z-[2] ${stickyBg} group-hover:bg-muted/40 px-3 py-2 text-sm font-medium shadow-[1px_0_0_0_hsl(var(--border)/0.4)]`}>
                     <Link href={`/players/${p.slug}`} className="hover:text-primary transition-colors">
                       {p.name}
                     </Link>
