@@ -1,12 +1,14 @@
 /**
- * Generates public/data/calendar.json from the MLB Stats API schedule endpoint.
+ * Generates public/data/calendar.json from the MLB Stats API schedule endpoint
+ * plus a small rosteredByTeam map pulled from baseball.db so the calendar
+ * page can show "your players are playing today" without loading players.json.
+ *
  * Range: season start (2026-03-26) → today + 14 days.
  *
  * Usage: npx tsx scripts/generate-calendar.ts
- *
- * One network call (no DB); safe to run independently of sync-and-build.
  */
 
+import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
@@ -93,6 +95,53 @@ async function fetchScheduleRange(start: string, end: string): Promise<CalendarG
   return out;
 }
 
+interface RosterEntry {
+  name: string;
+  slug: string;
+  fantasyTeam: string;
+  fantasyTeamId: number;
+}
+
+function buildRosterMap(): Record<string, RosterEntry[]> {
+  // Slugify mirrors src/lib/utils.ts and the matching helper in
+  // generate-static.ts. The bare-name slug is correct for rostered players
+  // (the slug-collision logic in generate-static appends -mlbId only for
+  // non-rostered players, so we'll never collide here).
+  const slugify = (name: string) =>
+    name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  const dbPath = path.join(process.cwd(), 'baseball.db');
+  if (!fs.existsSync(dbPath)) return {};
+
+  const sqlite = new Database(dbPath, { readonly: true });
+  const rows = sqlite.prepare(`
+    SELECT p.name, p.mlb_team as mlbTeam, p.team_id as teamId, t.name as fantasyTeam
+    FROM players p
+    JOIN teams t ON t.id = p.team_id
+    WHERE p.is_active = 1 AND p.team_id IS NOT NULL AND p.mlb_team IS NOT NULL
+  `).all() as Array<{ name: string; mlbTeam: string; teamId: number; fantasyTeam: string }>;
+  sqlite.close();
+
+  const map: Record<string, RosterEntry[]> = {};
+  for (const r of rows) {
+    if (!map[r.mlbTeam]) map[r.mlbTeam] = [];
+    map[r.mlbTeam].push({
+      name: r.name,
+      slug: slugify(r.name),
+      fantasyTeam: r.fantasyTeam,
+      fantasyTeamId: r.teamId,
+    });
+  }
+  // Stable order within each team — by fantasy-team owner then name.
+  for (const team of Object.values(map)) {
+    team.sort((a, b) =>
+      a.fantasyTeam.localeCompare(b.fantasyTeam) || a.name.localeCompare(b.name)
+    );
+  }
+  return map;
+}
+
 async function main() {
   fs.mkdirSync(outDir, { recursive: true });
 
@@ -103,6 +152,11 @@ async function main() {
   const games = await fetchScheduleRange(SEASON_START, endDate);
   console.log(`Got ${games.length} games`);
 
+  console.log('Building roster map...');
+  const rosteredByTeam = buildRosterMap();
+  const rosterTotal = Object.values(rosteredByTeam).reduce((s, arr) => s + arr.length, 0);
+  console.log(`Mapped ${rosterTotal} drafted players across ${Object.keys(rosteredByTeam).length} MLB teams`);
+
   fs.writeFileSync(
     path.join(outDir, 'calendar.json'),
     JSON.stringify({
@@ -110,6 +164,7 @@ async function main() {
       seasonStart: SEASON_START,
       endDate,
       games,
+      rosteredByTeam,
     }, null, 2),
   );
 

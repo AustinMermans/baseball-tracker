@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { fetchData } from '@/lib/data';
 
 interface CalendarTeam {
@@ -22,11 +23,19 @@ interface CalendarGame {
   doubleHeader: string | null;
 }
 
+interface RosterEntry {
+  name: string;
+  slug: string;
+  fantasyTeam: string;
+  fantasyTeamId: number;
+}
+
 interface CalendarData {
   generatedAt: string;
   seasonStart: string;
   endDate: string;
   games: CalendarGame[];
+  rosteredByTeam?: Record<string, RosterEntry[]>;
 }
 
 const todayYmd = (() => {
@@ -266,45 +275,84 @@ export default function CalendarPage() {
           </div>
         ) : (
           <div className="space-y-2">
-            {selectedGames.map(g => (
+            {selectedGames.map(g => {
+              const awayRoster = (data.rosteredByTeam?.[g.away.abbr ?? ''] ?? []);
+              const homeRoster = (data.rosteredByTeam?.[g.home.abbr ?? ''] ?? []);
+              return (
               <div
                 key={g.gamePk}
-                className="flex items-center justify-between gap-3 px-3 py-2 border border-border rounded-lg hover:bg-muted/20 transition-colors"
+                className="border border-border rounded-lg hover:bg-muted/20 transition-colors"
               >
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm tabular-nums">
-                    <span className="font-medium">{g.away.abbr ?? g.away.name}</span>
-                    {g.away.name && g.away.abbr && <span className="text-muted-foreground/60 text-xs"> {g.away.name}</span>}
-                    <span className="mx-2 text-muted-foreground/60">@</span>
-                    <span className="font-medium">{g.home.abbr ?? g.home.name}</span>
-                    {g.home.name && g.home.abbr && <span className="text-muted-foreground/60 text-xs"> {g.home.name}</span>}
+                <div className="flex items-center justify-between gap-3 px-3 py-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm tabular-nums">
+                      <span className="font-medium">{g.away.abbr ?? g.away.name}</span>
+                      {g.away.name && g.away.abbr && <span className="text-muted-foreground/60 text-xs"> {g.away.name}</span>}
+                      <span className="mx-2 text-muted-foreground/60">@</span>
+                      <span className="font-medium">{g.home.abbr ?? g.home.name}</span>
+                      {g.home.name && g.home.abbr && <span className="text-muted-foreground/60 text-xs"> {g.home.name}</span>}
+                    </div>
+                    {g.doubleHeader && (
+                      <div className="text-[10px] uppercase text-muted-foreground tracking-wide mt-0.5">Doubleheader</div>
+                    )}
                   </div>
-                  {g.doubleHeader && (
-                    <div className="text-[10px] uppercase text-muted-foreground tracking-wide mt-0.5">Doubleheader</div>
-                  )}
-                </div>
-                <div className="text-right whitespace-nowrap">
-                  {g.status === 'F' && g.awayScore != null && g.homeScore != null ? (
-                    <div>
-                      <div className="text-sm tabular-nums font-semibold">{g.awayScore} – {g.homeScore}</div>
-                      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{g.detailedState}</div>
-                    </div>
-                  ) : g.status === 'I' ? (
-                    <div>
-                      <div className="text-sm tabular-nums font-semibold">
-                        {g.awayScore ?? 0} – {g.homeScore ?? 0}
+                  <div className="text-right whitespace-nowrap">
+                    {g.status === 'F' && g.awayScore != null && g.homeScore != null ? (
+                      <div>
+                        <div className="text-sm tabular-nums font-semibold">{g.awayScore} – {g.homeScore}</div>
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{g.detailedState}</div>
                       </div>
-                      <div className="text-[10px] uppercase tracking-wide text-amber-500">{g.detailedState}</div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="text-xs text-muted-foreground tabular-nums">{fmtTime(g.gameTimeISO)}</div>
-                      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{g.detailedState}</div>
-                    </div>
-                  )}
+                    ) : g.status === 'I' ? (
+                      <div>
+                        <div className="text-sm tabular-nums font-semibold">
+                          {g.awayScore ?? 0} – {g.homeScore ?? 0}
+                        </div>
+                        <div className="text-[10px] uppercase tracking-wide text-amber-500">{g.detailedState}</div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="text-xs text-muted-foreground tabular-nums">{fmtTime(g.gameTimeISO)}</div>
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{g.detailedState}</div>
+                      </div>
+                    )}
+                  </div>
                 </div>
+                {(awayRoster.length > 0 || homeRoster.length > 0) && (
+                  <div className="border-t border-border/60 px-3 py-2 bg-muted/15">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1.5 gap-x-4">
+                      {[
+                        { side: g.away.abbr ?? '???', roster: awayRoster },
+                        { side: g.home.abbr ?? '???', roster: homeRoster },
+                      ].map(({ side, roster }) => (
+                        <div key={side} className="min-w-0">
+                          <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1 tabular-nums">{side}</div>
+                          {roster.length === 0 ? (
+                            <div className="text-[11px] text-muted-foreground/50">No drafted players</div>
+                          ) : (
+                            <ul className="space-y-0.5">
+                              {roster.map(r => (
+                                <li key={r.slug} className="flex items-baseline justify-between gap-2 text-[11px]">
+                                  <Link href={`/players/${r.slug}`} className="font-medium hover:text-primary transition-colors truncate">
+                                    {r.name}
+                                  </Link>
+                                  <Link
+                                    href={`/teams/${r.fantasyTeamId}`}
+                                    className="text-muted-foreground hover:text-primary transition-colors whitespace-nowrap shrink-0"
+                                  >
+                                    {r.fantasyTeam}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
