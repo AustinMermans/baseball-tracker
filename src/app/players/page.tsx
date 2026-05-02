@@ -53,12 +53,16 @@ const COLUMNS_BY_VIEW: Record<View, SortKey[]> = {
   all: ['gamesPlayed', 'plateAppearances', 'atBats', 'hits', 'doubles', 'triples', 'homeRuns', 'runs', 'rbi', 'walks', 'intentionalWalks', 'strikeouts', 'stolenBases', 'caughtStealing', 'hbp', 'sacFlies', 'avg', 'obp', 'slg'],
 };
 
+type DraftFilter = 'all' | 'drafted' | 'undrafted';
+
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerData[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<SortKey>('totalScore');
   const [view, setView] = useState<View>('fantasy');
+  const [mlbTeamFilter, setMlbTeamFilter] = useState<string>('');
+  const [draftFilter, setDraftFilter] = useState<DraftFilter>('all');
 
   useEffect(() => {
     fetchData<PlayerData[]>('/api/players')
@@ -82,8 +86,19 @@ export default function PlayersPage() {
     }
   };
 
+  // Sorted, deduplicated list of MLB team abbreviations for the dropdown.
+  const mlbTeamOptions = Array.from(
+    new Set(players.map(p => p.mlbTeam).filter((t): t is string => !!t))
+  ).sort();
+
   const filtered = players
     .filter(p => {
+      // Draft-status filter
+      if (draftFilter === 'drafted' && p.teamId == null) return false;
+      if (draftFilter === 'undrafted' && p.teamId != null) return false;
+      // MLB team filter
+      if (mlbTeamFilter && p.mlbTeam !== mlbTeamFilter) return false;
+      // Search
       const q = search.toLowerCase();
       if (!q) return true;
       return (
@@ -174,22 +189,71 @@ export default function PlayersPage() {
         </p>
       </div>
 
-      <div className="flex gap-1" role="tablist" aria-label="Stat view">
-        {(['fantasy', 'key', 'all'] as View[]).map(v => (
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex gap-1" role="tablist" aria-label="Stat view">
+          {(['fantasy', 'key', 'all'] as View[]).map(v => (
+            <button
+              key={v}
+              onClick={() => setView(v)}
+              role="tab"
+              aria-selected={view === v}
+              className={`min-h-[38px] px-3.5 py-2 text-xs sm:text-[11px] sm:py-1.5 rounded transition-colors capitalize ${
+                view === v
+                  ? 'bg-accent text-accent-foreground font-medium'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+
+        <div className="h-6 w-px bg-border hidden sm:block" />
+
+        <div className="flex gap-1" role="tablist" aria-label="Roster filter">
+          {([
+            { v: 'all', label: 'All' },
+            { v: 'drafted', label: 'Drafted' },
+            { v: 'undrafted', label: 'Undrafted' },
+          ] as const).map(o => (
+            <button
+              key={o.v}
+              onClick={() => setDraftFilter(o.v)}
+              role="tab"
+              aria-selected={draftFilter === o.v}
+              className={`min-h-[38px] px-3.5 py-2 text-xs sm:text-[11px] sm:py-1.5 rounded transition-colors ${
+                draftFilter === o.v
+                  ? 'bg-accent text-accent-foreground font-medium'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="h-6 w-px bg-border hidden sm:block" />
+
+        <select
+          value={mlbTeamFilter}
+          onChange={e => setMlbTeamFilter(e.target.value)}
+          aria-label="Filter by MLB team"
+          className="min-h-[38px] sm:min-h-[32px] bg-background border border-border rounded-md px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
+        >
+          <option value="">All MLB teams</option>
+          {mlbTeamOptions.map(t => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+
+        {(mlbTeamFilter || draftFilter !== 'all') && (
           <button
-            key={v}
-            onClick={() => setView(v)}
-            role="tab"
-            aria-selected={view === v}
-            className={`min-h-[38px] px-3.5 py-2 text-xs sm:text-[11px] sm:py-1.5 rounded transition-colors capitalize ${
-              view === v
-                ? 'bg-accent text-accent-foreground font-medium'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
+            onClick={() => { setMlbTeamFilter(''); setDraftFilter('all'); }}
+            className="min-h-[32px] px-2.5 py-1 text-[11px] rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
-            {v}
+            Clear filters
           </button>
-        ))}
+        )}
       </div>
 
       <div className="flex gap-2 items-center">

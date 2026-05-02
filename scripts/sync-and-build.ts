@@ -160,20 +160,26 @@ async function syncDate(
     }
   }
 
-  // Discover and upsert any new MLB players we haven't seen before.
-  // Existing rows are left untouched (preserves team_id, draft_round).
-  const insertPlayer = sqlite.prepare(`
+  // Discover and upsert MLB players. New rows get name/team/position from the
+  // boxscore. Existing rows keep their league-managed columns (team_id,
+  // draft_round, is_active) but mlb_team and position are refreshed in case
+  // of mid-season trades. Name is left alone to avoid spurious capitalization
+  // churn. team_id intentionally stays NULL on first insert (non-rostered).
+  const upsertPlayer = sqlite.prepare(`
     INSERT INTO players (mlb_id, name, mlb_team, position, team_id, draft_round, is_active)
     VALUES (?, ?, ?, ?, NULL, NULL, 1)
-    ON CONFLICT(mlb_id) DO NOTHING
+    ON CONFLICT(mlb_id) DO UPDATE SET
+      mlb_team = excluded.mlb_team,
+      position = excluded.position
   `);
   const lookupPlayer = sqlite.prepare(`SELECT id FROM players WHERE mlb_id = ?`);
   for (const [mlbId, meta] of dayMeta) {
-    if (mlbIdToPlayerId.has(mlbId)) continue;
     const mlbTeam = meta.mlbTeamId != null ? (teamAbbrev.get(meta.mlbTeamId) ?? null) : null;
-    insertPlayer.run(mlbId, meta.fullName, mlbTeam, meta.position);
-    const row = lookupPlayer.get(mlbId) as { id: number } | undefined;
-    if (row) mlbIdToPlayerId.set(mlbId, row.id);
+    upsertPlayer.run(mlbId, meta.fullName, mlbTeam, meta.position);
+    if (!mlbIdToPlayerId.has(mlbId)) {
+      const row = lookupPlayer.get(mlbId) as { id: number } | undefined;
+      if (row) mlbIdToPlayerId.set(mlbId, row.id);
+    }
   }
 
   const upsert = sqlite.prepare(`
@@ -275,9 +281,15 @@ async function main() {
 
   sqlite.close();
 
+  // Refresh MLB team/position for every player (catches mid-season trades
+  // and any rostered players who haven't appeared in a boxscore today).
+  // One API call, fast.
+  console.log('\nRefreshing player teams from MLB API...');
+  const { execSync } = await import('child_process');
+  execSync('npx tsx scripts/refresh-player-teams.ts', { stdio: 'inherit' });
+
   // Now generate static JSON
   console.log('\nGenerating static data...');
-  const { execSync } = await import('child_process');
   execSync('npx tsx scripts/generate-static.ts', { stdio: 'inherit' });
 
   console.log('\nGenerating calendar data...');

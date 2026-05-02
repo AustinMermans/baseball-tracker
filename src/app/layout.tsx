@@ -3,7 +3,7 @@
 import './globals.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const navItems = [
   { href: '/', label: 'Overview' },
@@ -17,11 +17,33 @@ const teamNames = ['Cole', 'Markus', 'J Mill', 'Ryan', 'Joey', 'Jack', 'Austin',
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+
+  // Close mobile menu on Escape, outside click, or route change.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false); };
+    const onClick = (e: MouseEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onClick);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onClick);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   return (
     <html lang="en">
       <body className="min-h-screen">
-        <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-50">
+        <header ref={headerRef} className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             {/* Top row */}
             <div className="flex items-center justify-between h-12">

@@ -40,13 +40,40 @@ export default function Dashboard() {
   const today = new Date().toISOString().split('T')[0];
   const currentPeriod = periods.find(p => p.startDate <= today && p.endDate >= today);
 
+  const fmtMD = (ymd?: string) => {
+    if (!ymd) return '';
+    const [y, m, d] = ymd.split('-').map(Number);
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    void y;
+    return `${monthNames[m - 1]} ${d}`;
+  };
+
+  const daysBetween = (a: string, b: string) => {
+    const ms = (new Date(b).getTime() - new Date(a).getTime());
+    return Math.max(0, Math.round(ms / 86400000));
+  };
+
+  const currentDaysLeft = currentPeriod ? daysBetween(today, currentPeriod.endDate) : 0;
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-lg font-semibold">League Overview</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          {currentPeriod?.name || 'Preseason'} &middot; Best ball, top 10 of 13 &middot; TB + SB + BB + HBP
+          {currentPeriod ? (
+            <>
+              <span className="text-foreground font-medium">{currentPeriod.name}</span>
+              <span className="mx-1">·</span>
+              {fmtMD(currentPeriod.startDate)} – {fmtMD(currentPeriod.endDate)}
+              <span className="mx-1">·</span>
+              <span className="text-primary">{currentDaysLeft} days left</span>
+            </>
+          ) : 'Preseason'}
+          <span className="mx-1">·</span>
+          Best ball, top 10 of 13
+          <span className="mx-1">·</span>
+          TB + SB + BB + HBP
         </p>
       </div>
 
@@ -127,8 +154,8 @@ export default function Dashboard() {
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-muted-foreground">
-                {p.startDate?.slice(5)} to {p.endDate?.slice(5)}
+              <p className="text-[11px] text-muted-foreground tabular-nums">
+                {fmtMD(p.startDate)} – {fmtMD(p.endDate)}
               </p>
               {leader && leader.periods[i]?.bestBallScore > 0 && (
                 <p className="text-xs mt-2">
