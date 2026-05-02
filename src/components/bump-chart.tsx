@@ -95,23 +95,25 @@ export function BumpChart({ entries, weeks, maxRank, title, subtitle }: BumpChar
       <h2 className="text-sm font-medium">{title}</h2>
       {subtitle && <p className="text-xs text-muted-foreground mt-0.5 mb-3">{subtitle}</p>}
       <div className="border border-border rounded-lg p-3 sm:p-4 mt-3">
-        <ResponsiveContainer width="100%" height={Math.max(280, maxRank * 40)}>
-          <LineChart data={chartData} margin={{ top: 16, right: 16, bottom: 8, left: 8 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+        <ResponsiveContainer width="100%" height={Math.max(320, maxRank * 44)}>
+          <LineChart data={chartData} margin={{ top: 24, right: 20, bottom: 16, left: 4 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
             <XAxis
               dataKey="week"
               tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
               tickLine={false}
               axisLine={false}
-              padding={{ left: 8, right: 8 }}
+              padding={{ left: 12, right: 12 }}
+              interval="preserveStartEnd"
+              minTickGap={32}
             />
             <YAxis
               reversed
-              // Pad the domain by 0.5 on each side so dots at rank 1 and rank
-              // maxRank get visual breathing room and don't clip on the chart
-              // edge. allowDataOverflow stays off since the data is now safely
-              // inside the domain.
-              domain={[0.5, maxRank + 0.5]}
+              // Pad the domain so rank-1 and rank-maxRank dots (radius 5) get
+              // breathing room and don't clip against the plot edge. Combined
+              // with the larger top/bottom chart margins, this keeps the full
+              // dot + stroke visible.
+              domain={[0.4, maxRank + 0.6]}
               ticks={Array.from({ length: maxRank }, (_, i) => i + 1)}
               tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
               tickLine={false}
