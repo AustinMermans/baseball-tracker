@@ -431,7 +431,7 @@ function PlayersPageInner() {
                     {isDrafted ? (
                       <Link
                         href={`/teams/${p.teamId}`}
-                        className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                        className="inline-flex items-center min-h-[36px] -my-2 text-xs text-muted-foreground hover:text-primary transition-colors"
                       >
                         {p.fantasyTeam}
                       </Link>

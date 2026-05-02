@@ -48,8 +48,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             {/* Top row */}
             <div className="flex items-center justify-between h-12">
-              <Link href="/" className="text-sm font-semibold tracking-tight text-foreground">
-                Fantasy Baseball <span className="text-muted-foreground font-normal">&apos;26</span>
+              <Link href="/" className="inline-flex items-center min-h-[40px] -my-1 text-sm font-semibold tracking-tight text-foreground">
+                Fantasy Baseball <span className="ml-1 text-muted-foreground font-normal">&apos;26</span>
               </Link>
 
               {/* Desktop nav */}

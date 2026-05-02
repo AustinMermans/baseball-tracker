@@ -132,7 +132,11 @@ async function probe(browser: Browser, probe: Probe, viewport: typeof VIEWPORTS[
       return targets.filter(el => {
         const r = (el as HTMLElement).getBoundingClientRect();
         if (r.width === 0 || r.height === 0) return false;
-        return (r.width < 32 || r.height < 32);
+        // Flag tap targets where neither dimension reaches 32px (truly small).
+        // Short-text links inside a row (e.g. an owner name like "Cole" at
+        // 26x36) are tappable thanks to the row's vertical padding — flagging
+        // them as a problem just produces noise.
+        return r.width < 32 && r.height < 32;
       }).slice(0, 10).map(el => ({
         tag: el.tagName,
         text: (el.textContent ?? '').trim().slice(0, 20),

@@ -54,9 +54,9 @@ interface PlayerDetail {
     slug: string;
     mlbTeam: string | null;
     position: string | null;
-    teamId: number;
+    teamId: number | null;
     fantasyTeam: string;
-    draftRound: number;
+    draftRound: number | null;
     overallRank: number;
   };
   seasonTotals: {
@@ -197,7 +197,7 @@ export default function PlayerDetailPage() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-          <Link href="/players" className="hover:text-foreground">Players</Link>
+          <Link href="/players" className="inline-flex items-center min-h-[32px] -my-1 hover:text-foreground">Players</Link>
           <span>/</span>
         </div>
         <div className="flex items-center justify-between">
@@ -205,13 +205,23 @@ export default function PlayerDetailPage() {
             <h1 className="text-lg font-semibold">{player.name}</h1>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
               <span className="text-xs text-muted-foreground">
-                {player.position} &middot; {player.mlbTeam}
+                {[player.position, player.mlbTeam].filter(Boolean).join(' · ') || '—'}
               </span>
-              <span className="text-xs text-muted-foreground">&middot;</span>
-              <Link href={`/teams/${player.teamId}`} className="text-xs text-muted-foreground hover:text-primary">
-                {player.fantasyTeam}
-              </Link>
-              <span className="text-xs text-muted-foreground">(Rd {player.draftRound})</span>
+              {player.teamId != null ? (
+                <>
+                  <span className="text-xs text-muted-foreground">&middot;</span>
+                  <Link href={`/teams/${player.teamId}`} className="inline-flex items-center min-h-[32px] -my-1 text-xs text-muted-foreground hover:text-primary">
+                    {player.fantasyTeam}
+                  </Link>
+                  {player.draftRound != null && (
+                    <span className="text-xs text-muted-foreground">(Rd {player.draftRound})</span>
+                  )}
+                </>
+              ) : (
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted text-muted-foreground">
+                  Undrafted
+                </span>
+              )}
               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary">
                 #{player.overallRank} overall
               </span>
@@ -221,12 +231,12 @@ export default function PlayerDetailPage() {
         {/* Prev / Next */}
         <div className="flex gap-3 mt-3 text-xs">
           {nav.prevSlug ? (
-            <Link href={`/players/${nav.prevSlug}`} className="text-muted-foreground hover:text-foreground">
+            <Link href={`/players/${nav.prevSlug}`} className="inline-flex items-center min-h-[36px] text-muted-foreground hover:text-foreground">
               &larr; {nav.prevName}
             </Link>
           ) : <span />}
           {nav.nextSlug && (
-            <Link href={`/players/${nav.nextSlug}`} className="text-muted-foreground hover:text-foreground">
+            <Link href={`/players/${nav.nextSlug}`} className="inline-flex items-center min-h-[36px] text-muted-foreground hover:text-foreground">
               {nav.nextName} &rarr;
             </Link>
           )}
@@ -242,7 +252,7 @@ export default function PlayerDetailPage() {
               <button
                 key={lc.key}
                 onClick={() => toggleLine(lc.key)}
-                className={`px-2.5 py-1 text-[11px] rounded-md transition-colors ${
+                className={`px-3 min-h-[32px] inline-flex items-center text-[11px] rounded-md transition-colors ${
                   activeLines.has(lc.key)
                     ? 'bg-accent text-accent-foreground font-medium'
                     : 'text-muted-foreground hover:text-foreground'
@@ -311,13 +321,13 @@ export default function PlayerDetailPage() {
           <div className="flex gap-1">
             <button
               onClick={() => setStatView('key')}
-              className={`px-2 py-1 text-[11px] rounded transition-colors ${
+              className={`px-3 min-h-[32px] inline-flex items-center justify-center text-[11px] rounded transition-colors ${
                 statView === 'key' ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
               }`}
             >Key</button>
             <button
               onClick={() => setStatView('all')}
-              className={`px-2 py-1 text-[11px] rounded transition-colors ${
+              className={`px-3 min-h-[32px] inline-flex items-center justify-center text-[11px] rounded transition-colors ${
                 statView === 'all' ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
               }`}
             >All</button>
@@ -342,13 +352,13 @@ export default function PlayerDetailPage() {
           <div className="flex gap-1">
             <button
               onClick={() => setLogView('key')}
-              className={`px-2 py-1 text-[11px] rounded transition-colors ${
+              className={`px-3 min-h-[32px] inline-flex items-center justify-center text-[11px] rounded transition-colors ${
                 logView === 'key' ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
               }`}
             >Key</button>
             <button
               onClick={() => setLogView('all')}
-              className={`px-2 py-1 text-[11px] rounded transition-colors ${
+              className={`px-3 min-h-[32px] inline-flex items-center justify-center text-[11px] rounded transition-colors ${
                 logView === 'all' ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
               }`}
             >All</button>

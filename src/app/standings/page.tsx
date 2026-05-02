@@ -142,7 +142,7 @@ export default function StandingsPage() {
                   </span>
                 </td>
                 <td className="px-4 py-2.5">
-                  <Link href={`/teams/${s.team.id}`} className="text-sm font-medium hover:text-primary">
+                  <Link href={`/teams/${s.team.id}`} className="inline-flex items-center min-h-[36px] -my-2 text-sm font-medium hover:text-primary">
                     {s.team.name}
                   </Link>
                 </td>

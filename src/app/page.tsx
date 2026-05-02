@@ -110,7 +110,7 @@ export default function Dashboard() {
                 <td className="px-4 py-2.5">
                   <Link
                     href={`/teams/${s.team.id}`}
-                    className="text-sm font-medium hover:text-primary transition-colors"
+                    className="inline-flex items-center min-h-[36px] -my-2 text-sm font-medium hover:text-primary transition-colors"
                   >
                     {s.team.name}
                     {idx === 0 && <span className="ml-1.5 text-[10px] text-primary font-normal">leader</span>}

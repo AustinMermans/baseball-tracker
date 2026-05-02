@@ -128,7 +128,7 @@ export default function TeamDetailPage() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-          <Link href="/standings" className="hover:text-foreground">Standings</Link>
+          <Link href="/standings" className="inline-flex items-center min-h-[32px] -my-1 hover:text-foreground">Standings</Link>
           <span>/</span>
         </div>
         <h1 className="text-lg font-semibold">{data.team.name}</h1>
@@ -140,7 +140,7 @@ export default function TeamDetailPage() {
             <Link
               key={i}
               href={`/teams/${i + 1}`}
-              className={`px-2 py-1 text-[11px] rounded transition-colors ${
+              className={`inline-flex items-center justify-center min-h-[32px] min-w-[44px] px-2 py-1 text-[11px] rounded transition-colors ${
                 i + 1 === id
                   ? 'bg-primary text-primary-foreground font-medium'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -184,9 +184,9 @@ export default function TeamDetailPage() {
           <h2 className="text-sm font-medium">
             Roster &middot; {pr?.period.name}
           </h2>
-          <TabsList className="h-7">
-            <TabsTrigger value="fantasy" className="text-[11px] px-2.5 py-1 h-auto">Fantasy Scoring</TabsTrigger>
-            <TabsTrigger value="stats" className="text-[11px] px-2.5 py-1 h-auto">Player Stats</TabsTrigger>
+          <TabsList className="h-auto">
+            <TabsTrigger value="fantasy" className="text-[11px] px-3 min-h-[32px] h-auto">Fantasy Scoring</TabsTrigger>
+            <TabsTrigger value="stats" className="text-[11px] px-3 min-h-[32px] h-auto">Player Stats</TabsTrigger>
           </TabsList>
         </div>
 
@@ -220,7 +220,7 @@ export default function TeamDetailPage() {
                         }`} />
                       </td>
                       <td className="px-4 py-2">
-                        <Link href={`/players/${ps.slug}`} className="text-sm hover:text-primary transition-colors">
+                        <Link href={`/players/${ps.slug}`} className="inline-flex items-center min-h-[36px] -my-2 text-sm hover:text-primary transition-colors">
                           {ps.playerName}
                         </Link>
                         {idx === 0 && counting && (
@@ -315,7 +315,7 @@ export default function TeamDetailPage() {
                   {pr?.playerScores.map(ps => (
                     <tr key={ps.playerId} className="border-b border-border/50 hover:bg-muted/30">
                       <td className="px-4 py-2">
-                        <Link href={`/players/${ps.slug}`} className="text-sm hover:text-primary transition-colors">
+                        <Link href={`/players/${ps.slug}`} className="inline-flex items-center min-h-[36px] -my-2 text-sm hover:text-primary transition-colors">
                           {ps.playerName}
                         </Link>
                       </td>
@@ -377,9 +377,9 @@ export default function TeamDetailPage() {
           {data.roster.map((p, i) => {
             const games7 = p.mlbTeam ? (gamesNext7ByMlbTeam.get(p.mlbTeam) ?? 0) : null;
             return (
-              <div key={p.id} className="px-3 py-2 border-b border-border/50 flex items-center gap-2">
+              <div key={p.id} className="px-3 py-1 border-b border-border/50 flex items-center gap-2">
                 <span className="text-xs text-muted-foreground tabular-nums w-5 shrink-0">{i + 1}.</span>
-                <Link href={`/players/${p.slug}`} className="text-xs flex-1 hover:text-primary transition-colors truncate">
+                <Link href={`/players/${p.slug}`} className="inline-flex items-center min-h-[36px] text-xs flex-1 hover:text-primary transition-colors truncate">
                   {p.name}
                 </Link>
                 {p.mlbTeam && (

@@ -338,13 +338,13 @@ export default function CalendarPage() {
                           ) : (
                             <ul className="space-y-0.5">
                               {roster.map(r => (
-                                <li key={r.slug} className="flex items-baseline justify-between gap-2 text-[11px]">
-                                  <Link href={`/players/${r.slug}`} className="font-medium hover:text-primary transition-colors truncate">
+                                <li key={r.slug} className="flex items-center justify-between gap-2 text-[11px]">
+                                  <Link href={`/players/${r.slug}`} className="inline-flex items-center min-h-[32px] font-medium hover:text-primary transition-colors truncate">
                                     {r.name}
                                   </Link>
                                   <Link
                                     href={`/teams/${r.fantasyTeamId}`}
-                                    className="text-muted-foreground hover:text-primary transition-colors whitespace-nowrap shrink-0"
+                                    className="inline-flex items-center min-h-[32px] text-muted-foreground hover:text-primary transition-colors whitespace-nowrap shrink-0"
                                   >
                                     {r.fantasyTeam}
                                   </Link>
