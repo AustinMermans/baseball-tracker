@@ -128,8 +128,24 @@ export default function PlayersPage() {
       <div>
         <h1 className="text-lg font-semibold">Players</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          All 104 rostered players &middot; sorted by {sortBy === 'totalScore' ? 'total score' : sortBy}
+          All 104 rostered players &middot; {view === 'fantasy' ? 'fantasy scoring' : view === 'key' ? 'key batting stats' : 'full batting stats'}
         </p>
+      </div>
+
+      <div className="flex gap-1">
+        {(['fantasy', 'key', 'all'] as View[]).map(v => (
+          <button
+            key={v}
+            onClick={() => setView(v)}
+            className={`px-2.5 py-1 text-[11px] rounded transition-colors capitalize ${
+              view === v
+                ? 'bg-accent text-accent-foreground font-medium'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {v}
+          </button>
+        ))}
       </div>
 
       <div className="flex gap-2 items-center">
