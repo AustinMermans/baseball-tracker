@@ -193,20 +193,36 @@ export default function PlayersPage() {
       </div>
 
       <div className="flex gap-2 items-center">
-        <input
-          type="text"
-          placeholder="Search players, fantasy teams, or MLB teams..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="flex-1 max-w-sm bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-        />
+        <div className="relative flex-1 max-w-sm">
+          <input
+            type="text"
+            placeholder="Search players, fantasy teams, or MLB teams..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full bg-background border border-border rounded-lg pl-3 pr-9 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              aria-label="Clear search"
+              className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted flex items-center justify-center"
+            >
+              ×
+            </button>
+          )}
+        </div>
         <button
           onClick={exportCSV}
-          className="px-3 py-2 text-xs font-medium rounded-lg border border-border hover:bg-muted transition-colors whitespace-nowrap"
+          className="min-h-[40px] px-3 py-2 text-xs font-medium rounded-lg border border-border hover:bg-muted transition-colors whitespace-nowrap"
         >
           Export CSV
         </button>
       </div>
+      {search && (
+        <p className="text-[11px] text-muted-foreground -mt-3">
+          {filtered.length} of {players.length} match &ldquo;{search}&rdquo;
+        </p>
+      )}
 
       <div className="border border-border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">

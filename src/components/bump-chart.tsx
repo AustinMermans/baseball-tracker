@@ -94,25 +94,29 @@ export function BumpChart({ entries, weeks, maxRank, title, subtitle }: BumpChar
     <div>
       <h2 className="text-sm font-medium">{title}</h2>
       {subtitle && <p className="text-xs text-muted-foreground mt-0.5 mb-3">{subtitle}</p>}
-      <div className="border border-border rounded-lg p-4 mt-3">
+      <div className="border border-border rounded-lg p-3 sm:p-4 mt-3">
         <ResponsiveContainer width="100%" height={Math.max(280, maxRank * 40)}>
-          <LineChart data={chartData} margin={{ top: 10, right: 80, bottom: 5, left: 5 }}>
+          <LineChart data={chartData} margin={{ top: 16, right: 16, bottom: 8, left: 8 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis
               dataKey="week"
               tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
               tickLine={false}
               axisLine={false}
+              padding={{ left: 8, right: 8 }}
             />
             <YAxis
               reversed
-              domain={[1, maxRank]}
+              // Pad the domain by 0.5 on each side so dots at rank 1 and rank
+              // maxRank get visual breathing room and don't clip on the chart
+              // edge. allowDataOverflow stays off since the data is now safely
+              // inside the domain.
+              domain={[0.5, maxRank + 0.5]}
               ticks={Array.from({ length: maxRank }, (_, i) => i + 1)}
               tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
               tickLine={false}
               axisLine={false}
-              width={25}
-              allowDataOverflow
+              width={22}
             />
             <Tooltip
               content={<BumpTooltip maxRank={maxRank} />}

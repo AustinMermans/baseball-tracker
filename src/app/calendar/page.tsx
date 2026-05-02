@@ -162,20 +162,30 @@ export default function CalendarPage() {
       </div>
 
       {/* Month nav */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <button
           onClick={goPrevMonth}
           disabled={!canPrev}
-          className="px-2 py-1 text-xs rounded-md border border-border hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="min-h-[36px] min-w-[36px] px-3 py-1.5 text-sm rounded-md border border-border hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Previous month"
         >
           ←
         </button>
-        <h2 className="text-sm font-medium tabular-nums">{MONTHS[month - 1]} {year}</h2>
+        <div className="flex items-center gap-2 flex-1 justify-center">
+          <h2 className="text-sm font-medium tabular-nums">{MONTHS[month - 1]} {year}</h2>
+          {(year !== today.y || month !== today.m || selectedDate !== todayYmd) && (
+            <button
+              onClick={() => { setYear(today.y); setMonth(today.m); setSelectedDate(todayYmd); }}
+              className="min-h-[28px] px-2.5 py-1 text-[11px] rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors font-medium"
+            >
+              Today
+            </button>
+          )}
+        </div>
         <button
           onClick={goNextMonth}
           disabled={!canNext}
-          className="px-2 py-1 text-xs rounded-md border border-border hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="min-h-[36px] min-w-[36px] px-3 py-1.5 text-sm rounded-md border border-border hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Next month"
         >
           →
