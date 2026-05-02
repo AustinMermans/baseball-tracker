@@ -65,6 +65,13 @@ export default function PlayersPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (!COLUMNS_BY_VIEW[view].includes(sortBy)) {
+      setSortBy(DEFAULT_SORT_BY_VIEW[view]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view]);
+
   const statValue = (p: PlayerData, key: SortKey): number => {
     switch (key) {
       case 'avg': return avg(p.hits, p.atBats);
