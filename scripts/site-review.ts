@@ -52,8 +52,6 @@ const PROBES: Probe[] = [
     },
   },
   { path: '/calendar', label: 'calendar' },
-  { path: '/compare', label: 'compare-empty' },
-  { path: '/compare?players=aaron-judge,kyle-schwarber,shohei-ohtani', label: 'compare-3' },
   { path: '/pitchers', label: 'pitchers' },
   { path: '/teams/1', label: 'team-1' },
   { path: '/players/aaron-judge', label: 'player-detail' },

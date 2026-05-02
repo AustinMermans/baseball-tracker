@@ -112,16 +112,6 @@ function PlayersPageInner() {
   const [view, setView] = useState<View>(initialState.current.view);
   const [mlbTeamFilter, setMlbTeamFilter] = useState<string>(initialState.current.mlbTeamFilter);
   const [draftFilter, setDraftFilter] = useState<DraftFilter>(initialState.current.draftFilter);
-  const [compareSlugs, setCompareSlugs] = useState<string[]>([]);
-
-  const COMPARE_MAX = 3;
-  const toggleCompare = (slug: string) => {
-    setCompareSlugs(prev => {
-      if (prev.includes(slug)) return prev.filter(s => s !== slug);
-      if (prev.length >= COMPARE_MAX) return prev;
-      return [...prev, slug];
-    });
-  };
 
   useEffect(() => {
     fetchData<PlayerData[]>('/api/players')
@@ -429,19 +419,7 @@ function PlayersPageInner() {
                   <td className={`sticky left-0 z-[2] ${stickyBg} group-hover:bg-muted/40 px-3 py-2 text-xs tabular-nums text-muted-foreground w-9`}>{idx + 1}</td>
                   <td className={`sticky left-9 z-[2] ${stickyBg} group-hover:bg-muted/40 px-3 py-2 text-sm font-medium shadow-[1px_0_0_0_hsl(var(--border)/0.4)]`}>
                     <span className="inline-flex items-center gap-1.5">
-                      <button
-                        onClick={() => toggleCompare(p.slug)}
-                        disabled={!compareSlugs.includes(p.slug) && compareSlugs.length >= COMPARE_MAX}
-                        aria-label={compareSlugs.includes(p.slug) ? `Remove ${p.name} from compare` : `Add ${p.name} to compare`}
-                        className={`w-8 h-8 sm:w-5 sm:h-5 rounded border text-sm sm:text-[11px] leading-none flex items-center justify-center shrink-0 transition-colors ${
-                          compareSlugs.includes(p.slug)
-                            ? 'bg-primary text-primary-foreground border-primary'
-                            : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed'
-                        }`}
-                      >
-                        {compareSlugs.includes(p.slug) ? '✓' : '+'}
-                      </button>
-                      <Link href={`/players/${p.slug}`} className="hover:text-primary transition-colors">
+                      <Link href={`/players/${p.slug}`} className="inline-flex items-center min-h-[36px] -my-2 hover:text-primary transition-colors">
                         {p.name}
                       </Link>
                       {p.mlbTeam && (
@@ -512,29 +490,6 @@ function PlayersPageInner() {
         </div>
       </div>
 
-      {/* Floating compare bar */}
-      {compareSlugs.length > 0 && (
-        <div className="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:right-6 sm:left-auto z-40 flex items-center gap-2 px-3 py-2 bg-card border border-primary/40 rounded-lg shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-200">
-          <span className="text-xs font-medium">
-            Compare {compareSlugs.length}/{COMPARE_MAX}
-          </span>
-          <span className="text-[11px] text-muted-foreground hidden sm:inline">
-            {compareSlugs.map(s => s.split('-').slice(0, 2).join(' ')).join(' · ')}
-          </span>
-          <button
-            onClick={() => setCompareSlugs([])}
-            className="text-[11px] text-muted-foreground hover:text-foreground px-2 py-1 rounded hover:bg-muted"
-          >
-            clear
-          </button>
-          <Link
-            href={`/compare?players=${compareSlugs.join(',')}`}
-            className="px-3 py-1.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-          >
-            Compare →
-          </Link>
-        </div>
-      )}
     </div>
   );
 }

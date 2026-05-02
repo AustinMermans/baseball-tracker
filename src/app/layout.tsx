@@ -10,7 +10,6 @@ const navItems = [
   { href: '/standings', label: 'Standings' },
   { href: '/players', label: 'Players' },
   { href: '/calendar', label: 'Calendar' },
-  { href: '/compare', label: 'Compare' },
   { href: '/pitchers', label: 'Pitchers' },
 ];
 
