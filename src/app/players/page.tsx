@@ -98,16 +98,48 @@ export default function PlayersPage() {
   }
 
   const exportCSV = () => {
-    const header = 'Rank,Player,Fantasy Team,GP,TB,SB,BB,HBP,PTS';
-    const rows = filtered.map((p, i) =>
-      `${i + 1},"${p.name}","${p.fantasyTeam}",${p.gamesPlayed},${p.totalBases},${p.stolenBases},${p.walks},${p.hbp},${p.totalScore}`
-    );
+    const baseHeader = ['Rank', 'Player', 'Fantasy Team'];
+    const baseRow = (p: PlayerData, i: number) => [
+      String(i + 1),
+      `"${p.name.replace(/"/g, '""')}"`,
+      `"${p.fantasyTeam.replace(/"/g, '""')}"`,
+    ];
+
+    let statHeaders: string[];
+    let statRow: (p: PlayerData) => string[];
+
+    if (view === 'fantasy') {
+      statHeaders = ['GP', 'TB', 'SB', 'BB', 'HBP', 'PTS'];
+      statRow = p => [p.gamesPlayed, p.totalBases, p.stolenBases, p.walks, p.hbp, p.totalScore].map(String);
+    } else if (view === 'key') {
+      statHeaders = ['GP', 'AB', 'H', 'HR', 'SB', 'BB', 'AVG'];
+      statRow = p => [
+        String(p.gamesPlayed), String(p.atBats), String(p.hits), String(p.homeRuns),
+        String(p.stolenBases), String(p.walks),
+        fmtRate(avg(p.hits, p.atBats)),
+      ];
+    } else {
+      statHeaders = ['GP', 'PA', 'AB', 'H', '2B', '3B', 'HR', 'R', 'RBI', 'BB', 'IBB', 'SO', 'SB', 'CS', 'HBP', 'SF', 'AVG', 'OBP', 'SLG'];
+      statRow = p => [
+        String(p.gamesPlayed), String(p.plateAppearances), String(p.atBats), String(p.hits),
+        String(p.doubles), String(p.triples), String(p.homeRuns), String(p.runs), String(p.rbi),
+        String(p.walks), String(p.intentionalWalks), String(p.strikeouts),
+        String(p.stolenBases), String(p.caughtStealing), String(p.hbp), String(p.sacFlies),
+        fmtRate(avg(p.hits, p.atBats)),
+        fmtRate(obp(p.hits, p.walks, p.hbp, p.atBats, p.sacFlies)),
+        fmtRate(slg(p.totalBases, p.atBats)),
+      ];
+    }
+
+    const header = [...baseHeader, ...statHeaders].join(',');
+    const rows = filtered.map((p, i) => [...baseRow(p, i), ...statRow(p)].join(','));
     const csv = [header, ...rows].join('\n');
+
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `fantasy-baseball-players-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `fantasy-baseball-players-${view}-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
