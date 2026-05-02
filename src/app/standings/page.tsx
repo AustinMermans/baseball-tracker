@@ -82,10 +82,12 @@ export default function StandingsPage() {
       )}
 
       {/* View toggles */}
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-wrap" role="tablist" aria-label="Period filter">
         <button
           onClick={() => setView('cumulative')}
-          className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+          role="tab"
+          aria-selected={view === 'cumulative'}
+          className={`min-h-[38px] px-3.5 py-2 sm:py-1.5 text-xs rounded-md transition-colors ${
             view === 'cumulative'
               ? 'bg-accent text-accent-foreground font-medium'
               : 'text-muted-foreground hover:text-foreground'
@@ -97,7 +99,9 @@ export default function StandingsPage() {
           <button
             key={p.id}
             onClick={() => setView(i)}
-            className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+            role="tab"
+            aria-selected={view === i}
+            className={`min-h-[38px] px-3.5 py-2 sm:py-1.5 text-xs rounded-md transition-colors ${
               view === i
                 ? 'bg-accent text-accent-foreground font-medium'
                 : 'text-muted-foreground hover:text-foreground'

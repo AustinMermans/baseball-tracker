@@ -174,12 +174,14 @@ export default function PlayersPage() {
         </p>
       </div>
 
-      <div className="flex gap-1">
+      <div className="flex gap-1" role="tablist" aria-label="Stat view">
         {(['fantasy', 'key', 'all'] as View[]).map(v => (
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`px-2.5 py-1 text-[11px] rounded transition-colors capitalize ${
+            role="tab"
+            aria-selected={view === v}
+            className={`min-h-[38px] px-3.5 py-2 text-xs sm:text-[11px] sm:py-1.5 rounded transition-colors capitalize ${
               view === v
                 ? 'bg-accent text-accent-foreground font-medium'
                 : 'text-muted-foreground hover:text-foreground'
@@ -209,10 +211,10 @@ export default function PlayersPage() {
       <div className="border border-border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead>
+            <thead className="sticky top-12 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
               <tr className="border-b border-border bg-muted/40">
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5 w-10">#</th>
-                <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Player</th>
+                <th className="sticky left-0 z-10 bg-muted/40 backdrop-blur text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-9">#</th>
+                <th className="sticky left-9 z-10 bg-muted/40 backdrop-blur text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5">Player</th>
                 <th className="text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5">Team</th>
                 {view === 'fantasy' && (
                   <>
@@ -263,13 +265,15 @@ export default function PlayersPage() {
             <tbody>
               {filtered.map((p, idx) => {
                 const isDrafted = p.teamId != null;
+                const rowBg = isDrafted ? 'bg-muted/20' : 'bg-background';
+                const rowHoverBg = isDrafted ? 'hover:bg-muted/40' : 'hover:bg-muted/30';
                 return (
                 <tr
                   key={p.id}
-                  className={`border-b border-border/50 transition-colors ${isDrafted ? 'bg-muted/20 hover:bg-muted/40' : 'hover:bg-muted/30'}`}
+                  className={`border-b border-border/50 transition-colors ${rowBg} ${rowHoverBg}`}
                 >
-                  <td className="px-4 py-2 text-xs tabular-nums text-muted-foreground">{idx + 1}</td>
-                  <td className="px-4 py-2 text-sm font-medium">
+                  <td className={`sticky left-0 z-[1] ${rowBg} px-3 py-2 text-xs tabular-nums text-muted-foreground w-9`}>{idx + 1}</td>
+                  <td className={`sticky left-9 z-[1] ${rowBg} px-3 py-2 text-sm font-medium`}>
                     <Link href={`/players/${p.slug}`} className="hover:text-primary transition-colors">
                       {p.name}
                     </Link>

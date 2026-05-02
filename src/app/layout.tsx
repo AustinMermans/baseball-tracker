@@ -80,8 +80,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {/* Mobile nav */}
             {menuOpen && (
-              <div className="md:hidden pb-3 space-y-2">
-                <div className="flex gap-1">
+              <div className="md:hidden pb-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="flex gap-1.5 flex-wrap">
                   {navItems.map(({ href, label }) => {
                     const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
                     return (
@@ -89,8 +89,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         key={href}
                         href={href}
                         onClick={() => setMenuOpen(false)}
-                        className={`px-3 py-1.5 text-xs rounded-md ${
-                          active ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground'
+                        className={`min-h-[40px] px-4 py-2 text-sm rounded-md flex items-center ${
+                          active ? 'bg-accent text-accent-foreground font-medium' : 'text-muted-foreground hover:bg-muted'
                         }`}
                       >
                         {label}
@@ -98,7 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     );
                   })}
                 </div>
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1.5">
                   {teamNames.map((name, i) => {
                     const active = pathname === `/teams/${i + 1}`;
                     return (
@@ -106,7 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         key={i}
                         href={`/teams/${i + 1}`}
                         onClick={() => setMenuOpen(false)}
-                        className={`px-2.5 py-1.5 text-xs rounded ${
+                        className={`min-h-[40px] px-3.5 py-2 text-sm rounded flex items-center ${
                           active ? 'bg-primary text-primary-foreground font-medium' : 'text-muted-foreground hover:bg-muted'
                         }`}
                       >
@@ -121,7 +121,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
 
         <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-          {children}
+          <div key={pathname} className="animate-in fade-in slide-in-from-bottom-1 duration-300">
+            {children}
+          </div>
         </main>
       </body>
     </html>
