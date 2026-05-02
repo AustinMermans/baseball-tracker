@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Fragment, Suspense, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { fetchData } from '@/lib/data';
 import { avg, obp, slg, fmtRate } from '@/lib/stats';
@@ -112,6 +112,7 @@ function PlayersPageInner() {
   const [view, setView] = useState<View>(initialState.current.view);
   const [mlbTeamFilter, setMlbTeamFilter] = useState<string>(initialState.current.mlbTeamFilter);
   const [draftFilter, setDraftFilter] = useState<DraftFilter>(initialState.current.draftFilter);
+  const [expanded, setExpanded] = useState<string | null>(searchParams.get('p'));
 
   useEffect(() => {
     fetchData<PlayerData[]>('/api/players')
@@ -135,9 +136,10 @@ function PlayersPageInner() {
     if (search) params.set('q', search);
     if (mlbTeamFilter) params.set('team', mlbTeamFilter);
     if (draftFilter !== 'all') params.set('drafted', draftFilter);
+    if (expanded) params.set('p', expanded);
     const qs = params.toString();
     router.replace(qs ? `/players?${qs}` : '/players', { scroll: false });
-  }, [view, sortBy, search, mlbTeamFilter, draftFilter, router]);
+  }, [view, sortBy, search, mlbTeamFilter, draftFilter, expanded, router]);
 
   const statValue = (p: PlayerData, key: SortKey): number => {
     switch (key) {
@@ -241,7 +243,7 @@ function PlayersPageInner() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-lg font-semibold">Players</h1>
+        <h1 className="text-lg font-semibold">Batters</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
           {(() => {
             const total = players.length;
@@ -261,7 +263,7 @@ function PlayersPageInner() {
               aria-selected={view === v}
               className={`min-h-[38px] px-3.5 py-2 text-xs sm:text-[11px] sm:py-1.5 rounded transition-colors capitalize ${
                 view === v
-                  ? 'bg-accent text-accent-foreground font-medium'
+                  ? 'bg-muted font-medium'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -285,7 +287,7 @@ function PlayersPageInner() {
               aria-selected={draftFilter === o.v}
               className={`min-h-[38px] px-3.5 py-2 text-xs sm:text-[11px] sm:py-1.5 rounded transition-colors ${
                 draftFilter === o.v
-                  ? 'bg-accent text-accent-foreground font-medium'
+                  ? 'bg-muted font-medium'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -407,19 +409,26 @@ function PlayersPageInner() {
             <tbody>
               {filtered.map((p, idx) => {
                 const isDrafted = p.teamId != null;
+                const isExpanded = expanded === p.slug;
+                const colCount = 3 + COLUMNS_BY_VIEW[view].length;
                 // Sticky cells need an opaque bg so scrolled-away columns
                 // don't show through. We use --card (drafted) vs --background
                 // (everyone else) — both are solid in this theme.
                 const stickyBg = isDrafted ? 'bg-card' : 'bg-background';
                 return (
+                <Fragment key={p.id}>
                 <tr
-                  key={p.id}
-                  className={`border-b border-border/50 transition-colors group ${isDrafted ? 'bg-muted/30' : ''} hover:bg-muted/40`}
+                  onClick={() => setExpanded(isExpanded ? null : p.slug)}
+                  className={`border-b border-border/50 transition-colors cursor-pointer group ${isDrafted ? 'bg-muted/30' : ''} hover:bg-muted/40`}
                 >
                   <td className={`sticky left-0 z-[2] ${stickyBg} group-hover:bg-muted/40 px-3 py-2 text-xs tabular-nums text-muted-foreground w-9`}>{idx + 1}</td>
                   <td className={`sticky left-9 z-[2] ${stickyBg} group-hover:bg-muted/40 px-3 py-2 text-sm font-medium shadow-[1px_0_0_0_hsl(var(--border)/0.4)]`}>
                     <span className="inline-flex items-center gap-1.5">
-                      <Link href={`/players/${p.slug}`} className="inline-flex items-center min-h-[36px] -my-2 hover:text-primary transition-colors">
+                      <Link
+                        href={`/players/${p.slug}`}
+                        onClick={e => e.stopPropagation()}
+                        className="inline-flex items-center min-h-[36px] -my-2 hover:text-primary transition-colors"
+                      >
                         {p.name}
                       </Link>
                       {p.mlbTeam && (
@@ -431,6 +440,7 @@ function PlayersPageInner() {
                     {isDrafted ? (
                       <Link
                         href={`/teams/${p.teamId}`}
+                        onClick={e => e.stopPropagation()}
                         className="inline-flex items-center min-h-[36px] -my-2 text-xs text-muted-foreground hover:text-primary transition-colors"
                       >
                         {p.fantasyTeam}
@@ -484,6 +494,98 @@ function PlayersPageInner() {
                     </>
                   )}
                 </tr>
+                {isExpanded && (
+                  <tr className="bg-muted">
+                    <td colSpan={colCount} className="p-4 sm:p-5">
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="min-w-0">
+                          <Link
+                            href={`/players/${p.slug}`}
+                            className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                          >
+                            {p.name}
+                          </Link>
+                          <p className="text-[11px] text-muted-foreground mt-0.5 tabular-nums">
+                            {p.mlbTeam ?? '???'}
+                            {isDrafted && (
+                              <> · drafted by{' '}
+                                <Link href={`/teams/${p.teamId}`} className="underline-offset-2 hover:underline text-muted-foreground">
+                                  {p.fantasyTeam}
+                                </Link>
+                              </>
+                            )}
+                            {!isDrafted && <> · undrafted</>}
+                            {p.draftRound != null && <> · round {p.draftRound}</>}
+                          </p>
+                        </div>
+                        <Link
+                          href={`/players/${p.slug}`}
+                          className="text-[11px] text-muted-foreground hover:text-foreground underline-offset-4 hover:underline shrink-0"
+                        >
+                          Full page →
+                        </Link>
+                      </div>
+
+                      {p.totalScore > 0 && (() => {
+                        const parts = [
+                          { label: 'TB', value: p.totalBases, color: '#d97706' },
+                          { label: 'BB', value: p.walks, color: '#2563eb' },
+                          { label: 'SB', value: p.stolenBases, color: '#16a34a' },
+                          { label: 'HBP', value: p.hbp, color: '#9ca3af' },
+                        ];
+                        const total = parts.reduce((s, x) => s + x.value, 0);
+                        if (total === 0) return null;
+                        return (
+                          <div className="mb-3">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Fantasy point mix</span>
+                              <span className="text-[10px] text-muted-foreground tabular-nums">{p.totalScore} pts</span>
+                            </div>
+                            <div className="flex h-4 rounded-md overflow-hidden border border-border" role="img" aria-label="Fantasy point composition">
+                              {parts.filter(x => x.value > 0).map(x => (
+                                <div
+                                  key={x.label}
+                                  style={{ backgroundColor: x.color, width: `${(x.value / total) * 100}%` }}
+                                  title={`${x.label}: ${x.value} pts (${((x.value / total) * 100).toFixed(0)}%)`}
+                                  className="flex items-center justify-center text-[9px] font-medium text-white tabular-nums"
+                                >
+                                  {x.value / total >= 0.1 ? x.label : ''}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-x-3 gap-y-2 text-[11px]">
+                        {[
+                          { label: 'GP', value: p.gamesPlayed },
+                          { label: 'AB', value: p.atBats },
+                          { label: 'H', value: p.hits },
+                          { label: 'HR', value: p.homeRuns },
+                          { label: 'R', value: p.runs },
+                          { label: 'RBI', value: p.rbi },
+                          { label: 'SB', value: p.stolenBases },
+                          { label: 'BB', value: p.walks },
+                          { label: 'AVG', value: fmtRate(avg(p.hits, p.atBats)) },
+                          { label: 'OBP', value: fmtRate(obp(p.hits, p.walks, p.hbp, p.atBats, p.sacFlies)) },
+                          { label: 'SLG', value: fmtRate(slg(p.totalBases, p.atBats)) },
+                          { label: 'TB', value: p.totalBases },
+                          { label: 'SO', value: p.strikeouts },
+                          { label: 'HBP', value: p.hbp },
+                          { label: '2B+3B', value: p.doubles + p.triples },
+                          { label: 'PTS', value: p.totalScore, emphasis: true },
+                        ].map(s => (
+                          <div key={s.label} className="flex flex-col">
+                            <span className="text-[10px] text-muted-foreground/70 uppercase tracking-wide">{s.label}</span>
+                            <span className={`tabular-nums ${s.emphasis ? 'font-semibold text-foreground' : 'font-medium text-foreground'}`}>{s.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
               );})}
             </tbody>
           </table>

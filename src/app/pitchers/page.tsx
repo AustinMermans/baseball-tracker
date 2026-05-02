@@ -1,7 +1,8 @@
 'use client';
 
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Fragment, Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { fetchData } from '@/lib/data';
 
 interface Pitch {
@@ -150,8 +151,6 @@ function PitchersInner() {
     });
   }, [data, search, handFilter, mlbTeamFilter, sortBy]);
 
-  const detail = selected ? filtered.find(p => p.slug === selected) ?? data?.pitchers.find(p => p.slug === selected) ?? null : null;
-
   if (loading || !data) {
     return (
       <div className="space-y-4">
@@ -184,7 +183,7 @@ function PitchersInner() {
               aria-selected={handFilter === o.v}
               className={`min-h-[38px] px-3.5 py-2 text-xs sm:text-[11px] sm:py-1.5 rounded transition-colors ${
                 handFilter === o.v
-                  ? 'bg-accent text-accent-foreground font-medium'
+                  ? 'bg-muted font-medium'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -226,92 +225,7 @@ function PitchersInner() {
         />
       </div>
 
-      {/* Selected pitcher detail (sticky at top of list) */}
-      {detail && (
-        <div className="border border-border rounded-lg p-4 sm:p-5 bg-card">
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="min-w-0">
-              <h2 className="text-base font-semibold">{detail.name}</h2>
-              <p className="text-xs text-muted-foreground mt-0.5 tabular-nums">
-                {detail.mlbTeam ?? '???'}
-                {detail.pitchHand && <> · {detail.pitchHand}HP</>}
-                {detail.age && <> · age {detail.age}</>}
-                {detail.totalPitches > 0 && <> · {detail.totalPitches.toLocaleString()} pitches</>}
-              </p>
-              {detail.season && detail.season.gamesStarted != null && (
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-x-3 gap-y-1 mt-3 text-[11px]">
-                  {[
-                    { label: 'GS', value: detail.season.gamesStarted },
-                    { label: 'IP', value: detail.season.inningsPitched },
-                    { label: 'ERA', value: detail.season.era },
-                    { label: 'WHIP', value: detail.season.whip },
-                    { label: 'K/9', value: detail.season.strikeoutsPer9Inn },
-                    { label: 'BB/9', value: detail.season.walksPer9Inn },
-                  ].map(s => (
-                    <div key={s.label} className="flex flex-col">
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-wide">{s.label}</span>
-                      <span className="tabular-nums font-medium text-foreground">{s.value ?? '—'}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <button
-              onClick={() => setSelected(null)}
-              aria-label="Close detail"
-              className="text-muted-foreground hover:text-foreground w-9 h-9 -mr-2 -mt-2 rounded hover:bg-muted flex items-center justify-center text-base leading-none shrink-0"
-            >×</button>
-          </div>
-
-          {detail.pitches.length === 0 ? (
-            <p className="text-xs text-muted-foreground">No pitch arsenal data for this season yet.</p>
-          ) : (
-            <div className="space-y-4">
-              {/* Stacked horizontal usage bar */}
-              <div className="flex h-7 rounded-md overflow-hidden border border-border" role="img" aria-label="Pitch usage">
-                {detail.pitches.map(p => (
-                  <div
-                    key={p.code}
-                    style={{ backgroundColor: pitchColor(p.code), width: `${p.percentage * 100}%` }}
-                    title={`${p.description}: ${fmtPct(p.percentage)}, ${fmtMph(p.averageSpeed)}`}
-                    className="flex items-center justify-center text-[10px] font-medium text-white tabular-nums"
-                  >
-                    {p.percentage >= 0.08 ? p.code : ''}
-                  </div>
-                ))}
-              </div>
-
-              {/* Legend / detail table */}
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="border-b border-border/60">
-                    <th className="text-left text-[11px] font-medium text-muted-foreground py-1.5 pr-2"></th>
-                    <th className="text-left text-[11px] font-medium text-muted-foreground py-1.5">Pitch</th>
-                    <th className="text-right text-[11px] font-medium text-muted-foreground py-1.5">Usage</th>
-                    <th className="text-right text-[11px] font-medium text-muted-foreground py-1.5">Avg vel</th>
-                    <th className="text-right text-[11px] font-medium text-muted-foreground py-1.5">Count</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {detail.pitches.map(p => (
-                    <tr key={p.code} className="border-b border-border/30 last:border-b-0">
-                      <td className="py-1.5 pr-2">
-                        <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: pitchColor(p.code) }} />
-                      </td>
-                      <td className="py-1.5 tabular-nums"><span className="font-medium">{p.code}</span> <span className="text-muted-foreground">{p.description}</span></td>
-                      <td className="py-1.5 text-right tabular-nums">{fmtPct(p.percentage)}</td>
-                      <td className="py-1.5 text-right tabular-nums text-muted-foreground">{fmtMph(p.averageSpeed)}</td>
-                      <td className="py-1.5 text-right tabular-nums text-muted-foreground">{p.pitchCount.toLocaleString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Pitcher list */}
+      {/* Pitcher list with inline-expand detail rows */}
       <div className="border border-border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -331,36 +245,132 @@ function PitchersInner() {
               {filtered.map(p => {
                 const isSelected = selected === p.slug;
                 return (
-                  <tr
-                    key={p.id}
-                    onClick={() => setSelected(isSelected ? null : p.slug)}
-                    className={`border-b border-border/40 cursor-pointer transition-colors ${
-                      isSelected ? 'bg-primary/10' : 'hover:bg-muted/30'
-                    }`}
-                  >
-                    <td className="px-3 py-2 text-sm font-medium">{p.name}</td>
-                    <td className="px-3 py-2 text-xs text-muted-foreground tabular-nums">{p.mlbTeam ?? '—'}</td>
-                    <td className="px-3 py-2 text-xs text-muted-foreground">{p.pitchHand ?? '—'}</td>
-                    <td className="px-3 py-2 text-xs text-right tabular-nums text-muted-foreground">{p.season?.inningsPitched ?? '—'}</td>
-                    <td className="px-3 py-2 text-xs text-right tabular-nums">{p.season?.era ?? '—'}</td>
-                    <td className="px-3 py-2 text-xs text-right tabular-nums text-muted-foreground">{p.season?.strikeoutsPer9Inn ?? '—'}</td>
-                    <td className="px-3 py-2 text-xs text-right text-muted-foreground tabular-nums">{p.totalPitches.toLocaleString()}</td>
-                    <td className="px-3 py-2">
-                      {p.pitches.length === 0 ? (
-                        <span className="text-[10px] text-muted-foreground/60">no data</span>
-                      ) : (
-                        <div className="flex h-3 rounded-sm overflow-hidden border border-border/60 max-w-[200px]">
-                          {p.pitches.map(pp => (
-                            <div
-                              key={pp.code}
-                              style={{ backgroundColor: pitchColor(pp.code), width: `${pp.percentage * 100}%` }}
-                              title={`${pp.code} ${fmtPct(pp.percentage)}`}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </td>
-                  </tr>
+                  <Fragment key={p.id}>
+                    <tr
+                      onClick={() => setSelected(isSelected ? null : p.slug)}
+                      className="border-b border-border/40 cursor-pointer transition-colors hover:bg-muted/30"
+                    >
+                      <td className="px-3 py-2 text-sm font-medium">
+                        <Link
+                          href={`/pitchers/${p.slug}`}
+                          onClick={e => e.stopPropagation()}
+                          className="inline-flex items-center min-h-[36px] -my-2 hover:text-primary transition-colors"
+                        >
+                          {p.name}
+                        </Link>
+                      </td>
+                      <td className="px-3 py-2 text-xs text-muted-foreground tabular-nums">{p.mlbTeam ?? '—'}</td>
+                      <td className="px-3 py-2 text-xs text-muted-foreground">{p.pitchHand ?? '—'}</td>
+                      <td className="px-3 py-2 text-xs text-right tabular-nums text-muted-foreground">{p.season?.inningsPitched ?? '—'}</td>
+                      <td className="px-3 py-2 text-xs text-right tabular-nums">{p.season?.era ?? '—'}</td>
+                      <td className="px-3 py-2 text-xs text-right tabular-nums text-muted-foreground">{p.season?.strikeoutsPer9Inn ?? '—'}</td>
+                      <td className="px-3 py-2 text-xs text-right text-muted-foreground tabular-nums">{p.totalPitches.toLocaleString()}</td>
+                      <td className="px-3 py-2">
+                        {p.pitches.length === 0 ? (
+                          <span className="text-[10px] text-muted-foreground/60">no data</span>
+                        ) : (
+                          <div className="flex h-3 rounded-sm overflow-hidden border border-border/60 max-w-[200px]">
+                            {p.pitches.map(pp => (
+                              <div
+                                key={pp.code}
+                                style={{ backgroundColor: pitchColor(pp.code), width: `${pp.percentage * 100}%` }}
+                                title={`${pp.code} ${fmtPct(pp.percentage)}`}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                    {isSelected && (
+                      <tr className="bg-muted">
+                        <td colSpan={8} className="p-4 sm:p-5">
+                          <div className="flex items-start justify-between gap-3 mb-4">
+                            <div className="min-w-0">
+                              <Link
+                                href={`/pitchers/${p.slug}`}
+                                className="text-base font-semibold text-foreground hover:text-primary transition-colors"
+                              >
+                                {p.name}
+                              </Link>
+                              <p className="text-xs text-muted-foreground mt-0.5 tabular-nums">
+                                {p.mlbTeam ?? '???'}
+                                {p.pitchHand && <> · {p.pitchHand}HP</>}
+                                {p.age && <> · age {p.age}</>}
+                                {p.totalPitches > 0 && <> · {p.totalPitches.toLocaleString()} pitches</>}
+                              </p>
+                              {p.season && p.season.gamesStarted != null && (
+                                <div className="grid grid-cols-3 sm:grid-cols-6 gap-x-3 gap-y-1 mt-3 text-[11px]">
+                                  {[
+                                    { label: 'GS', value: p.season.gamesStarted },
+                                    { label: 'IP', value: p.season.inningsPitched },
+                                    { label: 'ERA', value: p.season.era },
+                                    { label: 'WHIP', value: p.season.whip },
+                                    { label: 'K/9', value: p.season.strikeoutsPer9Inn },
+                                    { label: 'BB/9', value: p.season.walksPer9Inn },
+                                  ].map(s => (
+                                    <div key={s.label} className="flex flex-col">
+                                      <span className="text-[10px] text-muted-foreground/70 uppercase tracking-wide">{s.label}</span>
+                                      <span className="tabular-nums font-medium text-foreground">{s.value ?? '—'}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            <Link
+                              href={`/pitchers/${p.slug}`}
+                              className="text-[11px] text-muted-foreground hover:text-foreground underline-offset-4 hover:underline shrink-0"
+                            >
+                              Full page →
+                            </Link>
+                          </div>
+
+                          {p.pitches.length === 0 ? (
+                            <p className="text-xs text-muted-foreground">No pitch arsenal data for this season yet.</p>
+                          ) : (
+                            <div className="space-y-4">
+                              <div className="flex h-7 rounded-md overflow-hidden border border-border" role="img" aria-label="Pitch usage">
+                                {p.pitches.map(pp => (
+                                  <div
+                                    key={pp.code}
+                                    style={{ backgroundColor: pitchColor(pp.code), width: `${pp.percentage * 100}%` }}
+                                    title={`${pp.description}: ${fmtPct(pp.percentage)}, ${fmtMph(pp.averageSpeed)}`}
+                                    className="flex items-center justify-center text-[10px] font-medium text-white tabular-nums"
+                                  >
+                                    {pp.percentage >= 0.08 ? pp.code : ''}
+                                  </div>
+                                ))}
+                              </div>
+
+                              <table className="w-full text-xs">
+                                <thead>
+                                  <tr className="border-b border-border">
+                                    <th className="text-left text-[11px] font-medium text-muted-foreground py-1.5 pr-2"></th>
+                                    <th className="text-left text-[11px] font-medium text-muted-foreground py-1.5">Pitch</th>
+                                    <th className="text-right text-[11px] font-medium text-muted-foreground py-1.5">Usage</th>
+                                    <th className="text-right text-[11px] font-medium text-muted-foreground py-1.5">Avg vel</th>
+                                    <th className="text-right text-[11px] font-medium text-muted-foreground py-1.5">Count</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {p.pitches.map(pp => (
+                                    <tr key={pp.code} className="border-b border-border/50 last:border-b-0">
+                                      <td className="py-1.5 pr-2">
+                                        <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: pitchColor(pp.code) }} />
+                                      </td>
+                                      <td className="py-1.5 tabular-nums"><span className="font-medium">{pp.code}</span> <span className="text-muted-foreground">{pp.description}</span></td>
+                                      <td className="py-1.5 text-right tabular-nums">{fmtPct(pp.percentage)}</td>
+                                      <td className="py-1.5 text-right tabular-nums text-muted-foreground">{fmtMph(pp.averageSpeed)}</td>
+                                      <td className="py-1.5 text-right tabular-nums text-muted-foreground">{pp.pitchCount.toLocaleString()}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
                 );
               })}
               {filtered.length === 0 && (
