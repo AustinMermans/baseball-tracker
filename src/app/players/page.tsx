@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { fetchData } from '@/lib/data';
 import { avg, obp, slg, fmtRate } from '@/lib/stats';
 import Link from 'next/link';
@@ -55,14 +56,62 @@ const COLUMNS_BY_VIEW: Record<View, SortKey[]> = {
 
 type DraftFilter = 'all' | 'drafted' | 'undrafted';
 
+const VALID_VIEWS: View[] = ['fantasy', 'key', 'all'];
+const VALID_DRAFT_FILTERS: DraftFilter[] = ['all', 'drafted', 'undrafted'];
+const VALID_SORT_KEYS: ReadonlyArray<SortKey> = [
+  'totalScore', 'totalBases', 'stolenBases', 'walks', 'hbp', 'gamesPlayed',
+  'atBats', 'hits', 'homeRuns', 'avg',
+  'plateAppearances', 'doubles', 'triples', 'runs', 'rbi',
+  'intentionalWalks', 'strikeouts', 'caughtStealing', 'sacFlies',
+  'obp', 'slg',
+];
+
 export default function PlayersPage() {
+  // Suspense boundary needed because the inner component reads
+  // useSearchParams (which forces a CSR bailout under static export).
+  return (
+    <Suspense fallback={
+      <div className="space-y-4">
+        <div className="h-5 w-48 bg-muted rounded animate-pulse" />
+        <div className="h-96 bg-muted/50 rounded-lg animate-pulse" />
+      </div>
+    }>
+      <PlayersPageInner />
+    </Suspense>
+  );
+}
+
+function PlayersPageInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Read initial state from URL once. We deliberately DON'T re-run this on
+  // every searchParams change — that would create a feedback loop with the
+  // setState→pushState cycle below.
+  const initialState = useRef<{
+    view: View; sortBy: SortKey; search: string;
+    mlbTeamFilter: string; draftFilter: DraftFilter;
+  } | null>(null);
+  if (initialState.current === null) {
+    const v = searchParams.get('view') as View | null;
+    const s = searchParams.get('sort') as SortKey | null;
+    const d = searchParams.get('drafted') as DraftFilter | null;
+    initialState.current = {
+      view: v && VALID_VIEWS.includes(v) ? v : 'fantasy',
+      sortBy: s && VALID_SORT_KEYS.includes(s) ? s : 'totalScore',
+      search: searchParams.get('q') ?? '',
+      mlbTeamFilter: searchParams.get('team') ?? '',
+      draftFilter: d && VALID_DRAFT_FILTERS.includes(d) ? d : 'all',
+    };
+  }
+
   const [players, setPlayers] = useState<PlayerData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState<SortKey>('totalScore');
-  const [view, setView] = useState<View>('fantasy');
-  const [mlbTeamFilter, setMlbTeamFilter] = useState<string>('');
-  const [draftFilter, setDraftFilter] = useState<DraftFilter>('all');
+  const [search, setSearch] = useState(initialState.current.search);
+  const [sortBy, setSortBy] = useState<SortKey>(initialState.current.sortBy);
+  const [view, setView] = useState<View>(initialState.current.view);
+  const [mlbTeamFilter, setMlbTeamFilter] = useState<string>(initialState.current.mlbTeamFilter);
+  const [draftFilter, setDraftFilter] = useState<DraftFilter>(initialState.current.draftFilter);
 
   useEffect(() => {
     fetchData<PlayerData[]>('/api/players')
@@ -76,6 +125,19 @@ export default function PlayersPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view]);
+
+  // Sync state → URL. Use replace() so the back button doesn't accumulate
+  // every keystroke. Skip params at their default value to keep URLs clean.
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (view !== 'fantasy') params.set('view', view);
+    if (sortBy !== DEFAULT_SORT_BY_VIEW[view]) params.set('sort', sortBy);
+    if (search) params.set('q', search);
+    if (mlbTeamFilter) params.set('team', mlbTeamFilter);
+    if (draftFilter !== 'all') params.set('drafted', draftFilter);
+    const qs = params.toString();
+    router.replace(qs ? `/players?${qs}` : '/players', { scroll: false });
+  }, [view, sortBy, search, mlbTeamFilter, draftFilter, router]);
 
   const statValue = (p: PlayerData, key: SortKey): number => {
     switch (key) {

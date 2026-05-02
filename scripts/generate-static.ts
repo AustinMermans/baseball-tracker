@@ -107,6 +107,32 @@ function playerSlug(player: any): string {
   return slugByPlayerId.get(player.id) ?? slugByPlayerId.get(player.playerId) ?? slugify(player.name ?? player.playerName ?? '');
 }
 
+// Normalize a snake_case players-table row to the camelCase shape that the
+// /api/* routes return via Drizzle. Keeping a single canonical shape across
+// dev (API route) and static (JSON file) modes prevents UI bugs where a
+// component reads p.mlbTeam in one mode and gets undefined in the other.
+function normalizePlayerRow(p: any): {
+  id: number;
+  mlbId: number;
+  name: string;
+  mlbTeam: string | null;
+  position: string | null;
+  teamId: number | null;
+  draftRound: number | null;
+  isActive: number;
+} {
+  return {
+    id: p.id,
+    mlbId: p.mlb_id,
+    name: p.name,
+    mlbTeam: p.mlb_team ?? null,
+    position: p.position ?? null,
+    teamId: p.team_id ?? null,
+    draftRound: p.draft_round ?? null,
+    isActive: p.is_active ?? 1,
+  };
+}
+
 // --- Expanded stats query fragment ---
 
 const EXPANDED_STATS_SELECT = `
@@ -229,7 +255,7 @@ const teamsData = teams.map(team => ({
   roster: players
     .filter(p => p.team_id === team.id)
     .sort((a: any, b: any) => a.draft_round - b.draft_round)
-    .map((p: any) => ({ ...p, slug: playerSlug(p) })),
+    .map((p: any) => ({ ...normalizePlayerRow(p), slug: playerSlug(p) })),
 }));
 fs.writeFileSync(path.join(outDir, 'teams.json'), JSON.stringify(teamsData, null, 2));
 
@@ -288,7 +314,7 @@ for (const team of teams) {
       team,
       roster: roster
         .sort((a: any, b: any) => a.draft_round - b.draft_round)
-        .map((p: any) => ({ ...p, slug: playerSlug(p) })),
+        .map((p: any) => ({ ...normalizePlayerRow(p), slug: playerSlug(p) })),
       periods: periodResults,
     }, null, 2)
   );

@@ -44,9 +44,25 @@ interface PeriodResult {
 
 interface TeamDetail {
   team: { id: number; name: string };
-  roster: Array<{ id: number; name: string; draftRound: number; slug: string }>;
+  roster: Array<{
+    id: number;
+    name: string;
+    slug: string;
+    mlbTeam: string | null;
+    position: string | null;
+    draftRound: number | null;
+  }>;
   periods: PeriodResult[];
 }
+
+interface CalendarGame {
+  date: string;
+  gamePk: number;
+  away: { abbr: string | null };
+  home: { abbr: string | null };
+  status: string;
+}
+interface CalendarShape { games: CalendarGame[] }
 
 const teamNames = ['Cole', 'Markus', 'J Mill', 'Ryan', 'Joey', 'Jack', 'Austin', 'Bobby'];
 
@@ -54,15 +70,43 @@ export default function TeamDetailPage() {
   const params = useParams();
   const teamId = params.teamId as string;
   const [data, setData] = useState<TeamDetail | null>(null);
+  const [calendar, setCalendar] = useState<CalendarShape | null>(null);
   const [loading, setLoading] = useState(true);
   const [activePeriod, setActivePeriod] = useState(0);
   const [statsView, setStatsView] = useState<'key' | 'all'>('key');
 
   useEffect(() => {
-    fetchData<TeamDetail>(`/api/teams/${teamId}`)
-      .then(setData)
-      .finally(() => setLoading(false));
+    Promise.all([
+      fetchData<TeamDetail>(`/api/teams/${teamId}`),
+      fetchData<CalendarShape>(`/api/calendar`).catch(() => ({ games: [] })),
+    ]).then(([detail, cal]) => {
+      setData(detail);
+      setCalendar(cal);
+    }).finally(() => setLoading(false));
   }, [teamId]);
+
+  // Count remaining (today onward) games per MLB team within the next 7 days.
+  // Used for the games-this-week badge on each rostered player.
+  const gamesNext7ByMlbTeam = (() => {
+    const map = new Map<string, number>();
+    if (!calendar) return map;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const end = new Date(today);
+    end.setDate(end.getDate() + 7);
+    const todayYmd = today.toISOString().split('T')[0];
+    const endYmd = end.toISOString().split('T')[0];
+    for (const g of calendar.games) {
+      if (g.date < todayYmd || g.date >= endYmd) continue;
+      // Don't count games that already finished today.
+      if (g.date === todayYmd && g.status === 'F') continue;
+      for (const abbr of [g.away.abbr, g.home.abbr]) {
+        if (!abbr) continue;
+        map.set(abbr, (map.get(abbr) ?? 0) + 1);
+      }
+    }
+    return map;
+  })();
 
   if (loading) {
     return (
@@ -325,16 +369,38 @@ export default function TeamDetailPage() {
 
       {/* Draft Order */}
       <div>
-        <h2 className="text-sm font-medium mb-3">Draft Order</h2>
-        <div className="grid grid-cols-13 gap-0 border border-border rounded-lg overflow-hidden">
-          {data.roster.map((p, i) => (
-            <div key={p.id} className="px-3 py-2 border-b border-border/50 flex items-center justify-between">
-              <span className="text-xs text-muted-foreground tabular-nums w-5">{i + 1}.</span>
-              <Link href={`/players/${p.slug}`} className="text-xs flex-1 hover:text-primary transition-colors">
-                {p.name}
-              </Link>
-            </div>
-          ))}
+        <div className="flex items-baseline justify-between mb-3">
+          <h2 className="text-sm font-medium">Draft Order</h2>
+          <span className="text-[10px] text-muted-foreground">games next 7d</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-0 border border-border rounded-lg overflow-hidden">
+          {data.roster.map((p, i) => {
+            const games7 = p.mlbTeam ? (gamesNext7ByMlbTeam.get(p.mlbTeam) ?? 0) : null;
+            return (
+              <div key={p.id} className="px-3 py-2 border-b border-border/50 flex items-center gap-2">
+                <span className="text-xs text-muted-foreground tabular-nums w-5 shrink-0">{i + 1}.</span>
+                <Link href={`/players/${p.slug}`} className="text-xs flex-1 hover:text-primary transition-colors truncate">
+                  {p.name}
+                </Link>
+                {p.mlbTeam && (
+                  <span className="text-[9px] text-muted-foreground tabular-nums shrink-0">{p.mlbTeam}</span>
+                )}
+                {games7 != null && (
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded tabular-nums shrink-0 ${
+                      games7 >= 6 ? 'bg-primary/15 text-primary font-medium'
+                        : games7 >= 4 ? 'bg-muted text-foreground'
+                        : games7 === 0 ? 'bg-muted/40 text-muted-foreground/60'
+                        : 'bg-muted/60 text-muted-foreground'
+                    }`}
+                    title={`${games7} games in the next 7 days`}
+                  >
+                    {games7}
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
