@@ -353,7 +353,7 @@ function PlayersPageInner() {
       <div className="border border-border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="sticky top-12 z-20 bg-muted/95 backdrop-blur supports-[backdrop-filter]:bg-muted">
+            <thead className="sticky top-0 z-20 bg-muted/95 backdrop-blur supports-[backdrop-filter]:bg-muted">
               <tr className="border-b border-border">
                 <th className="sticky left-0 z-30 bg-muted text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5 w-9">#</th>
                 <th className="sticky left-9 z-30 bg-muted text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5 shadow-[1px_0_0_0_hsl(var(--border))]">Player</th>
