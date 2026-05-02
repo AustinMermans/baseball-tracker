@@ -15,10 +15,17 @@ npm start        # Run the built server
 STATIC_EXPORT=true NEXT_PUBLIC_STATIC=true NEXT_PUBLIC_BASE_PATH=/baseball-tracker npx next build
 
 # Data scripts
-npx tsx src/db/seed.ts                  # Re-seed baseball.db from scratch (only if DB is missing)
-npx tsx scripts/sync-and-build.ts       # Incremental MLB stat sync + regenerate public/data/*.json
-npx tsx scripts/generate-static.ts      # Just regenerate JSON from current DB (no MLB fetch)
-npx tsx scripts/migrate-add-stats.ts    # One-shot migration that added the 23 expanded batting columns to daily_stats
+npx tsx src/db/seed.ts                       # Re-seed baseball.db from scratch (only if DB is missing)
+npx tsx scripts/sync-and-build.ts            # Incremental MLB stat sync + regenerate every public/data/*.json
+BACKFILL=true npx tsx scripts/sync-and-build.ts  # Full re-sync from season start (idempotent; takes ~7 minutes)
+npx tsx scripts/generate-static.ts           # Just regenerate batter JSON from current DB (no MLB fetch)
+npx tsx scripts/generate-calendar.ts         # Refresh public/data/calendar.json from MLB API
+npx tsx scripts/generate-pitchers.ts         # Refresh public/data/pitchers.json (Statcast pitch arsenals; ~30s)
+npx tsx scripts/refresh-player-teams.ts      # Update mlb_team & position for every player from MLB API (one call)
+npx tsx scripts/migrate-add-stats.ts         # One-shot migration that added the 23 expanded batting columns to daily_stats
+
+# UI / aesthetic regression checks (Playwright)
+npx tsx scripts/site-review.ts               # Crawl primary pages at desktop+mobile, capture screenshots & flag issues to /tmp/site-review/
 ```
 
 There is no test suite — `package.json` defines no `test` script.
@@ -46,11 +53,13 @@ For `output: 'export'`, every dynamic segment must be enumerable at build time. 
 
 ### Data layer
 
-- **`baseball.db`** is committed to the repo (~260KB). It's the source of truth in dev and gets updated daily by CI.
+- **`baseball.db`** is committed to the repo (~840KB after the all-MLB backfill). It's the source of truth in dev and gets updated daily by CI.
 - **`src/db/schema.ts`** is a Drizzle schema, but most queries throughout `scripts/` and the API routes use **raw `better-sqlite3` prepared statements**, not Drizzle's query builder. Drizzle is essentially used for schema declaration and inferred types. When adding queries, follow the prevailing raw-SQL pattern.
-- Tables: `teams` (8), `players` (104 rostered, with `mlb_id` linking to MLB Stats API), `daily_stats` (per-player per-game), `team_daily_scores`, `season_periods` (3 periods), `redraft_log`.
+- Tables: `teams` (8), `players` (~460 active hitters: 104 rostered + ~356 discovered via boxscore), `daily_stats` (per-player per-game), `team_daily_scores`, `season_periods` (3 periods), `redraft_log`.
+- The `players` table is populated two ways: (a) `seed.ts` inserts the 104 rostered players with `team_id` set; (b) `sync-and-build.ts` upserts every batter that appears in a boxscore with PA, with `team_id` left NULL. The combined set is what powers the `/players` leaderboard.
 - `daily_stats` has the 4 fantasy-scoring columns (`total_bases`, `stolen_bases`, `walks`, `hbp`, plus the precomputed `fantasy_score`) **plus 23 expanded batting columns** (`at_bats`, `hits`, `doubles`, `triples`, `home_runs`, `runs`, `rbi`, `strikeouts`, etc.) used by player detail pages.
 - `src/lib/stats.ts` derives rate stats (AVG / OBP / SLG, cumulative + rolling-window averages) from raw counting stats. Rate stats are never stored.
+- **camelCase normalization gotcha**: API routes return camelCase via Drizzle (`mlbTeam`, `draftRound`); raw SQL `SELECT *` from `players` produces snake_case (`mlb_team`, `draft_round`). `generate-static.ts` has a `normalizePlayerRow()` helper that converts to camelCase so static JSON matches the API shape — use it when emitting player rows in any new generator.
 
 ### Scoring rules (`src/lib/scoring.ts`)
 
@@ -63,23 +72,26 @@ For `output: 'export'`, every dynamic segment must be enumerable at build time. 
 `.github/workflows/deploy.yml` runs daily at 07:00 UTC and on manual dispatch:
 
 1. Checkout → `npm ci`
-2. `npx tsx scripts/sync-and-build.ts` — figures out the date range as `(MAX(game_date) + 1day)` through `yesterday` (season start fallback `2026-03-26`), fetches MLB schedule + boxscores for completed games, upserts into `daily_stats`, then shells out to `generate-static.ts` to rewrite `public/data/*.json`.
+2. `npx tsx scripts/sync-and-build.ts` — figures out the date range as `(MAX(game_date) + 1day)` through `yesterday` (season start fallback `2026-03-26`), fetches MLB schedule + boxscores for completed games, upserts into `daily_stats`, *and* upserts any newly-seen batters into `players` (with `team_id` NULL = non-rostered). Then chains: `refresh-player-teams.ts` (one MLB API call to update mlb_team/position for trades) → `generate-static.ts` (DB → batter JSON) → `generate-calendar.ts` (one MLB API call: schedule + linescore + probablePitcher hydrate) → `generate-pitchers.ts` (~209 pitchers × 2 calls each, 8-way concurrent, ~30s).
 3. Commits `baseball.db` and `public/data/` back to `master` with message `Daily stat sync YYYY-MM-DD` (this is why git log is dominated by those commits — pull frequently or your local will fall many commits behind).
 4. `rm -rf src/app/api`, then static build with the env vars above, then deploy to Pages.
 
-The sync is **incremental** — only fetches games since the last synced date — so daily runs take ~30 seconds. A full backfill happens automatically if `daily_stats` is empty.
+The sync is **incremental** — only fetches games since the last synced date — so daily runs take ~1 minute. A full backfill happens automatically if `daily_stats` is empty, or on demand via `BACKFILL=true`.
 
-The MLB Stats API (`statsapi.mlb.com`) is free and key-less. `sync-and-build.ts` uses `/api/v1/schedule` for game lists and `/api/v1.1/game/{gamePk}/feed/live` for boxscores, filtering to `statusCode === 'F'` (final).
+The MLB Stats API (`statsapi.mlb.com`) is free and key-less. Endpoints used: `/api/v1/schedule` (with hydrates `team,linescore,probablePitcher`), `/api/v1.1/game/{gamePk}/feed/live`, `/api/v1/teams?sportId=1`, `/api/v1/sports/1/players?season=2026`, `/api/v1/people/{id}`, `/api/v1/people/{id}/stats?stats=pitchArsenal&group=pitching`.
 
 ## Conventions
 
 - UI primitives in `src/components/ui/` are shadcn-style (Card, Button, Badge, Tabs). `components.json` is shadcn config — don't hand-edit those primitives unless extending shadcn patterns.
 - When adding a new page that needs data, the pattern is: add an API route under `src/app/api/<thing>/route.ts`, add a corresponding emitter in `scripts/generate-static.ts` that writes `public/data/<thing>.json` with the same shape, and add the path to the `staticMap` (or a regex branch) in `src/lib/data.ts`. Missing any of the three breaks the static build silently. For dynamic-segment routes, also add `generateStaticParams` in a sibling `layout.tsx`.
-- Player detail pages (`/players/[slug]`) display the full 27-stat batting line with Key/All toggles and an AVG trend chart. The players leaderboard (`/players`) has a Fantasy / Key / All segmented control that mirrors the team-page Key/All sets (Fantasy = today's GP/TB/SB/BB/HBP/PTS, Key = GP/AB/H/HR/SB/BB/AVG, All = full 19-column line including OBP/SLG). Sort state persists across views when the column exists in both; otherwise it falls back to that view's default. CSV export reflects the active view and includes the view name in the filename.
+- Player detail pages (`/players/[slug]`) display the full 27-stat batting line with Key/All toggles and an AVG trend chart. The players leaderboard (`/players`) has a Fantasy / Key / All view toggle plus orthogonal filters (Drafted-status, MLB team, free-text search) — every filter is mirrored in URL search params for shareable links. CSV export reflects the active view and includes the view name in the filename.
+- Player comparison (`/compare?players=slug1,slug2,slug3`, max 3) overlays cumulative AVG curves and shows a side-by-side season-totals table with per-stat leader highlighted in their player's series color. Selection workflow: each row on `/players` has a small +/✓ toggle; floating bottom bar appears with up-to-3 chosen and a "Compare →" link.
+- Game calendar (`/calendar`) shows a month grid with click-to-expand day-detail. Each game shows the team matchup, score (final) or game-time (scheduled), the probable starter matchup ("X vs Y"), and a 2-column list of every drafted player on either team with their fantasy-team owner. Data is built once at sync time (single `?hydrate=team,linescore,probablePitcher` call).
+- Pitchers (`/pitchers`) lists every probable starter with their Statcast pitch arsenal (usage % + average velocity per pitch type, Savant-style colors). Click any row to expand a labeled stacked bar + breakdown table. Filterable by throwing hand / MLB team / free text; URL-state-synced.
+- Team page roster (`/teams/[teamId]`) shows a games-next-7d badge on each rostered player (color-coded green-ish for 6+, neutral for 1-5, faded for 0) so users can spot light-schedule weeks for best-ball matchup planning.
 
 ## Project notes file
 
-`notes for extension of this.md` (project-private, currently untracked) is Austin's running list of pending feature ideas. As of 2026-05-01 the live items are:
-1. Game calendar — visualize the slate of MLB games per day; many games per day so the visualization choice is open
-2. Players-tab extension to non-rostered MLB players — surface the same stat set for all active MLB players (not just the 104 rostered ones), to support pre-draft scouting. Will need a new sync path and storage strategy since current sync only fetches rostered MLB IDs
-3. Forecasting / EDA module driven by `30_Lab/` MLB forecasting work — deferred
+`notes for extension of this.md` (project-private, currently untracked) tracks Austin's running ideas. As of 2026-05-02 the active item is:
+
+1. Forecasting / EDA module driven by `30_Lab/` MLB forecasting work — deferred. Earlier items (game calendar, all-MLB-hitter extension, Statcast pitcher viz) all shipped.

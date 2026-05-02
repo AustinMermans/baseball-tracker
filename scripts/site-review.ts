@@ -35,7 +35,7 @@ const PROBES: Probe[] = [
     path: '/players',
     label: 'players-key',
     after: async (page) => {
-      await page.getByRole('tab', { name: /^key$/i }).click();
+      await page.getByRole('tab', { name: 'key', exact: true }).first().click();
       await page.waitForTimeout(300);
       return 'key-view';
     },
@@ -44,12 +44,17 @@ const PROBES: Probe[] = [
     path: '/players',
     label: 'players-all',
     after: async (page) => {
-      await page.getByRole('tab', { name: /^all$/i }).click();
+      // Two tabs both have name "all" (view tab + draft filter). Pick the
+      // view-tab one explicitly via its position in the segmented control.
+      await page.getByRole('tab', { name: 'all', exact: true }).first().click();
       await page.waitForTimeout(300);
       return 'all-view';
     },
   },
   { path: '/calendar', label: 'calendar' },
+  { path: '/compare', label: 'compare-empty' },
+  { path: '/compare?players=aaron-judge,kyle-schwarber,shohei-ohtani', label: 'compare-3' },
+  { path: '/pitchers', label: 'pitchers' },
   { path: '/teams/1', label: 'team-1' },
   { path: '/players/aaron-judge', label: 'player-detail' },
 ];

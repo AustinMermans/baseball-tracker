@@ -433,7 +433,7 @@ function PlayersPageInner() {
                         onClick={() => toggleCompare(p.slug)}
                         disabled={!compareSlugs.includes(p.slug) && compareSlugs.length >= COMPARE_MAX}
                         aria-label={compareSlugs.includes(p.slug) ? `Remove ${p.name} from compare` : `Add ${p.name} to compare`}
-                        className={`w-5 h-5 rounded border text-[11px] leading-none flex items-center justify-center shrink-0 transition-colors ${
+                        className={`w-8 h-8 sm:w-5 sm:h-5 rounded border text-sm sm:text-[11px] leading-none flex items-center justify-center shrink-0 transition-colors ${
                           compareSlugs.includes(p.slug)
                             ? 'bg-primary text-primary-foreground border-primary'
                             : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed'
