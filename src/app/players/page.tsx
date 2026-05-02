@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { fetchData } from '@/lib/data';
+import { avg, obp, slg, fmtRate } from '@/lib/stats';
 import Link from 'next/link';
 interface PlayerData {
   id: number;
@@ -64,12 +65,21 @@ export default function PlayersPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const statValue = (p: PlayerData, key: SortKey): number => {
+    switch (key) {
+      case 'avg': return avg(p.hits, p.atBats);
+      case 'obp': return obp(p.hits, p.walks, p.hbp, p.atBats, p.sacFlies);
+      case 'slg': return slg(p.totalBases, p.atBats);
+      default: return p[key];
+    }
+  };
+
   const filtered = players
     .filter(p =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.fantasyTeam.toLowerCase().includes(search.toLowerCase())
     )
-    .sort((a, b) => b[sortBy] - a[sortBy]);
+    .sort((a, b) => statValue(b, sortBy) - statValue(a, sortBy));
 
   if (loading) {
     return (
