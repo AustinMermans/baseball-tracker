@@ -172,12 +172,50 @@ export default function PlayersPage() {
                 <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5 w-10">#</th>
                 <th className="text-left text-[11px] font-medium text-muted-foreground px-4 py-2.5">Player</th>
                 <th className="text-left text-[11px] font-medium text-muted-foreground px-3 py-2.5">Team</th>
-                {sortHeader('gamesPlayed', 'GP')}
-                {sortHeader('totalBases', 'TB')}
-                {sortHeader('stolenBases', 'SB')}
-                {sortHeader('walks', 'BB')}
-                {sortHeader('hbp', 'HBP')}
-                {sortHeader('totalScore', 'PTS')}
+                {view === 'fantasy' && (
+                  <>
+                    {sortHeader('gamesPlayed', 'GP')}
+                    {sortHeader('totalBases', 'TB')}
+                    {sortHeader('stolenBases', 'SB')}
+                    {sortHeader('walks', 'BB')}
+                    {sortHeader('hbp', 'HBP')}
+                    {sortHeader('totalScore', 'PTS')}
+                  </>
+                )}
+                {view === 'key' && (
+                  <>
+                    {sortHeader('gamesPlayed', 'GP')}
+                    {sortHeader('atBats', 'AB')}
+                    {sortHeader('hits', 'H')}
+                    {sortHeader('homeRuns', 'HR')}
+                    {sortHeader('stolenBases', 'SB')}
+                    {sortHeader('walks', 'BB')}
+                    {sortHeader('avg', 'AVG')}
+                  </>
+                )}
+                {view === 'all' && (
+                  <>
+                    {sortHeader('gamesPlayed', 'GP')}
+                    {sortHeader('plateAppearances', 'PA')}
+                    {sortHeader('atBats', 'AB')}
+                    {sortHeader('hits', 'H')}
+                    {sortHeader('doubles', '2B')}
+                    {sortHeader('triples', '3B')}
+                    {sortHeader('homeRuns', 'HR')}
+                    {sortHeader('runs', 'R')}
+                    {sortHeader('rbi', 'RBI')}
+                    {sortHeader('walks', 'BB')}
+                    {sortHeader('intentionalWalks', 'IBB')}
+                    {sortHeader('strikeouts', 'SO')}
+                    {sortHeader('stolenBases', 'SB')}
+                    {sortHeader('caughtStealing', 'CS')}
+                    {sortHeader('hbp', 'HBP')}
+                    {sortHeader('sacFlies', 'SF')}
+                    {sortHeader('avg', 'AVG')}
+                    {sortHeader('obp', 'OBP')}
+                    {sortHeader('slg', 'SLG')}
+                  </>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -197,12 +235,50 @@ export default function PlayersPage() {
                       {p.fantasyTeam}
                     </Link>
                   </td>
-                  <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{p.gamesPlayed}</td>
-                  <td className="px-3 py-2 text-right text-xs tabular-nums">{p.totalBases}</td>
-                  <td className="px-3 py-2 text-right text-xs tabular-nums">{p.stolenBases}</td>
-                  <td className="px-3 py-2 text-right text-xs tabular-nums">{p.walks}</td>
-                  <td className="px-3 py-2 text-right text-xs tabular-nums">{p.hbp}</td>
-                  <td className="px-3 py-2 text-right text-xs tabular-nums font-semibold">{p.totalScore}</td>
+                  {view === 'fantasy' && (
+                    <>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{p.gamesPlayed}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.totalBases}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.stolenBases}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.walks}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.hbp}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums font-semibold">{p.totalScore}</td>
+                    </>
+                  )}
+                  {view === 'key' && (
+                    <>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{p.gamesPlayed}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.atBats}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.hits}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.homeRuns}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.stolenBases}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.walks}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{fmtRate(avg(p.hits, p.atBats))}</td>
+                    </>
+                  )}
+                  {view === 'all' && (
+                    <>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{p.gamesPlayed}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.plateAppearances}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.atBats}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.hits}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.doubles}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.triples}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.homeRuns}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.runs}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.rbi}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.walks}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.intentionalWalks}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.strikeouts}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.stolenBases}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.caughtStealing}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.hbp}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums">{p.sacFlies}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{fmtRate(avg(p.hits, p.atBats))}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{fmtRate(obp(p.hits, p.walks, p.hbp, p.atBats, p.sacFlies))}</td>
+                      <td className="px-3 py-2 text-right text-xs tabular-nums text-muted-foreground">{fmtRate(slg(p.totalBases, p.atBats))}</td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
