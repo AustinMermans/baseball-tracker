@@ -16,15 +16,47 @@ interface PlayerData {
   stolenBases: number;
   walks: number;
   hbp: number;
+  atBats: number;
+  hits: number;
+  doubles: number;
+  triples: number;
+  homeRuns: number;
+  runs: number;
+  rbi: number;
+  strikeouts: number;
+  plateAppearances: number;
+  sacFlies: number;
+  caughtStealing: number;
+  intentionalWalks: number;
 }
 
-type SortKey = 'totalScore' | 'totalBases' | 'stolenBases' | 'walks' | 'hbp' | 'gamesPlayed';
+type SortKey =
+  | 'totalScore' | 'totalBases' | 'stolenBases' | 'walks' | 'hbp' | 'gamesPlayed'
+  | 'atBats' | 'hits' | 'homeRuns' | 'avg'
+  | 'plateAppearances' | 'doubles' | 'triples' | 'runs' | 'rbi'
+  | 'intentionalWalks' | 'strikeouts' | 'caughtStealing' | 'sacFlies'
+  | 'obp' | 'slg';
+
+type View = 'fantasy' | 'key' | 'all';
+
+const DEFAULT_SORT_BY_VIEW: Record<View, SortKey> = {
+  fantasy: 'totalScore',
+  key: 'hits',
+  all: 'hits',
+};
+
+const COLUMNS_BY_VIEW: Record<View, SortKey[]> = {
+  fantasy: ['gamesPlayed', 'totalBases', 'stolenBases', 'walks', 'hbp', 'totalScore'],
+  key: ['gamesPlayed', 'atBats', 'hits', 'homeRuns', 'stolenBases', 'walks', 'avg'],
+  all: ['gamesPlayed', 'plateAppearances', 'atBats', 'hits', 'doubles', 'triples', 'homeRuns', 'runs', 'rbi', 'walks', 'intentionalWalks', 'strikeouts', 'stolenBases', 'caughtStealing', 'hbp', 'sacFlies', 'avg', 'obp', 'slg'],
+};
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<PlayerData[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<SortKey>('totalScore');
+  const [view, setView] = useState<View>('fantasy');
 
   useEffect(() => {
     fetchData<PlayerData[]>('/api/players')
