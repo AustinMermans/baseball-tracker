@@ -22,6 +22,11 @@ interface CalendarTeam {
   name: string;
 }
 
+interface ProbablePitcher {
+  id: number;
+  name: string;
+}
+
 interface CalendarGame {
   date: string;
   gamePk: number;
@@ -33,6 +38,8 @@ interface CalendarGame {
   detailedState: string;   // human-readable, e.g. "Final", "In Progress", "Scheduled"
   gameTimeISO: string | null;
   doubleHeader: string | null;
+  awayPitcher: ProbablePitcher | null;
+  homePitcher: ProbablePitcher | null;
 }
 
 function plusDays(date: Date, n: number): Date {
@@ -57,7 +64,7 @@ async function fetchAbbrevMap(): Promise<Map<number, string>> {
 }
 
 async function fetchScheduleRange(start: string, end: string): Promise<CalendarGame[]> {
-  const url = `${BASE_URL}/api/v1/schedule?sportId=1&startDate=${start}&endDate=${end}&hydrate=team,linescore`;
+  const url = `${BASE_URL}/api/v1/schedule?sportId=1&startDate=${start}&endDate=${end}&hydrate=team,linescore,probablePitcher`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Schedule failed: ${res.status}`);
   const data = await res.json();
@@ -69,6 +76,8 @@ async function fetchScheduleRange(start: string, end: string): Promise<CalendarG
       const date: string = g.gameDate ? g.gameDate.split('T')[0] : day.date;
       const home = g.teams?.home?.team ?? {};
       const away = g.teams?.away?.team ?? {};
+      const awayP = g.teams?.away?.probablePitcher;
+      const homeP = g.teams?.home?.probablePitcher;
       out.push({
         date,
         gamePk: g.gamePk,
@@ -88,6 +97,8 @@ async function fetchScheduleRange(start: string, end: string): Promise<CalendarG
         detailedState: g.status?.detailedState ?? 'Scheduled',
         gameTimeISO: g.gameDate ?? null,
         doubleHeader: g.doubleHeader && g.doubleHeader !== 'N' ? g.doubleHeader : null,
+        awayPitcher: awayP?.id ? { id: awayP.id, name: awayP.fullName ?? '' } : null,
+        homePitcher: homeP?.id ? { id: homeP.id, name: homeP.fullName ?? '' } : null,
       });
     }
   }

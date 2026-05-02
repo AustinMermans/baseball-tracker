@@ -23,6 +23,7 @@ export function dataUrl(path: string): string {
     '/api/teams': '/data/teams.json',
     '/api/rankings': '/data/rankings.json',
     '/api/calendar': '/data/calendar.json',
+    '/api/pitchers': '/data/pitchers.json',
   };
 
   const teamMatch = path.match(/^\/api\/teams\/(\d+)$/);

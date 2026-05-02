@@ -11,6 +11,7 @@ const navItems = [
   { href: '/players', label: 'Players' },
   { href: '/calendar', label: 'Calendar' },
   { href: '/compare', label: 'Compare' },
+  { href: '/pitchers', label: 'Pitchers' },
 ];
 
 const teamNames = ['Cole', 'Markus', 'J Mill', 'Ryan', 'Joey', 'Jack', 'Austin', 'Bobby'];

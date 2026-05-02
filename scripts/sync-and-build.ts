@@ -294,6 +294,9 @@ async function main() {
 
   console.log('\nGenerating calendar data...');
   execSync('npx tsx scripts/generate-calendar.ts', { stdio: 'inherit' });
+
+  console.log('\nGenerating pitchers data...');
+  execSync('npx tsx scripts/generate-pitchers.ts', { stdio: 'inherit' });
 }
 
 main().catch(e => {

@@ -21,6 +21,8 @@ interface CalendarGame {
   detailedState: string;
   gameTimeISO: string | null;
   doubleHeader: string | null;
+  awayPitcher?: { id: number; name: string } | null;
+  homePitcher?: { id: number; name: string } | null;
 }
 
 interface RosterEntry {
@@ -292,6 +294,11 @@ export default function CalendarPage() {
                       <span className="font-medium">{g.home.abbr ?? g.home.name}</span>
                       {g.home.name && g.home.abbr && <span className="text-muted-foreground/60 text-xs"> {g.home.name}</span>}
                     </div>
+                    {(g.awayPitcher || g.homePitcher) && (
+                      <div className="text-[11px] text-muted-foreground mt-0.5">
+                        {g.awayPitcher?.name ?? '—'} <span className="text-muted-foreground/60">vs</span> {g.homePitcher?.name ?? '—'}
+                      </div>
+                    )}
                     {g.doubleHeader && (
                       <div className="text-[10px] uppercase text-muted-foreground tracking-wide mt-0.5">Doubleheader</div>
                     )}
