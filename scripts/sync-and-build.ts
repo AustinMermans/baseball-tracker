@@ -279,6 +279,9 @@ async function main() {
   console.log('\nGenerating static data...');
   const { execSync } = await import('child_process');
   execSync('npx tsx scripts/generate-static.ts', { stdio: 'inherit' });
+
+  console.log('\nGenerating calendar data...');
+  execSync('npx tsx scripts/generate-calendar.ts', { stdio: 'inherit' });
 }
 
 main().catch(e => {
