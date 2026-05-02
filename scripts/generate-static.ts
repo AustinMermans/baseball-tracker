@@ -76,6 +76,37 @@ const teams = sqlite.prepare('SELECT * FROM teams').all() as any[];
 const periods = sqlite.prepare('SELECT * FROM season_periods').all() as any[];
 const players = sqlite.prepare('SELECT * FROM players WHERE is_active = 1').all() as any[];
 
+// --- Slug uniqueness map ---
+//
+// Rostered players (team_id NOT NULL) keep their bare-name slug — these are the
+// URLs already in production and we don't want to break links. Non-rostered
+// players append -{mlbId} to disambiguate (with ~500 active MLB hitters, name
+// collisions are real). Rostered players collide only theoretically; if it ever
+// happens we'd need a richer disambiguation (mlb-team suffix), but for now the
+// 104 rostered names are unique by construction.
+const slugByPlayerId = new Map<number, string>();
+const rosteredSlugs = new Set<string>();
+for (const p of players) {
+  if (p.team_id != null) {
+    const s = slugify(p.name);
+    rosteredSlugs.add(s);
+    slugByPlayerId.set(p.id, s);
+  }
+}
+for (const p of players) {
+  if (p.team_id != null) continue;
+  const bare = slugify(p.name);
+  const slug = rosteredSlugs.has(bare) ? `${bare}-${p.mlb_id}` : bare;
+  // If two non-rostered players share a name, the second one will see the
+  // first's slug already taken — fall back to mlb-id suffix.
+  const finalSlug = [...slugByPlayerId.values()].includes(slug) ? `${bare}-${p.mlb_id}` : slug;
+  slugByPlayerId.set(p.id, finalSlug);
+}
+
+function playerSlug(player: any): string {
+  return slugByPlayerId.get(player.id) ?? slugByPlayerId.get(player.playerId) ?? slugify(player.name ?? player.playerName ?? '');
+}
+
 // --- Expanded stats query fragment ---
 
 const EXPANDED_STATS_SELECT = `
@@ -124,7 +155,7 @@ for (const period of periods) {
 
   const map = new Map<number, PlayerPeriodScore>();
   for (const r of rows) {
-    map.set(r.playerId, { ...r, slug: slugify(r.playerName) });
+    map.set(r.playerId, { ...r, slug: slugByPlayerId.get(r.playerId) ?? slugify(r.playerName) });
   }
   statsByPeriod.set(period.id, map);
 }
@@ -140,7 +171,7 @@ const standings = teams.map(team => {
       return {
         playerId: player.id,
         playerName: player.name,
-        slug: slugify(player.name),
+        slug: playerSlug(player),
         totalScore: s?.totalScore ?? 0,
         gamesPlayed: s?.gamesPlayed ?? 0,
         totalBases: s?.totalBases ?? 0,
@@ -198,7 +229,7 @@ const teamsData = teams.map(team => ({
   roster: players
     .filter(p => p.team_id === team.id)
     .sort((a: any, b: any) => a.draft_round - b.draft_round)
-    .map((p: any) => ({ ...p, slug: slugify(p.name) })),
+    .map((p: any) => ({ ...p, slug: playerSlug(p) })),
 }));
 fs.writeFileSync(path.join(outDir, 'teams.json'), JSON.stringify(teamsData, null, 2));
 
@@ -216,7 +247,7 @@ for (const team of teams) {
       return {
         playerId: player.id,
         playerName: player.name,
-        slug: slugify(player.name),
+        slug: playerSlug(player),
         totalScore: s?.totalScore ?? 0,
         gamesPlayed: s?.gamesPlayed ?? 0,
         totalBases: s?.totalBases ?? 0,
@@ -257,7 +288,7 @@ for (const team of teams) {
       team,
       roster: roster
         .sort((a: any, b: any) => a.draft_round - b.draft_round)
-        .map((p: any) => ({ ...p, slug: slugify(p.name) })),
+        .map((p: any) => ({ ...p, slug: playerSlug(p) })),
       periods: periodResults,
     }, null, 2)
   );
@@ -282,8 +313,8 @@ const playerRows = sqlite.prepare(`
 
 const playersOut = playerRows.map(p => ({
   ...p,
-  slug: slugify(p.name),
-  fantasyTeam: teamMap.get(p.teamId) ?? 'Unknown',
+  slug: playerSlug(p),
+  fantasyTeam: p.teamId != null ? (teamMap.get(p.teamId) ?? '') : '',
 }));
 
 fs.writeFileSync(path.join(outDir, 'players.json'), JSON.stringify(playersOut, null, 2));
@@ -333,7 +364,7 @@ const rankMap = new Map(playerRankByScore.map(r => [r.id, r.rank]));
 
 for (let i = 0; i < sortedPlayers.length; i++) {
   const player = sortedPlayers[i];
-  const slug = slugify(player.name);
+  const slug = playerSlug(player);
   const games = gamesByPlayer.get(player.id) || [];
 
   // Season totals
@@ -378,9 +409,9 @@ for (let i = 0; i < sortedPlayers.length; i++) {
       return rest;
     }),
     navigation: {
-      prevSlug: prev ? slugify(prev.name) : null,
+      prevSlug: prev ? playerSlug(prev) : null,
       prevName: prev?.name ?? null,
-      nextSlug: next ? slugify(next.name) : null,
+      nextSlug: next ? playerSlug(next) : null,
       nextName: next?.name ?? null,
     },
   };

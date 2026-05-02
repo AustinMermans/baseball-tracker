@@ -9,8 +9,9 @@ interface PlayerData {
   name: string;
   slug: string;
   fantasyTeam: string;
-  teamId: number;
-  draftRound: number;
+  teamId: number | null;
+  mlbTeam: string | null;
+  draftRound: number | null;
   totalScore: number;
   gamesPlayed: number;
   totalBases: number;
@@ -82,10 +83,15 @@ export default function PlayersPage() {
   };
 
   const filtered = players
-    .filter(p =>
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.fantasyTeam.toLowerCase().includes(search.toLowerCase())
-    )
+    .filter(p => {
+      const q = search.toLowerCase();
+      if (!q) return true;
+      return (
+        p.name.toLowerCase().includes(q) ||
+        p.fantasyTeam.toLowerCase().includes(q) ||
+        (p.mlbTeam ?? '').toLowerCase().includes(q)
+      );
+    })
     .sort((a, b) => statValue(b, sortBy) - statValue(a, sortBy));
 
   if (loading) {
@@ -160,7 +166,11 @@ export default function PlayersPage() {
       <div>
         <h1 className="text-lg font-semibold">Players</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          All 104 rostered players &middot; {view === 'fantasy' ? 'fantasy scoring' : view === 'key' ? 'key batting stats' : 'full batting stats'}
+          {(() => {
+            const total = players.length;
+            const drafted = players.filter(p => p.teamId != null).length;
+            return `${total} active MLB hitters · ${drafted} drafted · ${view === 'fantasy' ? 'fantasy scoring' : view === 'key' ? 'key batting stats' : 'full batting stats'}`;
+          })()}
         </p>
       </div>
 
@@ -183,7 +193,7 @@ export default function PlayersPage() {
       <div className="flex gap-2 items-center">
         <input
           type="text"
-          placeholder="Search players or teams..."
+          placeholder="Search players, fantasy teams, or MLB teams..."
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="flex-1 max-w-sm bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
@@ -251,21 +261,33 @@ export default function PlayersPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((p, idx) => (
-                <tr key={p.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+              {filtered.map((p, idx) => {
+                const isDrafted = p.teamId != null;
+                return (
+                <tr
+                  key={p.id}
+                  className={`border-b border-border/50 transition-colors ${isDrafted ? 'bg-muted/20 hover:bg-muted/40' : 'hover:bg-muted/30'}`}
+                >
                   <td className="px-4 py-2 text-xs tabular-nums text-muted-foreground">{idx + 1}</td>
                   <td className="px-4 py-2 text-sm font-medium">
                     <Link href={`/players/${p.slug}`} className="hover:text-primary transition-colors">
                       {p.name}
                     </Link>
+                    {p.mlbTeam && (
+                      <span className="ml-1.5 text-[10px] text-muted-foreground tabular-nums">{p.mlbTeam}</span>
+                    )}
                   </td>
                   <td className="px-3 py-2">
-                    <Link
-                      href={`/teams/${p.teamId}`}
-                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      {p.fantasyTeam}
-                    </Link>
+                    {isDrafted ? (
+                      <Link
+                        href={`/teams/${p.teamId}`}
+                        className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {p.fantasyTeam}
+                      </Link>
+                    ) : (
+                      <span className="text-xs text-muted-foreground/50">—</span>
+                    )}
                   </td>
                   {view === 'fantasy' && (
                     <>
@@ -312,7 +334,7 @@ export default function PlayersPage() {
                     </>
                   )}
                 </tr>
-              ))}
+              );})}
             </tbody>
           </table>
         </div>

@@ -41,6 +41,23 @@ interface BattingLine {
   pickoffs: number;
 }
 
+interface PlayerMeta {
+  fullName: string;
+  position: string | null;
+  mlbTeamId: number | null;
+}
+
+async function getTeamAbbrevMap(): Promise<Map<number, string>> {
+  const res = await fetch(`${BASE_URL}/api/v1/teams?sportId=1`);
+  if (!res.ok) throw new Error(`Teams failed: ${res.status}`);
+  const data = await res.json();
+  const map = new Map<number, string>();
+  for (const t of data.teams || []) {
+    if (t.id && t.abbreviation) map.set(t.id, t.abbreviation);
+  }
+  return map;
+}
+
 async function getSchedule(date: string) {
   const res = await fetch(`${BASE_URL}/api/v1/schedule?sportId=1&date=${date}&hydrate=team`);
   if (!res.ok) throw new Error(`Schedule failed: ${res.status}`);
@@ -52,48 +69,63 @@ async function getSchedule(date: string) {
   return games;
 }
 
-async function getBoxscore(gamePk: number): Promise<Map<number, BattingLine>> {
+interface BoxscoreEntry {
+  stats: BattingLine;
+  meta: PlayerMeta;
+}
+
+async function getBoxscore(gamePk: number): Promise<Map<number, BoxscoreEntry>> {
   const res = await fetch(`${BASE_URL}/api/v1.1/game/${gamePk}/feed/live`);
   if (!res.ok) throw new Error(`Boxscore failed: ${res.status}`);
   const data = await res.json();
-  const result = new Map<number, BattingLine>();
+  const result = new Map<number, BoxscoreEntry>();
   const boxscore = data.liveData?.boxscore;
   if (!boxscore) return result;
 
   for (const side of ['away', 'home']) {
-    const teamPlayers = boxscore.teams[side]?.players || {};
+    const teamSide = boxscore.teams[side];
+    if (!teamSide) continue;
+    const sideTeamId: number | null = teamSide.team?.id ?? null;
+    const teamPlayers = teamSide.players || {};
     for (const [, pd] of Object.entries(teamPlayers)) {
       const p = pd as any;
       const b = p.stats?.batting;
       if (b && (b.atBats > 0 || b.baseOnBalls > 0 || b.hitByPitch > 0)) {
         result.set(p.person.id, {
-          atBats: b.atBats || 0,
-          hits: b.hits || 0,
-          doubles: b.doubles || 0,
-          triples: b.triples || 0,
-          homeRuns: b.homeRuns || 0,
-          totalBases: b.totalBases || 0,
-          stolenBases: b.stolenBases || 0,
-          baseOnBalls: b.baseOnBalls || 0,
-          hitByPitch: b.hitByPitch || 0,
-          runs: b.runs || 0,
-          rbi: b.rbi || 0,
-          strikeOuts: b.strikeOuts || 0,
-          plateAppearances: b.plateAppearances || 0,
-          sacBunts: b.sacBunts || 0,
-          sacFlies: b.sacFlies || 0,
-          groundIntoDoublePlay: b.groundIntoDoublePlay || 0,
-          groundIntoTriplePlay: b.groundIntoTriplePlay || 0,
-          leftOnBase: b.leftOnBase || 0,
-          groundOuts: b.groundOuts || 0,
-          flyOuts: b.flyOuts || 0,
-          lineOuts: b.lineOuts || 0,
-          popOuts: b.popOuts || 0,
-          airOuts: b.airOuts || 0,
-          catchersInterference: b.catchersInterference || 0,
-          caughtStealing: b.caughtStealing || 0,
-          intentionalWalks: b.intentionalWalks || 0,
-          pickoffs: b.pickoffs || 0,
+          stats: {
+            atBats: b.atBats || 0,
+            hits: b.hits || 0,
+            doubles: b.doubles || 0,
+            triples: b.triples || 0,
+            homeRuns: b.homeRuns || 0,
+            totalBases: b.totalBases || 0,
+            stolenBases: b.stolenBases || 0,
+            baseOnBalls: b.baseOnBalls || 0,
+            hitByPitch: b.hitByPitch || 0,
+            runs: b.runs || 0,
+            rbi: b.rbi || 0,
+            strikeOuts: b.strikeOuts || 0,
+            plateAppearances: b.plateAppearances || 0,
+            sacBunts: b.sacBunts || 0,
+            sacFlies: b.sacFlies || 0,
+            groundIntoDoublePlay: b.groundIntoDoublePlay || 0,
+            groundIntoTriplePlay: b.groundIntoTriplePlay || 0,
+            leftOnBase: b.leftOnBase || 0,
+            groundOuts: b.groundOuts || 0,
+            flyOuts: b.flyOuts || 0,
+            lineOuts: b.lineOuts || 0,
+            popOuts: b.popOuts || 0,
+            airOuts: b.airOuts || 0,
+            catchersInterference: b.catchersInterference || 0,
+            caughtStealing: b.caughtStealing || 0,
+            intentionalWalks: b.intentionalWalks || 0,
+            pickoffs: b.pickoffs || 0,
+          },
+          meta: {
+            fullName: p.person?.fullName ?? `MLB#${p.person?.id}`,
+            position: p.position?.abbreviation ?? null,
+            mlbTeamId: sideTeamId,
+          },
         });
       }
     }
@@ -101,26 +133,47 @@ async function getBoxscore(gamePk: number): Promise<Map<number, BattingLine>> {
   return result;
 }
 
-async function syncDate(date: string, mlbIdToPlayerId: Map<number, number>) {
+async function syncDate(
+  date: string,
+  mlbIdToPlayerId: Map<number, number>,
+  teamAbbrev: Map<number, string>,
+) {
   const games = await getSchedule(date);
   const completed = games.filter((g: any) => g.status.statusCode === 'F');
   if (completed.length === 0) return 0;
 
   const dayStats = new Map<number, BattingLine>();
+  const dayMeta = new Map<number, PlayerMeta>();
 
   for (const game of completed) {
     const box = await getBoxscore(game.gamePk);
-    for (const [mlbId, stats] of box) {
-      if (!mlbIdToPlayerId.has(mlbId)) continue;
+    for (const [mlbId, entry] of box) {
+      if (!dayMeta.has(mlbId)) dayMeta.set(mlbId, entry.meta);
       const existing = dayStats.get(mlbId);
       if (existing) {
-        for (const key of Object.keys(stats) as (keyof BattingLine)[]) {
-          (existing as any)[key] += stats[key];
+        for (const key of Object.keys(entry.stats) as (keyof BattingLine)[]) {
+          (existing as any)[key] += entry.stats[key];
         }
       } else {
-        dayStats.set(mlbId, { ...stats });
+        dayStats.set(mlbId, { ...entry.stats });
       }
     }
+  }
+
+  // Discover and upsert any new MLB players we haven't seen before.
+  // Existing rows are left untouched (preserves team_id, draft_round).
+  const insertPlayer = sqlite.prepare(`
+    INSERT INTO players (mlb_id, name, mlb_team, position, team_id, draft_round, is_active)
+    VALUES (?, ?, ?, ?, NULL, NULL, 1)
+    ON CONFLICT(mlb_id) DO NOTHING
+  `);
+  const lookupPlayer = sqlite.prepare(`SELECT id FROM players WHERE mlb_id = ?`);
+  for (const [mlbId, meta] of dayMeta) {
+    if (mlbIdToPlayerId.has(mlbId)) continue;
+    const mlbTeam = meta.mlbTeamId != null ? (teamAbbrev.get(meta.mlbTeamId) ?? null) : null;
+    insertPlayer.run(mlbId, meta.fullName, mlbTeam, meta.position);
+    const row = lookupPlayer.get(mlbId) as { id: number } | undefined;
+    if (row) mlbIdToPlayerId.set(mlbId, row.id);
   }
 
   const upsert = sqlite.prepare(`
@@ -169,17 +222,31 @@ async function syncDate(date: string, mlbIdToPlayerId: Map<number, number>) {
 }
 
 async function main() {
-  // Get rostered players
-  const players = sqlite.prepare('SELECT id, mlb_id FROM players WHERE is_active = 1').all() as any[];
-  const mlbIdToPlayerId = new Map<number, number>();
-  for (const p of players) mlbIdToPlayerId.set(p.mlb_id, p.id);
+  const backfill = process.env.BACKFILL === 'true';
 
-  // Determine date range: last synced date (or season start) to yesterday
-  const lastRow = sqlite.prepare('SELECT MAX(game_date) as d FROM daily_stats').get() as any;
+  // Load all known players (rostered + previously discovered non-rostered).
+  const existingPlayers = sqlite.prepare('SELECT id, mlb_id FROM players').all() as any[];
+  const mlbIdToPlayerId = new Map<number, number>();
+  for (const p of existingPlayers) mlbIdToPlayerId.set(p.mlb_id, p.id);
+
+  // Look up MLB team abbreviations once for player metadata.
+  console.log('Fetching MLB team abbreviations...');
+  const teamAbbrev = await getTeamAbbrevMap();
+
+  // Determine date range. BACKFILL=true forces a full re-sync from season start
+  // (idempotent — daily_stats and players upsert), used when adding non-rostered
+  // discovery to an existing DB.
   const seasonStart = '2026-03-26';
-  const startDate = lastRow?.d
-    ? new Date(new Date(lastRow.d).getTime() + 86400000).toISOString().split('T')[0]
-    : seasonStart;
+  let startDate: string;
+  if (backfill) {
+    startDate = seasonStart;
+    console.log('BACKFILL=true: re-syncing entire season (idempotent).');
+  } else {
+    const lastRow = sqlite.prepare('SELECT MAX(game_date) as d FROM daily_stats').get() as any;
+    startDate = lastRow?.d
+      ? new Date(new Date(lastRow.d).getTime() + 86400000).toISOString().split('T')[0]
+      : seasonStart;
+  }
 
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -195,7 +262,7 @@ async function main() {
       const dateStr = d.toISOString().split('T')[0];
       process.stdout.write(`  ${dateStr}... `);
       try {
-        const count = await syncDate(dateStr, mlbIdToPlayerId);
+        const count = await syncDate(dateStr, mlbIdToPlayerId, teamAbbrev);
         console.log(`${count} players`);
         totalSynced += count;
       } catch (e) {
