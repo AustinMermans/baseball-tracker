@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { fetchData } from '@/lib/data';
@@ -129,6 +129,14 @@ function pitchColor(code: string): string {
 const SUPPORTED_SEASONS = [2026, 2025, 2024];
 
 export default function NerdsPage() {
+  return (
+    <Suspense fallback={null}>
+      <NerdsPageInner />
+    </Suspense>
+  );
+}
+
+function NerdsPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialSeason = (() => {
