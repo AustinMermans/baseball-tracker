@@ -1,7 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { fetchData } from '@/lib/data';
+
+// Mirrors the slug rule used by generate-static.ts so leader-card batter
+// names route to /players/[slug] without needing slugs in the JSON.
+function slugify(name: string): string {
+  return name.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
 
 interface PitchMixEntry {
   code: string;
@@ -194,6 +205,7 @@ function LeadersSection({ leaders }: { leaders: Leaders }) {
             label="Hardest hit ball"
             big={`${leaders.hardestHit.launchSpeed.toFixed(1)} mph`}
             primary={leaders.hardestHit.batterName}
+            primaryHref={`/players/${slugify(leaders.hardestHit.batterName)}`}
             secondary={`${leaders.hardestHit.event} · ${leaders.hardestHit.launchAngle}° off ${leaders.hardestHit.pitcherName} · ${fmtDate(leaders.hardestHit.gameDate)}`}
             accent="#16a34a"
           />
@@ -203,6 +215,7 @@ function LeadersSection({ leaders }: { leaders: Leaders }) {
             label="Longest hit"
             big={`${leaders.longestHit.totalDistance} ft`}
             primary={leaders.longestHit.batterName}
+            primaryHref={`/players/${slugify(leaders.longestHit.batterName)}`}
             secondary={`${leaders.longestHit.event} · ${leaders.longestHit.launchSpeed.toFixed(1)} mph @ ${leaders.longestHit.launchAngle}° · ${fmtDate(leaders.longestHit.gameDate)}`}
             accent="#d97706"
           />
@@ -213,17 +226,25 @@ function LeadersSection({ leaders }: { leaders: Leaders }) {
 }
 
 function LeaderCard({
-  label, big, primary, secondary, accent,
+  label, big, primary, primaryHref, secondary, accent,
 }: {
-  label: string; big: string; primary: string; secondary: string; accent: string;
+  label: string; big: string; primary: string; primaryHref?: string;
+  secondary: string; accent: string;
 }) {
+  const primaryEl = primaryHref ? (
+    <Link href={primaryHref} className="text-sm font-medium text-foreground hover:text-primary transition-colors truncate inline-block max-w-full" title={primary}>
+      {primary}
+    </Link>
+  ) : (
+    <span className="text-sm font-medium text-foreground truncate inline-block max-w-full" title={primary}>{primary}</span>
+  );
   return (
-    <div className="border border-border rounded-lg bg-card p-4 relative overflow-hidden">
+    <div className="border border-border rounded-lg bg-card p-4 relative overflow-hidden hover:shadow-sm transition-shadow">
       <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: accent }} />
       <div className="pl-2">
         <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
         <div className="text-2xl font-semibold tabular-nums mt-1" style={{ color: accent }}>{big}</div>
-        <div className="text-sm font-medium text-foreground mt-1.5 truncate" title={primary}>{primary}</div>
+        <div className="mt-1.5">{primaryEl}</div>
         <div className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">{secondary}</div>
       </div>
     </div>
@@ -418,15 +439,19 @@ function ViolinPanel({
 
 function PitchLocationSection({ data }: { data: StatcastData }) {
   const { pitchLocation, pitchMix } = data;
-  // Show top-6 by count for the panel grid (matches reference image layout).
   const codes = pitchMix.slice(0, 6).map(p => p.code).filter(c => pitchLocation.byType[c]);
+  // Build a quick code → median-mph map so the panel header can show velocity.
+  const medByCode = new Map<string, number | null>();
+  for (const p of pitchMix) {
+    medByCode.set(p.code, p.velocityQuartiles?.[2] ?? null);
+  }
   return (
     <section>
       <SectionHeader title="Pitch Location Density"
         subtitle="Where each pitch type is thrown, viewed from the catcher's perspective. Strike zone shown in outline." />
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {codes.map(code => (
-          <PitchLocationPanel key={code} code={code} entry={pitchLocation.byType[code]} loc={pitchLocation} />
+          <PitchLocationPanel key={code} code={code} entry={pitchLocation.byType[code]} loc={pitchLocation} medianMph={medByCode.get(code) ?? null} />
         ))}
       </div>
     </section>
@@ -437,10 +462,12 @@ function PitchLocationPanel({
   code,
   entry,
   loc,
+  medianMph,
 }: {
   code: string;
   entry: PitchLocationGrid;
   loc: StatcastData['pitchLocation'];
+  medianMph: number | null;
 }) {
   const W = 220, H = 260;
   const padL = 30, padR = 8, padT = 30, padB = 28;
@@ -478,12 +505,14 @@ function PitchLocationPanel({
 
   return (
     <div className="border border-border rounded-lg bg-card p-3">
-      <div className="flex items-baseline justify-between mb-1.5">
-        <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: pitchColor(code) }} />
-          <span className="text-[12px] font-medium">{entry.name}</span>
+      <div className="flex items-baseline justify-between mb-1.5 gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: pitchColor(code) }} />
+          <span className="text-[12px] font-medium truncate">{entry.name}</span>
         </div>
-        <span className="text-[10px] text-muted-foreground tabular-nums">{pctInZone.toFixed(0)}% in zone</span>
+        <span className="text-[10px] text-muted-foreground tabular-nums shrink-0">
+          {pctInZone.toFixed(0)}% in zone{medianMph != null && <> · {medianMph.toFixed(0)} mph</>}
+        </span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
         <defs>
