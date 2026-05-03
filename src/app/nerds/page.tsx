@@ -96,18 +96,20 @@ function densityColor(t: number, cutoff = 0.06): string {
   return `hsla(262, 75%, 26%, 1)`;
 }
 
-// Diverging red ↔ neutral ↔ green for run values. Centered at zero.
+// Diverging red ↔ neutral ↔ green for run values. Centered at zero. Pushed
+// darker at both extremes (peak ~28% lightness) so the chart reads as a true
+// dark-red → cream → dark-green gradient rather than a pastel wash.
 function divergingColor(value: number, magnitude: number): string {
   if (Math.abs(value) < 1e-9) return 'hsl(45, 25%, 95%)';
   const t = Math.max(-1, Math.min(1, value / magnitude));
   if (t > 0) {
-    // green ramp
-    const l = 92 - t * 50;
-    return `hsl(142, 55%, ${l}%)`;
+    const l = 92 - t * 64;
+    const s = 55 + t * 10;
+    return `hsl(142, ${s}%, ${l}%)`;
   } else {
-    // red ramp
-    const l = 92 - Math.abs(t) * 50;
-    return `hsl(8, 70%, ${l}%)`;
+    const l = 92 - Math.abs(t) * 64;
+    const s = 65 + Math.abs(t) * 10;
+    return `hsl(8, ${s}%, ${l}%)`;
   }
 }
 
@@ -691,7 +693,7 @@ function RunValueSection({ data, idx }: { data: StatcastData; idx?: string }) {
 
 function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunValue']; magnitude: number }) {
   const W = 760, H = 380;
-  const padL = 56, padR = 16, padT = 16, padB = 38;
+  const padL = 56, padR = 96, padT = 18, padB = 38;
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
   const cellW = innerW / rv.lsBins;
@@ -705,24 +707,21 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
   const laTicks: number[] = [];
   for (let v = -75; v <= 75; v += 15) laTicks.push(v);
 
-  // Smooth the raw 32×20 grid with a small Gaussian over neighbors. Reduces
-  // single-cell noise from sparse bins while keeping the structural gradients.
-  // Then quantize each smoothed value to one of the diverging-color bands so
-  // the resulting fill has hard borders between bands (the elevation-map look)
-  // rather than a smeared red↔green blend.
-  const BANDS = [-0.6, -0.4, -0.25, -0.12, -0.04, 0.04, 0.15, 0.3, 0.5, 0.75, 1.0];
+  // Count-weighted Gaussian smooth over each cell's 3×3 neighborhood. Outputs a
+  // continuous avg run value (or null when the neighborhood is too sparse to
+  // trust). The blur+posterize-alpha SVG filter applied below handles the
+  // visual smoothing — we don't band-snap here, so the resulting isobands come
+  // from the alpha quantization rather than discrete fill colors.
   const smoothed: (number | null)[][] = Array.from({ length: rv.laBins }, () => Array(rv.lsBins).fill(null));
   for (let ai = 0; ai < rv.laBins; ai++) {
     for (let si = 0; si < rv.lsBins; si++) {
-      let sum = 0, weight = 0;
-      let nbrs = 0;
+      let sum = 0, weight = 0, nbrs = 0;
       for (let dai = -1; dai <= 1; dai++) {
         for (let dsi = -1; dsi <= 1; dsi++) {
           const aj = ai + dai, sj = si + dsi;
           if (aj < 0 || aj >= rv.laBins || sj < 0 || sj >= rv.lsBins) continue;
           const c = rv.grid[aj][sj];
-          if (c.avg == null || c.count < 2) continue;
-          // Weight: center 4, edges 2, corners 1; further weighted by sample count.
+          if (c.avg == null || c.count < 1) continue;
           const k = (dai === 0 && dsi === 0) ? 4 : (dai === 0 || dsi === 0 ? 2 : 1);
           const w = k * Math.min(20, c.count);
           sum += c.avg * w;
@@ -730,94 +729,175 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
           nbrs++;
         }
       }
-      if (weight > 0 && nbrs >= 2) {
-        const avg = sum / weight;
-        // Snap to nearest band so the fill color is one of a few discrete
-        // values — gives clean band edges instead of muddy continuous tones.
-        let band = BANDS[0];
-        let best = Math.abs(avg - band);
-        for (const b of BANDS) {
-          const d = Math.abs(avg - b);
-          if (d < best) { best = d; band = b; }
+      if (weight > 0 && nbrs >= 1) smoothed[ai][si] = sum / weight;
+    }
+  }
+
+  // Single light extrapolation pass: only fills null cells with ≥3 non-null
+  // neighbors (concave edges of the envelope). Keeps the boundary close to the
+  // real data — sub-cell feathering happens in the bilinear renderer below.
+  {
+    const next = smoothed.map(row => row.slice());
+    for (let ai = 0; ai < rv.laBins; ai++) {
+      for (let si = 0; si < rv.lsBins; si++) {
+        if (smoothed[ai][si] != null) continue;
+        let sum = 0, n = 0;
+        for (let dai = -1; dai <= 1; dai++) {
+          for (let dsi = -1; dsi <= 1; dsi++) {
+            if (dai === 0 && dsi === 0) continue;
+            const aj = ai + dai, sj = si + dsi;
+            if (aj < 0 || aj >= rv.laBins || sj < 0 || sj >= rv.lsBins) continue;
+            const v = smoothed[aj][sj];
+            if (v == null) continue;
+            sum += v;
+            n++;
+          }
         }
-        smoothed[ai][si] = band;
+        if (n >= 3) next[ai][si] = sum / n;
       }
+    }
+    for (let ai = 0; ai < rv.laBins; ai++) {
+      for (let si = 0; si < rv.lsBins; si++) smoothed[ai][si] = next[ai][si];
+    }
+  }
+
+  // Static tooltip layer above the iso layers — kept un-filtered so hovering
+  // returns the original cell's stats, not a smoothed approximation.
+  const tooltipCells: React.ReactNode[] = [];
+  for (let ai = 0; ai < rv.laBins; ai++) {
+    for (let si = 0; si < rv.lsBins; si++) {
+      const c = rv.grid[ai][si];
+      if (c.avg == null || c.count < 2) continue;
+      const x = padL + si * cellW;
+      const y = padT + (rv.laBins - 1 - ai) * cellH;
+      tooltipCells.push(
+        <rect key={`t-${ai}-${si}`} x={x} y={y} width={cellW + 0.5} height={cellH + 0.5}
+          fill="transparent" pointerEvents="all">
+          <title>{`launch ${(rv.lsMin + (si + 0.5) * (rv.lsMax - rv.lsMin) / rv.lsBins).toFixed(0)} mph · ${(rv.laMin + (ai + 0.5) * (rv.laMax - rv.laMin) / rv.laBins).toFixed(0)}°\nrun value ${c.avg >= 0 ? '+' : ''}${c.avg.toFixed(2)} · n=${c.count}`}</title>
+        </rect>
+      );
     }
   }
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
       <defs>
-        {/* Light blur softens the cell edges enough that adjacent same-band
-            cells visually merge, but keeps the band-to-band transitions sharp. */}
-        <filter id="rv-iso" x="-2%" y="-2%" width="104%" height="104%">
-          <feGaussianBlur stdDeviation="1.6" />
-        </filter>
         <clipPath id="rv-clip">
           <rect x={padL} y={padT} width={innerW} height={innerH} />
         </clipPath>
       </defs>
-      <g filter="url(#rv-iso)" clipPath="url(#rv-clip)">
-        {smoothed.map((row, ai) =>
-          row.map((band, si) => {
-            if (band == null) return null;
-            const original = rv.grid[ai][si];
-            const x = padL + si * cellW;
-            const y = padT + (rv.laBins - 1 - ai) * cellH;
-            return (
-              <rect key={`${ai}-${si}`} x={x} y={y} width={cellW + 0.5} height={cellH + 0.5}
-                fill={divergingColor(band, magnitude)}>
-                <title>{`launch ${(rv.lsMin + (si + 0.5) * (rv.lsMax - rv.lsMin) / rv.lsBins).toFixed(0)} mph · ${(rv.laMin + (ai + 0.5) * (rv.laMax - rv.laMin) / rv.laBins).toFixed(0)}°\nrun value ${original.avg != null ? (original.avg >= 0 ? '+' : '') + original.avg.toFixed(2) : 'n/a'} · n=${original.count}`}</title>
-              </rect>
-            );
-          })
-        )}
+
+      {/* Render a bilinearly-interpolated finer grid: each original cell becomes
+          a SUB×SUB block of sub-cells whose values are weighted from the 4
+          surrounding original cell centers. This gives a continuous gradient
+          (no visible cell boundaries) without any blur — so the field stays
+          crisp where the data is, and the envelope edge stays sharp. */}
+      <g clipPath="url(#rv-clip)" shapeRendering="crispEdges">
+        {(() => {
+          const SUB = 6;
+          const fineLs = rv.lsBins * SUB;
+          const fineLa = rv.laBins * SUB;
+          const fineW = innerW / fineLs;
+          const fineH = innerH / fineLa;
+          const out: React.ReactNode[] = [];
+          for (let fa = 0; fa < fineLa; fa++) {
+            // Original-grid (cell-center) coordinates of this sub-cell
+            const ax = (fa + 0.5) / SUB - 0.5;
+            const ai0 = Math.max(0, Math.min(rv.laBins - 2, Math.floor(ax)));
+            const tA = Math.max(0, Math.min(1, ax - ai0));
+            for (let fs = 0; fs < fineLs; fs++) {
+              const sx = (fs + 0.5) / SUB - 0.5;
+              const si0 = Math.max(0, Math.min(rv.lsBins - 2, Math.floor(sx)));
+              const tS = Math.max(0, Math.min(1, sx - si0));
+              const v00 = smoothed[ai0][si0];
+              const v01 = smoothed[ai0][si0 + 1];
+              const v10 = smoothed[ai0 + 1][si0];
+              const v11 = smoothed[ai0 + 1][si0 + 1];
+              // Bilinear weights — these always sum to 1 when all corners
+              // exist. If any corner is null, sum the available weight and
+              // use it as alpha — yields a sub-cell-resolution feathered edge
+              // that follows the data envelope without imputing values
+              // beyond it.
+              const w00 = (1 - tA) * (1 - tS);
+              const w01 = (1 - tA) * tS;
+              const w10 = tA * (1 - tS);
+              const w11 = tA * tS;
+              let weightedSum = 0;
+              let availW = 0;
+              if (v00 != null) { weightedSum += v00 * w00; availW += w00; }
+              if (v01 != null) { weightedSum += v01 * w01; availW += w01; }
+              if (v10 != null) { weightedSum += v10 * w10; availW += w10; }
+              if (v11 != null) { weightedSum += v11 * w11; availW += w11; }
+              if (availW < 0.05) continue;
+              const v = weightedSum / availW;
+              const x = padL + fs * fineW;
+              const y = padT + (fineLa - 1 - fa) * fineH;
+              // No overlap (no +0.5): when alpha < 1, overlapping rects would
+              // accumulate opacity and produce a checkerboard at the boundary.
+              const overlap = availW > 0.99 ? 0.5 : 0;
+              out.push(
+                <rect key={`${fa}-${fs}`} x={x} y={y} width={fineW + overlap} height={fineH + overlap}
+                  fill={divergingColor(v, magnitude)} fillOpacity={availW} />
+              );
+            }
+          }
+          return out;
+        })()}
       </g>
-      {/* Reference lines: 0° launch angle, 95 mph (avg fastball / hard-hit threshold) */}
-      <line x1={padL} x2={W - padR} y1={laToPx(0)} y2={laToPx(0)} stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.25" strokeDasharray="3 3" />
-      <line x1={lsToPx(95)} x2={lsToPx(95)} y1={padT} y2={H - padB} stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.25" strokeDasharray="3 3" />
-      {/* Barrel-zone callout — a small label + leader pointing at the peak */}
+
+      {/* Reference: 95 mph (avg four-seam / hard-hit threshold). 0° dropped —
+          y-axis already labels it. */}
+      <line x1={lsToPx(95)} x2={lsToPx(95)} y1={padT} y2={H - padB}
+        stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.22" strokeDasharray="3 3" />
+
+      {/* Barrel-zone marker — small ring at the peak, label sits below the axis. */}
       {(() => {
-        const barrelX = lsToPx(105);
-        const barrelY = laToPx(28);
-        const labelX = lsToPx(75);
-        const labelY = laToPx(60);
+        const bx = lsToPx(105), by = laToPx(28);
         return (
           <g pointerEvents="none">
-            <line x1={labelX + 22} y1={labelY} x2={barrelX - 8} y2={barrelY - 4}
-              stroke="hsl(var(--foreground))" strokeOpacity="0.35" strokeWidth="0.75" />
-            <circle cx={barrelX} cy={barrelY} r={3} fill="none"
-              stroke="hsl(var(--foreground))" strokeOpacity="0.45" strokeWidth="0.75" />
-            <rect x={labelX - 30} y={labelY - 9} width={60} height={18} rx={3}
-              fill="hsl(var(--background))" fillOpacity="0.92"
-              stroke="hsl(var(--foreground))" strokeOpacity="0.18" strokeWidth="0.5" />
-            <text x={labelX} y={labelY + 4} textAnchor="middle" fontSize="10"
-              fill="hsl(var(--foreground))" fontWeight="500">Barrel zone</text>
+            <circle cx={bx} cy={by} r={5.5} fill="none"
+              stroke="hsl(var(--foreground))" strokeOpacity="0.6" strokeWidth="1" />
+            <circle cx={bx} cy={by} r={1.5} fill="hsl(var(--foreground))" fillOpacity="0.6" />
+            <text x={bx} y={H - padB + 26} textAnchor="middle" fontSize="9"
+              fill="hsl(var(--foreground))" fillOpacity="0.55"
+              className="tracking-wide uppercase">Barrel zone</text>
           </g>
         );
       })()}
-      {/* Outline */}
-      <rect x={padL} y={padT} width={innerW} height={innerH} fill="none" stroke="hsl(var(--border))" strokeWidth="1" />
-      {/* Launch-angle region labels along the right edge — give readers a
-          mental map of what each band means without cluttering the field. */}
+
+      {/* Chart frame */}
+      <rect x={padL} y={padT} width={innerW} height={innerH} fill="none"
+        stroke="hsl(var(--border))" strokeWidth="1" />
+
+      {/* Right-side launch-angle region gutter: tick marks at 50°/25°/10° plus
+          a label centered between each pair of boundaries. Reads like an
+          anatomical key rather than text floating over the data. */}
       {(() => {
-        const labelX = W - padR - 6;
-        const regions: { y: number; text: string }[] = [
-          { y: laToPx(60), text: 'Pop ups' },
-          { y: laToPx(35), text: 'Fly balls' },
-          { y: laToPx(15), text: 'Line drives' },
-          { y: laToPx(-10), text: 'Ground balls' },
+        const x0 = padL + innerW;
+        const tickEnd = x0 + 6;
+        const labelX = x0 + 10;
+        const boundaries = [50, 25, 10];
+        const regions: { yMid: number; text: string }[] = [
+          { yMid: (laToPx(rv.laMax) + laToPx(50)) / 2, text: 'Pop ups' },
+          { yMid: (laToPx(50) + laToPx(25)) / 2, text: 'Fly balls' },
+          { yMid: (laToPx(25) + laToPx(10)) / 2, text: 'Line drives' },
+          { yMid: (laToPx(10) + laToPx(rv.laMin)) / 2, text: 'Ground balls' },
         ];
         return (
           <g pointerEvents="none">
+            {boundaries.map(b => (
+              <line key={b} x1={x0} x2={tickEnd} y1={laToPx(b)} y2={laToPx(b)}
+                stroke="hsl(var(--muted-foreground))" strokeWidth="0.5" />
+            ))}
             {regions.map(r => (
-              <text key={r.text} x={labelX} y={r.y + 3} textAnchor="end"
-                fontSize="9" fontWeight="500" fill="hsl(var(--foreground))" fillOpacity="0.4"
-                className="tracking-wide uppercase">{r.text}</text>
+              <text key={r.text} x={labelX} y={r.yMid + 3} textAnchor="start"
+                fontSize="9.5" fontWeight="500" fill="hsl(var(--foreground))" fillOpacity="0.55"
+                className="tracking-wide">{r.text}</text>
             ))}
           </g>
         );
       })()}
+
       {/* X axis */}
       {lsTicks.map(t => (
         <g key={t}>
@@ -826,6 +906,7 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
         </g>
       ))}
       <text x={padL + innerW / 2} y={H - 6} textAnchor="middle" fontSize="11" fill="hsl(var(--foreground))">Exit velocity (mph)</text>
+
       {/* Y axis */}
       {laTicks.map(t => (
         <g key={t}>
@@ -834,6 +915,10 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
         </g>
       ))}
       <text x={14} y={padT + innerH / 2} textAnchor="middle" fontSize="11" fill="hsl(var(--foreground))" transform={`rotate(-90 14 ${padT + innerH / 2})`}>Launch angle</text>
+
+      {/* Hover layer — invisible cells that surface per-bin tooltips without
+          getting filtered/blurred. Drawn last so it sits on top. */}
+      <g>{tooltipCells}</g>
     </svg>
   );
 }
