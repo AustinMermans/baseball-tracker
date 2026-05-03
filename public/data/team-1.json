@@ -41,10 +41,10 @@
     },
     {
       "id": 4,
-      "mlbId": 694497,
+      "mlbId": 695578,
       "name": "James Wood",
-      "mlbTeam": "TEX",
-      "position": "CF",
+      "mlbTeam": "WSH",
+      "position": "RF",
       "teamId": 1,
       "draftRound": 4,
       "isActive": 1,
@@ -159,8 +159,34 @@
         "end_date": "2026-05-30",
         "redraft_date": null
       },
-      "bestBallScore": 687,
+      "bestBallScore": 739,
       "playerScores": [
+        {
+          "playerId": 4,
+          "playerName": "James Wood",
+          "slug": "james-wood",
+          "totalScore": 106,
+          "gamesPlayed": 34,
+          "totalBases": 68,
+          "stolenBases": 5,
+          "walks": 31,
+          "hbp": 2,
+          "atBats": 130,
+          "hits": 31,
+          "doubles": 7,
+          "triples": 0,
+          "homeRuns": 10,
+          "runs": 30,
+          "rbi": 24,
+          "strikeouts": 53,
+          "plateAppearances": 163,
+          "sacFlies": 0,
+          "sacBunts": 0,
+          "caughtStealing": 1,
+          "intentionalWalks": 6,
+          "groundIntoDoublePlay": 1,
+          "leftOnBase": 47
+        },
         {
           "playerId": 1,
           "playerName": "Shohei Ohtani",
@@ -422,32 +448,6 @@
           "leftOnBase": 54
         },
         {
-          "playerId": 4,
-          "playerName": "James Wood",
-          "slug": "james-wood",
-          "totalScore": 52,
-          "gamesPlayed": 32,
-          "totalBases": 30,
-          "stolenBases": 5,
-          "walks": 16,
-          "hbp": 1,
-          "atBats": 92,
-          "hits": 17,
-          "doubles": 4,
-          "triples": 0,
-          "homeRuns": 3,
-          "runs": 11,
-          "rbi": 9,
-          "strikeouts": 27,
-          "plateAppearances": 113,
-          "sacFlies": 1,
-          "sacBunts": 3,
-          "caughtStealing": 0,
-          "intentionalWalks": 0,
-          "groundIntoDoublePlay": 0,
-          "leftOnBase": 47
-        },
-        {
           "playerId": 10,
           "playerName": "Salvador Perez",
           "slug": "salvador-perez",
@@ -501,6 +501,7 @@
         }
       ],
       "countingPlayerIds": [
+        4,
         1,
         11,
         12,
@@ -509,11 +510,10 @@
         9,
         8,
         13,
-        6,
-        5
+        6
       ],
       "benchPlayerIds": [
-        4,
+        5,
         10,
         3
       ]
