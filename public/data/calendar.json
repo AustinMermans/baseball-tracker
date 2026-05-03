@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T20:23:01.952Z",
+  "generatedAt": "2026-05-03T20:48:53.697Z",
   "seasonStart": "2026-03-26",
   "endDate": "2026-05-17",
   "games": [
@@ -14185,7 +14185,7 @@
         "name": "Yankees"
       },
       "awayScore": 3,
-      "homeScore": 4,
+      "homeScore": 11,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T17:35:00Z",
@@ -14270,8 +14270,8 @@
       },
       "awayScore": 7,
       "homeScore": 2,
-      "status": "O",
-      "detailedState": "Game Over",
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-03T17:40:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14296,10 +14296,10 @@
         "abbr": "STL",
         "name": "Cardinals"
       },
-      "awayScore": 3,
+      "awayScore": 4,
       "homeScore": 1,
-      "status": "I",
-      "detailedState": "In Progress",
+      "status": "O",
+      "detailedState": "Game Over",
       "gameTimeISO": "2026-05-03T18:15:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14325,7 +14325,7 @@
         "name": "Cubs"
       },
       "awayScore": 2,
-      "homeScore": 6,
+      "homeScore": 8,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T18:20:00Z",
@@ -14352,8 +14352,8 @@
         "abbr": "COL",
         "name": "Rockies"
       },
-      "awayScore": 3,
-      "homeScore": 2,
+      "awayScore": 4,
+      "homeScore": 4,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T19:10:00Z",
@@ -14381,7 +14381,7 @@
         "name": "Athletics"
       },
       "awayScore": 0,
-      "homeScore": 0,
+      "homeScore": 1,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T20:05:00Z",
@@ -14409,7 +14409,7 @@
         "name": "Angels"
       },
       "awayScore": 0,
-      "homeScore": 0,
+      "homeScore": 1,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T20:07:00Z",
@@ -14464,7 +14464,7 @@
         "abbr": "SD",
         "name": "Padres"
       },
-      "awayScore": 0,
+      "awayScore": 1,
       "homeScore": 0,
       "status": "I",
       "detailedState": "In Progress",
@@ -18925,19 +18925,7 @@
         "fantasyTeamId": 6
       }
     ],
-    "TEX": [
-      {
-        "name": "Corey Seager",
-        "slug": "corey-seager",
-        "fantasyTeam": "Austin",
-        "fantasyTeamId": 7
-      },
-      {
-        "name": "Wyatt Langford",
-        "slug": "wyatt-langford",
-        "fantasyTeam": "Austin",
-        "fantasyTeamId": 7
-      },
+    "WSH": [
       {
         "name": "James Wood",
         "slug": "james-wood",
@@ -18945,10 +18933,10 @@
         "fantasyTeamId": 1
       },
       {
-        "name": "Brandon Nimmo",
-        "slug": "brandon-nimmo",
-        "fantasyTeam": "Joey",
-        "fantasyTeamId": 5
+        "name": "CJ Abrams",
+        "slug": "cj-abrams",
+        "fantasyTeam": "J Mill",
+        "fantasyTeamId": 3
       }
     ],
     "SD": [
@@ -19237,14 +19225,14 @@
         "fantasyTeamId": 8
       },
       {
-        "name": "Wilson Contreras",
-        "slug": "wilson-contreras",
+        "name": "Willson Contreras",
+        "slug": "willson-contreras",
         "fantasyTeam": "J Mill",
         "fantasyTeamId": 3
       },
       {
-        "name": "Cedanne Rafaela",
-        "slug": "cedanne-rafaela",
+        "name": "Ceddanne Rafaela",
+        "slug": "ceddanne-rafaela",
         "fantasyTeam": "Jack",
         "fantasyTeamId": 6
       },
@@ -19277,8 +19265,8 @@
     ],
     "MIA": [
       {
-        "name": "Augustin Ramirez",
-        "slug": "augustin-ramirez",
+        "name": "Agustín Ramírez",
+        "slug": "agustin-ramirez",
         "fantasyTeam": "Bobby",
         "fantasyTeamId": 8
       },
@@ -19315,8 +19303,8 @@
         "fantasyTeamId": 8
       },
       {
-        "name": "Yanier Diaz",
-        "slug": "yanier-diaz",
+        "name": "Yainer Diaz",
+        "slug": "yainer-diaz",
         "fantasyTeam": "Markus",
         "fantasyTeamId": 2
       }
@@ -19345,14 +19333,6 @@
         "slug": "bo-bichette",
         "fantasyTeam": "Ryan",
         "fantasyTeamId": 4
-      }
-    ],
-    "WSH": [
-      {
-        "name": "CJ Abrams",
-        "slug": "cj-abrams",
-        "fantasyTeam": "J Mill",
-        "fantasyTeamId": 3
       }
     ],
     "CIN": [
@@ -19477,6 +19457,26 @@
       {
         "name": "Yandy Diaz",
         "slug": "yandy-diaz",
+        "fantasyTeam": "Joey",
+        "fantasyTeamId": 5
+      }
+    ],
+    "TEX": [
+      {
+        "name": "Corey Seager",
+        "slug": "corey-seager",
+        "fantasyTeam": "Austin",
+        "fantasyTeamId": 7
+      },
+      {
+        "name": "Wyatt Langford",
+        "slug": "wyatt-langford",
+        "fantasyTeam": "Austin",
+        "fantasyTeamId": 7
+      },
+      {
+        "name": "Brandon Nimmo",
+        "slug": "brandon-nimmo",
         "fantasyTeam": "Joey",
         "fantasyTeamId": 5
       }
