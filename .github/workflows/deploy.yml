@@ -37,6 +37,29 @@ jobs:
       - name: Sync new MLB stats (incremental)
         run: npx tsx scripts/sync-and-build.ts
 
+      # pitches.db is gitignored (33+ MB raw Statcast). Cache it so the daily
+      # incremental sync only fetches new games' pitches; on cache miss the
+      # script falls back to a full-season backfill (a few minutes).
+      - name: Restore pitches DB cache
+        id: pitches-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: pitches.db
+          key: pitches-db-2026-${{ github.run_id }}
+          restore-keys: pitches-db-2026-
+
+      - name: Sync pitch-by-pitch Statcast (incremental)
+        run: npx tsx scripts/sync-pitches.ts
+
+      - name: Build Statcast aggregates
+        run: npx tsx scripts/build-statcast.ts
+
+      - name: Save pitches DB cache
+        uses: actions/cache/save@v4
+        with:
+          path: pitches.db
+          key: pitches-db-2026-${{ github.run_id }}
+
       - name: Commit updated database
         run: |
           git config user.name "github-actions[bot]"
