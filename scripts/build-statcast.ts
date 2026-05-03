@@ -114,7 +114,49 @@ function quartiles(sorted: number[]): [number, number, number, number, number] |
   return [sorted[0], at(0.25), at(0.5), at(0.75), sorted[sorted.length - 1]];
 }
 
-function buildSeason(season: number) {
+// Hydrate name maps from the existing data files. Batters live in
+// baseball.db (mlb_id → name); pitchers live in pitchers.json. Both are
+// already part of this repo's pipeline, so we don't need extra API calls.
+function loadNames() {
+  const batterDbPath = path.join(process.cwd(), 'baseball.db');
+  const batters = new Map<number, string>();
+  if (fs.existsSync(batterDbPath)) {
+    const bdb = new Database(batterDbPath, { readonly: true });
+    const rows = bdb.prepare(`SELECT mlb_id, name FROM players`).all() as { mlb_id: number; name: string }[];
+    for (const r of rows) batters.set(r.mlb_id, r.name);
+    bdb.close();
+  }
+  const pitchersPath = path.join(process.cwd(), 'public', 'data', 'pitchers.json');
+  const pitchers = new Map<number, string>();
+  if (fs.existsSync(pitchersPath)) {
+    const j = JSON.parse(fs.readFileSync(pitchersPath, 'utf-8'));
+    for (const p of (j.pitchers ?? [])) pitchers.set(p.id, p.name);
+  }
+  return { batters, pitchers };
+}
+
+const NAMES = loadNames();
+
+// Fetch a single player's name from MLB Stats API (used as a fallback for
+// leader IDs that aren't in batterDb or pitchers.json — e.g. relievers).
+async function fetchName(id: number): Promise<string | null> {
+  try {
+    const res = await fetch(`https://statsapi.mlb.com/api/v1/people/${id}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.people?.[0]?.fullName ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function hydrateName(id: number, fallback: string): Promise<string> {
+  if (!fallback.startsWith('#')) return fallback;
+  const fetched = await fetchName(id);
+  return fetched ?? fallback;
+}
+
+async function buildSeasonAsync(season: number) {
   const rows = sqlite.prepare<[number], PitchRow>(`
     SELECT pitch_type, pitch_name, plate_x, plate_z, release_speed, is_in_play,
            launch_speed, launch_angle, event_type
@@ -222,12 +264,69 @@ function buildSeason(season: number) {
     row.map(c => ({ avg: c.count > 0 ? c.sum / c.count : null, count: c.count }))
   );
 
+  // ---- League extremes for the "Nerds" highlight panel ----
+  // Pull each leader with one indexed query rather than scanning rows
+  // a second time. game_date carries through for context.
+  const hardestPitch = sqlite.prepare(`
+    SELECT pitcher_id, pitch_type, pitch_name, release_speed, game_date
+    FROM pitches
+    WHERE season = ? AND release_speed IS NOT NULL AND pitch_type NOT IN ('PO','IN')
+    ORDER BY release_speed DESC LIMIT 1
+  `).get(season) as { pitcher_id: number; pitch_type: string | null; pitch_name: string | null; release_speed: number; game_date: string } | undefined;
+
+  const hardestHit = sqlite.prepare(`
+    SELECT batter_id, pitcher_id, launch_speed, launch_angle, event, event_type, game_date
+    FROM pitches
+    WHERE season = ? AND is_in_play = 1 AND launch_speed IS NOT NULL
+    ORDER BY launch_speed DESC LIMIT 1
+  `).get(season) as { batter_id: number; pitcher_id: number; launch_speed: number; launch_angle: number; event: string; event_type: string; game_date: string } | undefined;
+
+  const longestHit = sqlite.prepare(`
+    SELECT batter_id, pitcher_id, total_distance, launch_speed, launch_angle, event, game_date
+    FROM pitches
+    WHERE season = ? AND is_in_play = 1 AND total_distance IS NOT NULL
+    ORDER BY total_distance DESC LIMIT 1
+  `).get(season) as { batter_id: number; pitcher_id: number; total_distance: number; launch_speed: number; launch_angle: number; event: string; game_date: string } | undefined;
+
+  const leaders = {
+    hardestPitch: hardestPitch && {
+      pitcherId: hardestPitch.pitcher_id,
+      pitcherName: await hydrateName(hardestPitch.pitcher_id, NAMES.pitchers.get(hardestPitch.pitcher_id) ?? `#${hardestPitch.pitcher_id}`),
+      pitchType: hardestPitch.pitch_type,
+      pitchName: hardestPitch.pitch_name,
+      releaseSpeed: hardestPitch.release_speed,
+      gameDate: hardestPitch.game_date,
+    },
+    hardestHit: hardestHit && {
+      batterId: hardestHit.batter_id,
+      batterName: await hydrateName(hardestHit.batter_id, NAMES.batters.get(hardestHit.batter_id) ?? `#${hardestHit.batter_id}`),
+      pitcherId: hardestHit.pitcher_id,
+      pitcherName: await hydrateName(hardestHit.pitcher_id, NAMES.pitchers.get(hardestHit.pitcher_id) ?? `#${hardestHit.pitcher_id}`),
+      launchSpeed: hardestHit.launch_speed,
+      launchAngle: hardestHit.launch_angle,
+      event: hardestHit.event,
+      gameDate: hardestHit.game_date,
+    },
+    longestHit: longestHit && {
+      batterId: longestHit.batter_id,
+      batterName: await hydrateName(longestHit.batter_id, NAMES.batters.get(longestHit.batter_id) ?? `#${longestHit.batter_id}`),
+      pitcherId: longestHit.pitcher_id,
+      pitcherName: await hydrateName(longestHit.pitcher_id, NAMES.pitchers.get(longestHit.pitcher_id) ?? `#${longestHit.pitcher_id}`),
+      totalDistance: longestHit.total_distance,
+      launchSpeed: longestHit.launch_speed,
+      launchAngle: longestHit.launch_angle,
+      event: longestHit.event,
+      gameDate: longestHit.game_date,
+    },
+  };
+
   return {
     season,
     generatedAt: new Date().toISOString(),
     totalPitches,
     battedBalls,
     knownOutcomes,
+    leaders,
     pitchMix,
     velocityHist,
     pitchLocation: {
@@ -244,7 +343,7 @@ function buildSeason(season: number) {
   };
 }
 
-function main() {
+async function main() {
   const explicit = process.env.SEASON;
   let seasons: number[];
   if (explicit) {
@@ -264,7 +363,7 @@ function main() {
 
   for (const season of seasons) {
     console.log(`Building statcast aggregates for ${season}...`);
-    const data = buildSeason(season);
+    const data = await buildSeasonAsync(season);
     if (!data) continue;
     const file = path.join(outDir, `statcast-${season}.json`);
     fs.writeFileSync(file, JSON.stringify(data));
@@ -273,4 +372,4 @@ function main() {
   }
 }
 
-main();
+main().catch(e => { console.error(e); process.exit(1); });

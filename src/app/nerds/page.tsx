@@ -18,12 +18,33 @@ interface PitchLocationGrid {
   max: number;
 }
 
+interface Leaders {
+  hardestPitch: {
+    pitcherId: number; pitcherName: string;
+    pitchType: string | null; pitchName: string | null;
+    releaseSpeed: number; gameDate: string;
+  } | null;
+  hardestHit: {
+    batterId: number; batterName: string;
+    pitcherId: number; pitcherName: string;
+    launchSpeed: number; launchAngle: number;
+    event: string; gameDate: string;
+  } | null;
+  longestHit: {
+    batterId: number; batterName: string;
+    pitcherId: number; pitcherName: string;
+    totalDistance: number; launchSpeed: number; launchAngle: number;
+    event: string; gameDate: string;
+  } | null;
+}
+
 interface StatcastData {
   season: number;
   generatedAt: string;
   totalPitches: number;
   battedBalls: number;
   knownOutcomes: number;
+  leaders: Leaders;
   pitchMix: PitchMixEntry[];
   velocityHist: { min: number; max: number; binSize: number };
   pitchLocation: {
@@ -122,18 +143,89 @@ export default function NerdsPage() {
 
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-lg font-semibold">Nerds</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {data.totalPitches.toLocaleString()} pitches · {data.battedBalls.toLocaleString()} batted balls · {data.season} season
-          {' · '}
-          <span className="text-muted-foreground/70">league-wide aggregates from MLB Statcast</span>
-        </p>
+      <div className="flex items-center gap-3">
+        <span className="inline-block w-1 h-9 bg-primary rounded-full" />
+        <div>
+          <h1 className="text-lg font-semibold tracking-tight">Nerds</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {data.totalPitches.toLocaleString()} pitches · {data.battedBalls.toLocaleString()} batted balls · {data.season} season
+            {' · '}
+            <span className="text-muted-foreground/70">league-wide aggregates from MLB Statcast</span>
+          </p>
+        </div>
       </div>
 
+      <LeadersSection leaders={data.leaders} />
       <PitchMixSection data={data} />
       <PitchLocationSection data={data} />
       <RunValueSection data={data} />
+    </div>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// League Extremes — three highlight cards
+// ----------------------------------------------------------------------------
+
+function LeadersSection({ leaders }: { leaders: Leaders }) {
+  if (!leaders) return null;
+  const fmtDate = (iso: string) => {
+    try {
+      const d = new Date(iso + 'T00:00:00Z');
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+    } catch { return iso; }
+  };
+  return (
+    <section>
+      <SectionHeader title="League Extremes"
+        subtitle="Single-pitch outliers from the season — the hardest, the loudest, the longest." />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {leaders.hardestPitch && (
+          <LeaderCard
+            label="Hardest pitch"
+            big={`${leaders.hardestPitch.releaseSpeed.toFixed(1)} mph`}
+            primary={leaders.hardestPitch.pitcherName}
+            secondary={`${leaders.hardestPitch.pitchName ?? leaders.hardestPitch.pitchType} · ${fmtDate(leaders.hardestPitch.gameDate)}`}
+            accent={leaders.hardestPitch.pitchType ? pitchColor(leaders.hardestPitch.pitchType) : 'hsl(var(--primary))'}
+          />
+        )}
+        {leaders.hardestHit && (
+          <LeaderCard
+            label="Hardest hit ball"
+            big={`${leaders.hardestHit.launchSpeed.toFixed(1)} mph`}
+            primary={leaders.hardestHit.batterName}
+            secondary={`${leaders.hardestHit.event} · ${leaders.hardestHit.launchAngle}° off ${leaders.hardestHit.pitcherName} · ${fmtDate(leaders.hardestHit.gameDate)}`}
+            accent="#16a34a"
+          />
+        )}
+        {leaders.longestHit && (
+          <LeaderCard
+            label="Longest hit"
+            big={`${leaders.longestHit.totalDistance} ft`}
+            primary={leaders.longestHit.batterName}
+            secondary={`${leaders.longestHit.event} · ${leaders.longestHit.launchSpeed.toFixed(1)} mph @ ${leaders.longestHit.launchAngle}° · ${fmtDate(leaders.longestHit.gameDate)}`}
+            accent="#d97706"
+          />
+        )}
+      </div>
+    </section>
+  );
+}
+
+function LeaderCard({
+  label, big, primary, secondary, accent,
+}: {
+  label: string; big: string; primary: string; secondary: string; accent: string;
+}) {
+  return (
+    <div className="border border-border rounded-lg bg-card p-4 relative overflow-hidden">
+      <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: accent }} />
+      <div className="pl-2">
+        <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
+        <div className="text-2xl font-semibold tabular-nums mt-1" style={{ color: accent }}>{big}</div>
+        <div className="text-sm font-medium text-foreground mt-1.5 truncate" title={primary}>{primary}</div>
+        <div className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">{secondary}</div>
+      </div>
     </div>
   );
 }
@@ -164,16 +256,17 @@ function PitchMixSection({ data }: { data: StatcastData }) {
               {filtered.map(p => {
                 const w = (p.count / maxCount) * 100;
                 const pct = (p.count / total) * 100;
+                const med = p.velocityQuartiles?.[2];
                 return (
-                  <div key={p.code} className="flex items-center gap-2 text-[11px]">
+                  <div key={p.code} className="flex items-center gap-2 text-[11px]" title={`${p.count.toLocaleString()} pitches`}>
                     <span className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: pitchColor(p.code) }} />
                     <span className="font-medium tabular-nums w-6 shrink-0">{p.code}</span>
                     <span className="text-muted-foreground truncate w-24 shrink-0">{p.name}</span>
                     <div className="flex-1 h-4 bg-muted/50 rounded-sm overflow-hidden relative">
                       <div className="h-full rounded-sm transition-all" style={{ width: `${w}%`, backgroundColor: pitchColor(p.code), opacity: 0.85 }} />
                     </div>
-                    <span className="tabular-nums w-12 text-right text-muted-foreground">{pct.toFixed(1)}%</span>
-                    <span className="tabular-nums w-12 text-right text-muted-foreground/70 hidden sm:inline">{p.count.toLocaleString()}</span>
+                    <span className="tabular-nums w-12 text-right text-foreground">{pct.toFixed(1)}%</span>
+                    <span className="tabular-nums w-14 text-right text-muted-foreground hidden sm:inline">{med != null ? `${med.toFixed(0)} mph` : '—'}</span>
                   </div>
                 );
               })}
