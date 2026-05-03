@@ -536,9 +536,15 @@ function PitchLocationPanel({
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
         <defs>
-          {/* Gentle smoothing only — bigger blur turned the panel into fog. */}
-          <filter id={`blur-${code}`} x="-5%" y="-5%" width="110%" height="110%">
-            <feGaussianBlur stdDeviation="1.4" />
+          {/* Elevation-map effect: heavy Gaussian blur over the discrete cells
+              produces a smooth density field, then feComponentTransfer with
+              discrete alpha steps quantizes that field into clean isobands
+              (no rectangular grid visible). */}
+          <filter id={`isoband-${code}`} x="-10%" y="-10%" width="120%" height="120%">
+            <feGaussianBlur stdDeviation="4.5" />
+            <feComponentTransfer>
+              <feFuncA type="discrete" tableValues="0 0 0.25 0.45 0.62 0.78 0.92 1" />
+            </feComponentTransfer>
           </filter>
         </defs>
         {/* Gridlines (subtle) */}
@@ -548,12 +554,11 @@ function PitchLocationPanel({
         {[1, 2, 3, 4].map(z => (
           <line key={z} x1={padL} x2={W - padR} y1={zToPx(z)} y2={zToPx(z)} stroke="hsl(var(--border))" strokeWidth="0.5" />
         ))}
-        {/* Density cells. Skip below-cutoff cells before the blur so we don't
-            smear background noise across the frame. */}
-        <g filter={`url(#blur-${code})`}>
+        {/* Density cells; the filter blurs + posterizes the alpha to bands. */}
+        <g filter={`url(#isoband-${code})`}>
           {cells.map((c, i) => {
             const t = c.v / Math.max(1, entry.max);
-            if (t < 0.06) return null;
+            if (t < 0.04) return null;
             return (
               <rect key={i} x={c.x} y={c.y} width={cellW + 0.5} height={cellH + 0.5}
                 fill={densityColor(t)} />
@@ -632,17 +637,22 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
       <defs>
-        <filter id="rv-blur" x="-3%" y="-3%" width="106%" height="106%">
-          {/* Subtle blur — keeps the barrel-zone peak crisp and avoids fog. */}
-          <feGaussianBlur stdDeviation="2.0" />
+        <filter id="rv-iso" x="-3%" y="-3%" width="106%" height="106%">
+          {/* Elevation-map look: blur the discrete cells into a smooth field,
+              then quantize alpha into clean isobands so adjacent values
+              merge into shaped regions instead of the grid showing through. */}
+          <feGaussianBlur stdDeviation="5" />
+          <feComponentTransfer>
+            <feFuncA type="discrete" tableValues="0 0 0.3 0.5 0.7 0.85 1" />
+          </feComponentTransfer>
         </filter>
         {/* Clip the blurred field to the heatmap rect so it doesn't bleed onto axes. */}
         <clipPath id="rv-clip">
           <rect x={padL} y={padT} width={innerW} height={innerH} />
         </clipPath>
       </defs>
-      {/* Cells, Gaussian-smoothed for a contour feel. */}
-      <g filter="url(#rv-blur)" clipPath="url(#rv-clip)">
+      {/* Cells, blurred + posterized into elevation-style bands. */}
+      <g filter="url(#rv-iso)" clipPath="url(#rv-clip)">
         {rv.grid.map((row, ai) =>
           row.map((c, si) => {
             if (c.avg == null || c.count < 2) return null;
