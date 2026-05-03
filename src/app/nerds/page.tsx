@@ -684,34 +684,69 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
   const laTicks: number[] = [];
   for (let v = -75; v <= 75; v += 15) laTicks.push(v);
 
+  // Smooth the raw 32×20 grid with a small Gaussian over neighbors. Reduces
+  // single-cell noise from sparse bins while keeping the structural gradients.
+  // Then quantize each smoothed value to one of the diverging-color bands so
+  // the resulting fill has hard borders between bands (the elevation-map look)
+  // rather than a smeared red↔green blend.
+  const BANDS = [-0.6, -0.4, -0.25, -0.12, -0.04, 0.04, 0.15, 0.3, 0.5, 0.75, 1.0];
+  const smoothed: (number | null)[][] = Array.from({ length: rv.laBins }, () => Array(rv.lsBins).fill(null));
+  for (let ai = 0; ai < rv.laBins; ai++) {
+    for (let si = 0; si < rv.lsBins; si++) {
+      let sum = 0, weight = 0;
+      let nbrs = 0;
+      for (let dai = -1; dai <= 1; dai++) {
+        for (let dsi = -1; dsi <= 1; dsi++) {
+          const aj = ai + dai, sj = si + dsi;
+          if (aj < 0 || aj >= rv.laBins || sj < 0 || sj >= rv.lsBins) continue;
+          const c = rv.grid[aj][sj];
+          if (c.avg == null || c.count < 2) continue;
+          // Weight: center 4, edges 2, corners 1; further weighted by sample count.
+          const k = (dai === 0 && dsi === 0) ? 4 : (dai === 0 || dsi === 0 ? 2 : 1);
+          const w = k * Math.min(20, c.count);
+          sum += c.avg * w;
+          weight += w;
+          nbrs++;
+        }
+      }
+      if (weight > 0 && nbrs >= 2) {
+        const avg = sum / weight;
+        // Snap to nearest band so the fill color is one of a few discrete
+        // values — gives clean band edges instead of muddy continuous tones.
+        let band = BANDS[0];
+        let best = Math.abs(avg - band);
+        for (const b of BANDS) {
+          const d = Math.abs(avg - b);
+          if (d < best) { best = d; band = b; }
+        }
+        smoothed[ai][si] = band;
+      }
+    }
+  }
+
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
       <defs>
-        <filter id="rv-iso" x="-3%" y="-3%" width="106%" height="106%">
-          {/* Elevation-map look: blur the discrete cells into a smooth field,
-              then quantize alpha into clean isobands so adjacent values
-              merge into shaped regions instead of the grid showing through. */}
-          <feGaussianBlur stdDeviation="5" />
-          <feComponentTransfer>
-            <feFuncA type="discrete" tableValues="0 0 0.3 0.5 0.7 0.85 1" />
-          </feComponentTransfer>
+        {/* Light blur softens the cell edges enough that adjacent same-band
+            cells visually merge, but keeps the band-to-band transitions sharp. */}
+        <filter id="rv-iso" x="-2%" y="-2%" width="104%" height="104%">
+          <feGaussianBlur stdDeviation="1.6" />
         </filter>
-        {/* Clip the blurred field to the heatmap rect so it doesn't bleed onto axes. */}
         <clipPath id="rv-clip">
           <rect x={padL} y={padT} width={innerW} height={innerH} />
         </clipPath>
       </defs>
-      {/* Cells, blurred + posterized into elevation-style bands. */}
       <g filter="url(#rv-iso)" clipPath="url(#rv-clip)">
-        {rv.grid.map((row, ai) =>
-          row.map((c, si) => {
-            if (c.avg == null || c.count < 2) return null;
+        {smoothed.map((row, ai) =>
+          row.map((band, si) => {
+            if (band == null) return null;
+            const original = rv.grid[ai][si];
             const x = padL + si * cellW;
             const y = padT + (rv.laBins - 1 - ai) * cellH;
             return (
               <rect key={`${ai}-${si}`} x={x} y={y} width={cellW + 0.5} height={cellH + 0.5}
-                fill={divergingColor(c.avg, magnitude)}>
-                <title>{`launch ${(rv.lsMin + (si + 0.5) * (rv.lsMax - rv.lsMin) / rv.lsBins).toFixed(0)} mph · ${(rv.laMin + (ai + 0.5) * (rv.laMax - rv.laMin) / rv.laBins).toFixed(0)}°\nrun value ${c.avg >= 0 ? '+' : ''}${c.avg.toFixed(2)} · n=${c.count}`}</title>
+                fill={divergingColor(band, magnitude)}>
+                <title>{`launch ${(rv.lsMin + (si + 0.5) * (rv.lsMax - rv.lsMin) / rv.lsBins).toFixed(0)} mph · ${(rv.laMin + (ai + 0.5) * (rv.laMax - rv.laMin) / rv.laBins).toFixed(0)}°\nrun value ${original.avg != null ? (original.avg >= 0 ? '+' : '') + original.avg.toFixed(2) : 'n/a'} · n=${original.count}`}</title>
               </rect>
             );
           })
