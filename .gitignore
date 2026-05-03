@@ -40,6 +40,9 @@ next-env.d.ts
 *.db-shm
 .claude/
 
+# raw pitch-by-pitch DB (large, derived; aggregates ship as public/data/statcast-*.json)
+/pitches.db
+
 # playwright artifacts (screenshots, snapshots, console logs)
 /.playwright-mcp/
 /*.png
