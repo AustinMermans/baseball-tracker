@@ -253,8 +253,9 @@ function ViolinPanel({
   // each pitch's own distribution maps to half-row-height. Each violin shows
   // its own shape clearly without a tiny pitch type's distribution looking flat.
   const violins = pitches.map(p => {
-    const smoothed = smoothHist(p.velocityHistogram, 1.6);
-    const max = Math.max(...smoothed) || 1;
+    const histRaw = p.velocityHistogram ?? [];
+    const smoothed = histRaw.length ? smoothHist(histRaw, 1.6) : [];
+    const max = smoothed.length ? Math.max(...smoothed) || 1 : 1;
     return { code: p.code, name: p.name, q: p.velocityQuartiles, smoothed, max };
   });
 
@@ -358,25 +359,38 @@ function PitchLocationPanel({
   const zToPx = (z: number) => padT + ((loc.zMax - z) / (loc.zMax - loc.zMin)) * innerH; // Z is up
 
   // Build the cells. The grid is [zBins][xBins]; row 0 is the lowest z (bottom of frame).
+  // Track which bin centers are inside the strike-zone box so we can show
+  // "% in zone" — a more useful summary than raw "peak count".
   const cells: { x: number; y: number; v: number }[] = [];
+  let totalCount = 0;
+  let inZoneCount = 0;
+  const xBinW = (loc.xMax - loc.xMin) / loc.xBins;
+  const zBinH = (loc.zMax - loc.zMin) / loc.zBins;
   for (let zi = 0; zi < loc.zBins; zi++) {
     for (let xi = 0; xi < loc.xBins; xi++) {
       const v = entry.grid[zi][xi];
       const px = padL + xi * cellW;
-      // zi=0 is z near zMin (bottom). Higher zi → higher z → smaller y.
       const py = padT + (loc.zBins - 1 - zi) * cellH;
       cells.push({ x: px, y: py, v });
+      totalCount += v;
+      const cx = loc.xMin + (xi + 0.5) * xBinW;
+      const cz = loc.zMin + (zi + 0.5) * zBinH;
+      if (cx >= loc.strikeZone.left && cx <= loc.strikeZone.right
+          && cz >= loc.strikeZone.bottom && cz <= loc.strikeZone.top) {
+        inZoneCount += v;
+      }
     }
   }
+  const pctInZone = totalCount > 0 ? (inZoneCount / totalCount) * 100 : 0;
 
   return (
     <div className="border border-border rounded-lg bg-card p-3">
-      <div className="flex items-baseline justify-between mb-1">
+      <div className="flex items-baseline justify-between mb-1.5">
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: pitchColor(code) }} />
           <span className="text-[12px] font-medium">{entry.name}</span>
         </div>
-        <span className="text-[10px] text-muted-foreground tabular-nums">{loc.byType[code].max ? `peak ${loc.byType[code].max}` : ''}</span>
+        <span className="text-[10px] text-muted-foreground tabular-nums">{pctInZone.toFixed(0)}% in zone</span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
         <defs>
@@ -434,20 +448,16 @@ function PitchLocationPanel({
 
 function RunValueSection({ data }: { data: StatcastData }) {
   const rv = data.battedBallRunValue;
-
-  // Find magnitude for color scaling — robust max so a single outlier doesn't blow it out.
-  const allValues: number[] = [];
-  for (const row of rv.grid) for (const c of row) if (c.avg != null && c.count >= 3) allValues.push(c.avg);
-  allValues.sort((a, b) => Math.abs(b) - Math.abs(a));
-  const magnitude = allValues.length ? Math.max(0.5, allValues[Math.floor(allValues.length * 0.05)] ?? 1) : 1;
-
+  // Lock the color scale magnitude so the legend's tick labels match the
+  // heatmap's saturation — anything ≥0.9 (HR territory) clamps to deepest green.
+  const SCALE_MAGNITUDE = 0.9;
   return (
     <section>
       <SectionHeader title="Batted-Ball Run Value"
         subtitle="Average run value of every batted ball, by exit velocity and launch angle. Green = damage; red = outs. Linear weights (Tango)." />
       <div className="border border-border rounded-xl bg-card p-4 sm:p-6 overflow-x-auto">
-        <RunValueHeatmap rv={rv} magnitude={Math.abs(magnitude)} />
-        <Legend min={-0.5} max={0.9} />
+        <RunValueHeatmap rv={rv} magnitude={SCALE_MAGNITUDE} />
+        <Legend min={-SCALE_MAGNITUDE} max={SCALE_MAGNITUDE} />
       </div>
     </section>
   );
@@ -497,9 +507,29 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
           })
         )}
       </g>
-      {/* Reference lines: 0° launch angle, 90 mph */}
+      {/* Reference lines: 0° launch angle, 95 mph (avg fastball / hard-hit threshold) */}
       <line x1={padL} x2={W - padR} y1={laToPx(0)} y2={laToPx(0)} stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.25" strokeDasharray="3 3" />
       <line x1={lsToPx(95)} x2={lsToPx(95)} y1={padT} y2={H - padB} stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.25" strokeDasharray="3 3" />
+      {/* Barrel-zone callout — a small label + leader pointing at the peak */}
+      {(() => {
+        const barrelX = lsToPx(105);
+        const barrelY = laToPx(28);
+        const labelX = lsToPx(75);
+        const labelY = laToPx(60);
+        return (
+          <g pointerEvents="none">
+            <line x1={labelX + 22} y1={labelY} x2={barrelX - 8} y2={barrelY - 4}
+              stroke="hsl(var(--foreground))" strokeOpacity="0.35" strokeWidth="0.75" />
+            <circle cx={barrelX} cy={barrelY} r={3} fill="none"
+              stroke="hsl(var(--foreground))" strokeOpacity="0.45" strokeWidth="0.75" />
+            <rect x={labelX - 30} y={labelY - 9} width={60} height={18} rx={3}
+              fill="hsl(var(--background))" fillOpacity="0.92"
+              stroke="hsl(var(--foreground))" strokeOpacity="0.18" strokeWidth="0.5" />
+            <text x={labelX} y={labelY + 4} textAnchor="middle" fontSize="10"
+              fill="hsl(var(--foreground))" fontWeight="500">Barrel zone</text>
+          </g>
+        );
+      })()}
       {/* Outline */}
       <rect x={padL} y={padT} width={innerW} height={innerH} fill="none" stroke="hsl(var(--border))" strokeWidth="1" />
       {/* X axis */}
