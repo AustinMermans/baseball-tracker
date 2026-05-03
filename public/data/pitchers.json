@@ -1,63 +1,7 @@
 {
-  "generatedAt": "2026-05-03T07:10:19.620Z",
+  "generatedAt": "2026-05-03T08:26:06.232Z",
   "season": 2026,
   "pitchers": [
-    {
-      "id": 671737,
-      "name": "Taj Bradley",
-      "slug": "taj-bradley-671737",
-      "mlbTeam": "MIN",
-      "mlbTeamId": 142,
-      "pitchHand": "R",
-      "age": 25,
-      "totalPitches": 708,
-      "pitches": [
-        {
-          "code": "FF",
-          "description": "Four-seam FB",
-          "pitchCount": 323,
-          "totalPitches": 708,
-          "percentage": 0.4562147,
-          "averageSpeed": 96.40498782043345
-        },
-        {
-          "code": "FS",
-          "description": "Splitter",
-          "pitchCount": 163,
-          "totalPitches": 708,
-          "percentage": 0.230226,
-          "averageSpeed": 90.57504449079754
-        },
-        {
-          "code": "FC",
-          "description": "Cutter",
-          "pitchCount": 147,
-          "totalPitches": 708,
-          "percentage": 0.20762712,
-          "averageSpeed": 88.94490535374148
-        },
-        {
-          "code": "CU",
-          "description": "Curveball",
-          "pitchCount": 75,
-          "totalPitches": 708,
-          "percentage": 0.105932206,
-          "averageSpeed": 81.23899590666669
-        }
-      ],
-      "season": {
-        "gamesStarted": 7,
-        "inningsPitched": "41.0",
-        "era": "2.85",
-        "whip": "1.22",
-        "strikeoutsPer9Inn": "9.66",
-        "walksPer9Inn": "3.29",
-        "strikeOuts": 44,
-        "baseOnBalls": 15,
-        "wins": 3,
-        "losses": 1
-      }
-    },
     {
       "id": 656302,
       "name": "Dylan Cease",
@@ -127,6 +71,62 @@
         "strikeOuts": 56,
         "baseOnBalls": 18,
         "wins": 2,
+        "losses": 1
+      }
+    },
+    {
+      "id": 671737,
+      "name": "Taj Bradley",
+      "slug": "taj-bradley-671737",
+      "mlbTeam": "MIN",
+      "mlbTeamId": 142,
+      "pitchHand": "R",
+      "age": 25,
+      "totalPitches": 708,
+      "pitches": [
+        {
+          "code": "FF",
+          "description": "Four-seam FB",
+          "pitchCount": 323,
+          "totalPitches": 708,
+          "percentage": 0.4562147,
+          "averageSpeed": 96.40498782043345
+        },
+        {
+          "code": "FS",
+          "description": "Splitter",
+          "pitchCount": 163,
+          "totalPitches": 708,
+          "percentage": 0.230226,
+          "averageSpeed": 90.57504449079754
+        },
+        {
+          "code": "FC",
+          "description": "Cutter",
+          "pitchCount": 147,
+          "totalPitches": 708,
+          "percentage": 0.20762712,
+          "averageSpeed": 88.94490535374148
+        },
+        {
+          "code": "CU",
+          "description": "Curveball",
+          "pitchCount": 75,
+          "totalPitches": 708,
+          "percentage": 0.105932206,
+          "averageSpeed": 81.23899590666669
+        }
+      ],
+      "season": {
+        "gamesStarted": 7,
+        "inningsPitched": "41.0",
+        "era": "2.85",
+        "whip": "1.22",
+        "strikeoutsPer9Inn": "9.66",
+        "walksPer9Inn": "3.29",
+        "strikeOuts": 44,
+        "baseOnBalls": 15,
+        "wins": 3,
         "losses": 1
       }
     },
@@ -695,10 +695,10 @@
         {
           "code": "SL",
           "description": "Slider",
-          "pitchCount": 73,
+          "pitchCount": 72,
           "totalPitches": 657,
-          "percentage": 0.11111111,
-          "averageSpeed": 84.32759282191783
+          "percentage": 0.10958904,
+          "averageSpeed": 84.3180161666667
         },
         {
           "code": "ST",
@@ -711,10 +711,10 @@
         {
           "code": "CH",
           "description": "Changeup",
-          "pitchCount": 47,
+          "pitchCount": 48,
           "totalPitches": 657,
-          "percentage": 0.07153729,
-          "averageSpeed": 85.44677776595746
+          "percentage": 0.07305936,
+          "averageSpeed": 85.43782639583334
         },
         {
           "code": "SV",
@@ -10495,10 +10495,10 @@
         {
           "code": "FF",
           "description": "Four-seam FB",
-          "pitchCount": 130,
+          "pitchCount": 129,
           "totalPitches": 298,
-          "percentage": 0.4362416,
-          "averageSpeed": 92.34372673076922
+          "percentage": 0.43288592,
+          "averageSpeed": 92.39318039534882
         },
         {
           "code": "FS",
@@ -10519,10 +10519,10 @@
         {
           "code": "FC",
           "description": "Cutter",
-          "pitchCount": 38,
+          "pitchCount": 39,
           "totalPitches": 298,
-          "percentage": 0.12751678,
-          "averageSpeed": 86.0933637631579
+          "percentage": 0.13087249,
+          "averageSpeed": 86.09005197435897
         }
       ],
       "season": {
@@ -12795,6 +12795,54 @@
       }
     },
     {
+      "id": 679775,
+      "name": "Kyle Backhus",
+      "slug": "kyle-backhus-679775",
+      "mlbTeam": "PHI",
+      "mlbTeamId": 143,
+      "pitchHand": "L",
+      "age": 28,
+      "totalPitches": 161,
+      "pitches": [
+        {
+          "code": "SI",
+          "description": "Sinker",
+          "pitchCount": 92,
+          "totalPitches": 161,
+          "percentage": 0.5714286,
+          "averageSpeed": 91.13107388043474
+        },
+        {
+          "code": "ST",
+          "description": "Sweeper",
+          "pitchCount": 55,
+          "totalPitches": 161,
+          "percentage": 0.3416149,
+          "averageSpeed": 78.49501403636361
+        },
+        {
+          "code": "CH",
+          "description": "Changeup",
+          "pitchCount": 14,
+          "totalPitches": 161,
+          "percentage": 0.08695652,
+          "averageSpeed": 81.01249707142857
+        }
+      ],
+      "season": {
+        "gamesStarted": 1,
+        "inningsPitched": "9.2",
+        "era": "4.66",
+        "whip": "1.24",
+        "strikeoutsPer9Inn": "9.31",
+        "walksPer9Inn": "0.93",
+        "strikeOuts": 10,
+        "baseOnBalls": 1,
+        "wins": 0,
+        "losses": 0
+      }
+    },
+    {
       "id": 801139,
       "name": "Payton Tolle",
       "slug": "payton-tolle-801139",
@@ -12856,54 +12904,6 @@
         "baseOnBalls": 5,
         "wins": 0,
         "losses": 1
-      }
-    },
-    {
-      "id": 679775,
-      "name": "Kyle Backhus",
-      "slug": "kyle-backhus-679775",
-      "mlbTeam": "PHI",
-      "mlbTeamId": 143,
-      "pitchHand": "L",
-      "age": 28,
-      "totalPitches": 161,
-      "pitches": [
-        {
-          "code": "SI",
-          "description": "Sinker",
-          "pitchCount": 92,
-          "totalPitches": 161,
-          "percentage": 0.5714286,
-          "averageSpeed": 91.13107388043474
-        },
-        {
-          "code": "ST",
-          "description": "Sweeper",
-          "pitchCount": 55,
-          "totalPitches": 161,
-          "percentage": 0.3416149,
-          "averageSpeed": 78.49501403636361
-        },
-        {
-          "code": "CH",
-          "description": "Changeup",
-          "pitchCount": 14,
-          "totalPitches": 161,
-          "percentage": 0.08695652,
-          "averageSpeed": 81.01249707142857
-        }
-      ],
-      "season": {
-        "gamesStarted": 1,
-        "inningsPitched": "9.2",
-        "era": "4.66",
-        "whip": "1.24",
-        "strikeoutsPer9Inn": "9.31",
-        "walksPer9Inn": "0.93",
-        "strikeOuts": 10,
-        "baseOnBalls": 1,
-        "wins": 0,
-        "losses": 0
       }
     },
     {
