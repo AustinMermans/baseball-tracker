@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { fetchData } from '@/lib/data';
 
 // Mirrors the slug rule used by generate-static.ts so leader-card batter
@@ -128,11 +129,23 @@ function pitchColor(code: string): string {
 const SUPPORTED_SEASONS = [2026, 2025, 2024];
 
 export default function NerdsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialSeason = (() => {
+    const q = parseInt(searchParams.get('season') ?? '', 10);
+    return SUPPORTED_SEASONS.includes(q) ? q : SUPPORTED_SEASONS[0];
+  })();
   const [data, setData] = useState<StatcastData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-  const [season, setSeason] = useState<number>(SUPPORTED_SEASONS[0]);
+  const [season, setSeason] = useState<number>(initialSeason);
   const [available, setAvailable] = useState<number[]>([SUPPORTED_SEASONS[0]]);
+
+  // Persist the chosen season in the URL so it survives reloads / can be linked.
+  useEffect(() => {
+    const url = season === SUPPORTED_SEASONS[0] ? '/nerds' : `/nerds?season=${season}`;
+    router.replace(url, { scroll: false });
+  }, [season, router]);
 
   // On mount, probe each supported season once and remember which ones exist.
   useEffect(() => {
@@ -777,6 +790,26 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
       })()}
       {/* Outline */}
       <rect x={padL} y={padT} width={innerW} height={innerH} fill="none" stroke="hsl(var(--border))" strokeWidth="1" />
+      {/* Launch-angle region labels along the right edge — give readers a
+          mental map of what each band means without cluttering the field. */}
+      {(() => {
+        const labelX = W - padR - 6;
+        const regions: { y: number; text: string }[] = [
+          { y: laToPx(60), text: 'Pop ups' },
+          { y: laToPx(35), text: 'Fly balls' },
+          { y: laToPx(15), text: 'Line drives' },
+          { y: laToPx(-10), text: 'Ground balls' },
+        ];
+        return (
+          <g pointerEvents="none">
+            {regions.map(r => (
+              <text key={r.text} x={labelX} y={r.y + 3} textAnchor="end"
+                fontSize="9" fontWeight="500" fill="hsl(var(--foreground))" fillOpacity="0.4"
+                className="tracking-wide uppercase">{r.text}</text>
+            ))}
+          </g>
+        );
+      })()}
       {/* X axis */}
       {lsTicks.map(t => (
         <g key={t}>
