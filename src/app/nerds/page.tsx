@@ -122,17 +122,48 @@ function pitchColor(code: string): string {
   return PITCH_COLORS[code] ?? 'hsl(var(--primary))';
 }
 
+// Seasons for which we ship a pre-aggregated statcast-{season}.json.
+// Add new seasons here as they get backfilled — the page tries each in turn
+// (newest first) and shows the first that loads.
+const SUPPORTED_SEASONS = [2026, 2025, 2024];
+
 export default function NerdsPage() {
   const [data, setData] = useState<StatcastData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [season, setSeason] = useState<number>(SUPPORTED_SEASONS[0]);
+  const [available, setAvailable] = useState<number[]>([SUPPORTED_SEASONS[0]]);
+
+  // On mount, probe each supported season once and remember which ones exist.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const found: number[] = [];
+      for (const s of SUPPORTED_SEASONS) {
+        try {
+          const r = await fetch(`/api/statcast/${s}`, { method: 'HEAD' });
+          if (r.ok) found.push(s);
+        } catch { /* ignore */ }
+      }
+      if (cancelled) return;
+      // Always include the default current season even if HEAD failed (works
+      // both for the static export, where HEAD might 404 spuriously, and for
+      // edge cases where a season is in flight).
+      if (found.length === 0) found.push(SUPPORTED_SEASONS[0]);
+      setAvailable(found);
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
-    fetchData<StatcastData>('/api/statcast')
+    setLoading(true);
+    setErr(null);
+    const path = season === SUPPORTED_SEASONS[0] ? '/api/statcast' : `/api/statcast/${season}`;
+    fetchData<StatcastData>(path)
       .then(setData)
       .catch(e => setErr(e.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [season]);
 
   if (loading) {
     return (
@@ -154,16 +185,35 @@ export default function NerdsPage() {
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center gap-3">
-        <span className="inline-block w-1 h-9 bg-primary rounded-full" />
-        <div>
-          <h1 className="text-lg font-semibold tracking-tight">Nerds</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {data.totalPitches.toLocaleString()} pitches · {data.battedBalls.toLocaleString()} batted balls · {data.season} season
-            {' · '}
-            <span className="text-muted-foreground/70">league-wide aggregates from MLB Statcast</span>
-          </p>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="inline-block w-1 h-9 bg-primary rounded-full shrink-0" />
+          <div className="min-w-0">
+            <h1 className="text-lg font-semibold tracking-tight">Nerds</h1>
+            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+              {data.totalPitches.toLocaleString()} pitches · {data.battedBalls.toLocaleString()} batted balls · {data.season} season
+              {' · '}
+              <span className="text-muted-foreground/70">league-wide aggregates from MLB Statcast</span>
+            </p>
+          </div>
         </div>
+        {available.length > 1 && (
+          <div className="flex items-center gap-1 shrink-0 border border-border rounded-md p-0.5 bg-card">
+            {available.map(s => (
+              <button
+                key={s}
+                onClick={() => setSeason(s)}
+                className={`text-xs px-2.5 py-1 rounded tabular-nums transition-colors ${
+                  s === season
+                    ? 'bg-primary text-primary-foreground font-medium'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <LeadersSection leaders={data.leaders} idx="01" />

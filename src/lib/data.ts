@@ -37,6 +37,11 @@ export function dataUrl(path: string): string {
     return `${basePath}/data/player-${playerMatch[1]}.json`;
   }
 
+  const statcastSeasonMatch = path.match(/^\/api\/statcast\/(\d{4})$/);
+  if (statcastSeasonMatch) {
+    return `${basePath}/data/statcast-${statcastSeasonMatch[1]}.json`;
+  }
+
   return `${basePath}${staticMap[path] || path}`;
 }
 
