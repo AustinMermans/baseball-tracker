@@ -166,10 +166,22 @@ export default function NerdsPage() {
         </div>
       </div>
 
-      <LeadersSection leaders={data.leaders} />
-      <PitchMixSection data={data} />
-      <PitchLocationSection data={data} />
-      <RunValueSection data={data} />
+      <LeadersSection leaders={data.leaders} idx="01" />
+      <PitchMixSection data={data} idx="02" />
+      <PitchLocationSection data={data} idx="03" />
+      <RunValueSection data={data} idx="04" />
+
+      <div className="pt-4 mt-2 border-t border-border text-[11px] text-muted-foreground/80 leading-relaxed">
+        <p>
+          Source: MLB Stats API <code className="font-mono text-[10px]">/game/&#123;gamePk&#125;/feed/live</code> · pitch-by-pitch tracking via Statcast.
+          {' '}Aggregates rebuilt daily. Run values use fixed{' '}
+          <a href="https://library.fangraphs.com/principles/linear-weights/" target="_blank" rel="noopener noreferrer"
+             className="underline-offset-2 hover:underline hover:text-foreground">
+            Tango linear weights
+          </a>
+          {' '}as a stand-in for Statcast&apos;s delta-run-expectancy.
+        </p>
+      </div>
     </div>
   );
 }
@@ -178,7 +190,7 @@ export default function NerdsPage() {
 // League Extremes — three highlight cards
 // ----------------------------------------------------------------------------
 
-function LeadersSection({ leaders }: { leaders: Leaders }) {
+function LeadersSection({ leaders, idx }: { leaders: Leaders; idx?: string }) {
   if (!leaders) return null;
   const fmtDate = (iso: string) => {
     try {
@@ -188,7 +200,7 @@ function LeadersSection({ leaders }: { leaders: Leaders }) {
   };
   return (
     <section>
-      <SectionHeader title="League Extremes"
+      <SectionHeader idx={idx} title="League Extremes"
         subtitle="Single-pitch outliers from the season — the hardest, the loudest, the longest." />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {leaders.hardestPitch && (
@@ -255,7 +267,7 @@ function LeaderCard({
 // Pitch Mix + Velocity (single combined section: bar + box plots side-by-side)
 // ----------------------------------------------------------------------------
 
-function PitchMixSection({ data }: { data: StatcastData }) {
+function PitchMixSection({ data, idx }: { data: StatcastData; idx?: string }) {
   const total = data.totalPitches;
   const filtered = data.pitchMix.filter(p => p.count >= 50).slice(0, 14);
   const maxCount = Math.max(...filtered.map(p => p.count));
@@ -265,7 +277,7 @@ function PitchMixSection({ data }: { data: StatcastData }) {
 
   return (
     <section>
-      <SectionHeader title="Pitch Mix · Velocity Distribution"
+      <SectionHeader idx={idx} title="Pitch Mix · Velocity Distribution"
         subtitle="What's getting thrown, and how hard. Each violin is a smoothed kernel-density of release speed; bar = IQR; dot = median." />
 
       <div className="border border-border rounded-xl bg-card overflow-hidden">
@@ -437,7 +449,7 @@ function ViolinPanel({
 // Pitch Location Heatmap (small multiples by pitch type)
 // ----------------------------------------------------------------------------
 
-function PitchLocationSection({ data }: { data: StatcastData }) {
+function PitchLocationSection({ data, idx }: { data: StatcastData; idx?: string }) {
   const { pitchLocation, pitchMix } = data;
   const codes = pitchMix.slice(0, 6).map(p => p.code).filter(c => pitchLocation.byType[c]);
   // Build a quick code → median-mph map so the panel header can show velocity.
@@ -447,7 +459,7 @@ function PitchLocationSection({ data }: { data: StatcastData }) {
   }
   return (
     <section>
-      <SectionHeader title="Pitch Location Density"
+      <SectionHeader idx={idx} title="Pitch Location Density"
         subtitle="Where each pitch type is thrown, viewed from the catcher's perspective. Strike zone shown in outline." />
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {codes.map(code => (
@@ -568,14 +580,14 @@ function PitchLocationPanel({
 // Batted-Ball Run Value Heatmap
 // ----------------------------------------------------------------------------
 
-function RunValueSection({ data }: { data: StatcastData }) {
+function RunValueSection({ data, idx }: { data: StatcastData; idx?: string }) {
   const rv = data.battedBallRunValue;
   // Lock the color scale magnitude so the legend's tick labels match the
   // heatmap's saturation — anything ≥0.9 (HR territory) clamps to deepest green.
   const SCALE_MAGNITUDE = 0.9;
   return (
     <section>
-      <SectionHeader title="Batted-Ball Run Value"
+      <SectionHeader idx={idx} title="Batted-Ball Run Value"
         subtitle="Average run value of every batted ball, by exit velocity and launch angle. Green = damage; red = outs. Linear weights (Tango)." />
       <div className="border border-border rounded-xl bg-card p-4 sm:p-6 overflow-x-auto">
         <RunValueHeatmap rv={rv} magnitude={SCALE_MAGNITUDE} />
@@ -722,11 +734,18 @@ function Legend({ min, max }: { min: number; max: number }) {
 // Generic section header
 // ----------------------------------------------------------------------------
 
-function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+function SectionHeader({ title, subtitle, idx }: { title: string; subtitle?: string; idx?: string }) {
   return (
-    <div className="mb-3">
-      <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
-      {subtitle && <p className="text-[11px] text-muted-foreground mt-0.5">{subtitle}</p>}
+    <div className="mb-3 flex items-baseline gap-2.5">
+      {idx && (
+        <span className="text-[10px] font-mono font-medium tracking-wider text-primary/60 tabular-nums shrink-0 mt-0.5">
+          {idx}
+        </span>
+      )}
+      <div className="min-w-0">
+        <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
+        {subtitle && <p className="text-[11px] text-muted-foreground mt-0.5">{subtitle}</p>}
+      </div>
     </div>
   );
 }
