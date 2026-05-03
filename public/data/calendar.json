@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T00:17:01.005Z",
+  "generatedAt": "2026-05-03T03:27:03.950Z",
   "seasonStart": "2026-03-26",
   "endDate": "2026-05-17",
   "games": [
@@ -13905,9 +13905,9 @@
         "name": "Rays"
       },
       "awayScore": 1,
-      "homeScore": 4,
-      "status": "I",
-      "detailedState": "In Progress",
+      "homeScore": 5,
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-02T22:10:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -13932,10 +13932,10 @@
         "abbr": "STL",
         "name": "Cardinals"
       },
-      "awayScore": 0,
+      "awayScore": 2,
       "homeScore": 3,
-      "status": "I",
-      "detailedState": "In Progress",
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-02T23:15:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -13962,8 +13962,8 @@
       },
       "awayScore": 1,
       "homeScore": 5,
-      "status": "I",
-      "detailedState": "In Progress",
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-02T23:15:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -13988,10 +13988,10 @@
         "abbr": "COL",
         "name": "Rockies"
       },
-      "awayScore": 2,
-      "homeScore": 0,
-      "status": "I",
-      "detailedState": "In Progress",
+      "awayScore": 9,
+      "homeScore": 1,
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-03T00:10:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14016,10 +14016,10 @@
         "abbr": "SD",
         "name": "Padres"
       },
-      "awayScore": 0,
+      "awayScore": 4,
       "homeScore": 0,
-      "status": "P",
-      "detailedState": "Pre-Game",
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-03T00:40:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14044,10 +14044,10 @@
         "abbr": "LAA",
         "name": "Angels"
       },
-      "awayScore": 0,
-      "homeScore": 0,
-      "status": "P",
-      "detailedState": "Pre-Game",
+      "awayScore": 3,
+      "homeScore": 3,
+      "status": "I",
+      "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T01:38:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14072,10 +14072,10 @@
         "abbr": "SEA",
         "name": "Mariners"
       },
-      "awayScore": 0,
-      "homeScore": 0,
-      "status": "P",
-      "detailedState": "Pre-Game",
+      "awayScore": 1,
+      "homeScore": 2,
+      "status": "I",
+      "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T01:40:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14496,7 +14496,10 @@
         "id": 683004,
         "name": "Jack Leiter"
       },
-      "homePitcher": null
+      "homePitcher": {
+        "id": 663947,
+        "name": "Tyler Holton"
+      }
     },
     {
       "date": "2026-05-04",
@@ -15040,7 +15043,10 @@
       "detailedState": "Scheduled",
       "gameTimeISO": "2026-05-06T00:40:00Z",
       "doubleHeader": null,
-      "awayPitcher": null,
+      "awayPitcher": {
+        "id": 642547,
+        "name": "Freddy Peralta"
+      },
       "homePitcher": null
     },
     {
@@ -15219,7 +15225,10 @@
       "detailedState": "Scheduled",
       "gameTimeISO": "2026-05-06T19:10:00Z",
       "doubleHeader": null,
-      "awayPitcher": null,
+      "awayPitcher": {
+        "id": 681035,
+        "name": "Christian Scott"
+      },
       "homePitcher": null
     },
     {
