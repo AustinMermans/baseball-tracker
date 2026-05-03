@@ -9,6 +9,7 @@ interface PitchMixEntry {
   count: number;
   velocityQuartiles: [number, number, number, number, number] | null;
   avgVelocity: number | null;
+  velocityHistogram: number[];
 }
 
 interface PitchLocationGrid {
@@ -24,6 +25,7 @@ interface StatcastData {
   battedBalls: number;
   knownOutcomes: number;
   pitchMix: PitchMixEntry[];
+  velocityHist: { min: number; max: number; binSize: number };
   pitchLocation: {
     xMin: number; xMax: number; xBins: number;
     zMin: number; zMax: number; zBins: number;
@@ -37,26 +39,28 @@ interface StatcastData {
   };
 }
 
-// Sequential purple ramp aligned with the app's primary hue.
-// Used for density (low → high counts).
-function densityColor(t: number): string {
-  // Cream → lilac → primary purple → deep
-  if (t <= 0) return 'transparent';
+// Sequential purple ramp aligned with the app's primary hue. Below `cutoff`
+// the cell is transparent so sparse one-off pitches don't fog the panel.
+function densityColor(t: number, cutoff = 0.06): string {
+  if (t <= cutoff) return 'transparent';
+  // Re-normalize above cutoff so the gradient uses its full range.
+  const tt = (t - cutoff) / (1 - cutoff);
   const stops = [
-    { t: 0,    h: 250, s: 30,  l: 96 },
-    { t: 0.25, h: 262, s: 45,  l: 82 },
-    { t: 0.55, h: 262, s: 55,  l: 60 },
-    { t: 0.85, h: 262, s: 60,  l: 40 },
-    { t: 1.0,  h: 262, s: 65,  l: 25 },
+    { t: 0,    h: 262, s: 50,  l: 88, a: 0.55 },
+    { t: 0.25, h: 262, s: 60,  l: 70, a: 0.75 },
+    { t: 0.55, h: 262, s: 65,  l: 52, a: 0.9  },
+    { t: 0.85, h: 262, s: 70,  l: 38, a: 0.95 },
+    { t: 1.0,  h: 262, s: 75,  l: 26, a: 1.0  },
   ];
   for (let i = 1; i < stops.length; i++) {
-    if (t <= stops[i].t) {
+    if (tt <= stops[i].t) {
       const a = stops[i - 1], b = stops[i];
-      const f = (t - a.t) / (b.t - a.t);
-      return `hsl(${a.h + (b.h - a.h) * f}, ${a.s + (b.s - a.s) * f}%, ${a.l + (b.l - a.l) * f}%)`;
+      const f = (tt - a.t) / (b.t - a.t);
+      const lerp = (x: number, y: number) => x + (y - x) * f;
+      return `hsla(${lerp(a.h, b.h)}, ${lerp(a.s, b.s)}%, ${lerp(a.l, b.l)}%, ${lerp(a.a, b.a)})`;
     }
   }
-  return `hsl(262, 65%, 25%)`;
+  return `hsla(262, 75%, 26%, 1)`;
 }
 
 // Diverging red ↔ neutral ↔ green for run values. Centered at zero.
@@ -149,7 +153,7 @@ function PitchMixSection({ data }: { data: StatcastData }) {
   return (
     <section>
       <SectionHeader title="Pitch Mix · Velocity Distribution"
-        subtitle="What's getting thrown, and how hard. Box: 25–75% range; whiskers: min/max; line: median." />
+        subtitle="What's getting thrown, and how hard. Each violin is a smoothed kernel-density of release speed; bar = IQR; dot = median." />
 
       <div className="border border-border rounded-xl bg-card overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] divide-y lg:divide-y-0 lg:divide-x divide-border">
@@ -176,10 +180,10 @@ function PitchMixSection({ data }: { data: StatcastData }) {
             </div>
           </div>
 
-          {/* Velocity boxplots */}
+          {/* Velocity violins */}
           <div className="p-5 overflow-x-auto">
             <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-3">Velocity by Pitch Type (mph)</div>
-            <BoxPlotPanel pitches={filtered} veloMin={veloMin} veloMax={veloMax} />
+            <ViolinPanel pitches={filtered} hist={data.velocityHist} veloMin={veloMin} veloMax={veloMax} />
           </div>
         </div>
       </div>
@@ -187,10 +191,57 @@ function PitchMixSection({ data }: { data: StatcastData }) {
   );
 }
 
-function BoxPlotPanel({ pitches, veloMin, veloMax }: { pitches: PitchMixEntry[]; veloMin: number; veloMax: number }) {
-  const W = 460;
-  const H = pitches.length * 26 + 40;
-  const padL = 56, padR = 12, padT = 8, padB = 28;
+// Smooth a histogram with a small Gaussian kernel (sigma in bins).
+function smoothHist(h: number[], sigma = 1.5): number[] {
+  const radius = Math.ceil(sigma * 3);
+  const kernel: number[] = [];
+  for (let i = -radius; i <= radius; i++) kernel.push(Math.exp(-(i * i) / (2 * sigma * sigma)));
+  const ksum = kernel.reduce((s, v) => s + v, 0);
+  return h.map((_, i) => {
+    let acc = 0;
+    for (let j = -radius; j <= radius; j++) {
+      const idx = i + j;
+      if (idx < 0 || idx >= h.length) continue;
+      acc += h[idx] * kernel[j + radius];
+    }
+    return acc / ksum;
+  });
+}
+
+// Catmull-Rom spline → cubic Bezier path data, for smooth violin/area outlines.
+function smoothPath(points: { x: number; y: number }[]): string {
+  if (points.length === 0) return '';
+  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(0, i - 1)];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[Math.min(points.length - 1, i + 2)];
+    const c1x = p1.x + (p2.x - p0.x) / 6;
+    const c1y = p1.y + (p2.y - p0.y) / 6;
+    const c2x = p2.x - (p3.x - p1.x) / 6;
+    const c2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
+  }
+  return d;
+}
+
+function ViolinPanel({
+  pitches,
+  hist,
+  veloMin,
+  veloMax,
+}: {
+  pitches: PitchMixEntry[];
+  hist: { min: number; max: number; binSize: number };
+  veloMin: number;
+  veloMax: number;
+}) {
+  const W = 480;
+  const ROW_H = 30;
+  const H = pitches.length * ROW_H + 40;
+  const padL = 56, padR = 16, padT = 8, padB = 28;
   const innerW = W - padL - padR;
   const xToPx = (v: number) => padL + ((v - veloMin) / (veloMax - veloMin)) * innerW;
 
@@ -198,11 +249,22 @@ function BoxPlotPanel({ pitches, veloMin, veloMax }: { pitches: PitchMixEntry[];
   const ticks: number[] = [];
   for (let v = Math.ceil(veloMin / tickStep) * tickStep; v <= veloMax; v += tickStep) ticks.push(v);
 
+  // Smoothed densities for each pitch type, normalized so the tallest bin in
+  // each pitch's own distribution maps to half-row-height. Each violin shows
+  // its own shape clearly without a tiny pitch type's distribution looking flat.
+  const violins = pitches.map(p => {
+    const smoothed = smoothHist(p.velocityHistogram, 1.6);
+    const max = Math.max(...smoothed) || 1;
+    return { code: p.code, name: p.name, q: p.velocityQuartiles, smoothed, max };
+  });
+
+  const halfH = (ROW_H - 8) / 2;
+
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet" className="text-foreground">
       {/* Vertical gridlines */}
       {ticks.map(t => (
-        <line key={t} x1={xToPx(t)} x2={xToPx(t)} y1={padT} y2={H - padB} stroke="hsl(var(--border))" strokeWidth="1" />
+        <line key={t} x1={xToPx(t)} x2={xToPx(t)} y1={padT} y2={H - padB} stroke="hsl(var(--border))" strokeWidth="0.5" strokeOpacity="0.6" />
       ))}
       {/* Tick labels */}
       {ticks.map(t => (
@@ -210,25 +272,45 @@ function BoxPlotPanel({ pitches, veloMin, veloMax }: { pitches: PitchMixEntry[];
       ))}
       <text x={padL + innerW / 2} y={H - 4} textAnchor="middle" fontSize="9" fill="hsl(var(--muted-foreground))">mph</text>
 
-      {pitches.map((p, i) => {
-        const q = p.velocityQuartiles;
-        if (!q) return null;
-        const [min, q1, med, q3, max] = q;
-        const y = padT + i * 26 + 12;
-        const c = pitchColor(p.code);
+      {violins.map((v, i) => {
+        const yMid = padT + i * ROW_H + ROW_H / 2;
+        const c = pitchColor(v.code);
+
+        // Build the violin outline: top points = (binCenter, yMid - halfH * d/max),
+        // then bottom points reversed.
+        const top: { x: number; y: number }[] = [];
+        const bot: { x: number; y: number }[] = [];
+        for (let bin = 0; bin < v.smoothed.length; bin++) {
+          const mph = hist.min + (bin + 0.5) * hist.binSize;
+          if (mph < veloMin - 1 || mph > veloMax + 1) continue;
+          const d = v.smoothed[bin] / v.max; // 0..1
+          if (d < 0.005) continue;
+          const x = xToPx(mph);
+          const offset = halfH * d;
+          top.push({ x, y: yMid - offset });
+          bot.unshift({ x, y: yMid + offset });
+        }
+        if (top.length < 2) return null;
+        const outline = smoothPath(top) + ' ' + smoothPath(bot).replace(/^M/, 'L') + ' Z';
+
+        const q = v.q;
         return (
-          <g key={p.code}>
-            {/* Pitch label */}
-            <text x={padL - 6} y={y + 4} textAnchor="end" fontSize="10" fill="hsl(var(--foreground))" fontWeight="500" className="tabular-nums">{p.code}</text>
-            {/* Whiskers */}
-            <line x1={xToPx(min)} x2={xToPx(max)} y1={y} y2={y} stroke={c} strokeWidth="1" opacity="0.55" />
-            <line x1={xToPx(min)} x2={xToPx(min)} y1={y - 4} y2={y + 4} stroke={c} strokeWidth="1.2" opacity="0.55" />
-            <line x1={xToPx(max)} x2={xToPx(max)} y1={y - 4} y2={y + 4} stroke={c} strokeWidth="1.2" opacity="0.55" />
-            {/* Box */}
-            <rect x={xToPx(q1)} y={y - 7} width={xToPx(q3) - xToPx(q1)} height={14} fill={c} fillOpacity="0.32" stroke={c} strokeWidth="1.2" />
-            {/* Median */}
-            <line x1={xToPx(med)} x2={xToPx(med)} y1={y - 7} y2={y + 7} stroke={c} strokeWidth="2" />
-            <title>{`${p.name}\nmin ${min.toFixed(1)} · q25 ${q1.toFixed(1)} · med ${med.toFixed(1)} · q75 ${q3.toFixed(1)} · max ${max.toFixed(1)} mph`}</title>
+          <g key={v.code}>
+            {/* Pitch code label */}
+            <text x={padL - 6} y={yMid + 3} textAnchor="end" fontSize="10" fill="hsl(var(--foreground))" fontWeight="500" className="tabular-nums">{v.code}</text>
+            {/* Violin body */}
+            <path d={outline} fill={c} fillOpacity="0.32" stroke={c} strokeWidth="1" strokeOpacity="0.85" />
+            {/* IQR center band */}
+            {q && (
+              <line x1={xToPx(q[1])} x2={xToPx(q[3])} y1={yMid} y2={yMid} stroke={c} strokeWidth="1.5" strokeOpacity="0.6" />
+            )}
+            {/* Median tick */}
+            {q && (
+              <circle cx={xToPx(q[2])} cy={yMid} r={2.5} fill={c} stroke="white" strokeWidth="1" />
+            )}
+            {q && (
+              <title>{`${v.name}\nmin ${q[0].toFixed(1)} · q25 ${q[1].toFixed(1)} · med ${q[2].toFixed(1)} · q75 ${q[3].toFixed(1)} · max ${q[4].toFixed(1)} mph`}</title>
+            )}
           </g>
         );
       })}
@@ -297,6 +379,12 @@ function PitchLocationPanel({
         <span className="text-[10px] text-muted-foreground tabular-nums">{loc.byType[code].max ? `peak ${loc.byType[code].max}` : ''}</span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          {/* Gentle smoothing only — bigger blur turned the panel into fog. */}
+          <filter id={`blur-${code}`} x="-5%" y="-5%" width="110%" height="110%">
+            <feGaussianBlur stdDeviation="1.4" />
+          </filter>
+        </defs>
         {/* Gridlines (subtle) */}
         {[-1, 0, 1].map(x => (
           <line key={x} x1={xToPx(x)} x2={xToPx(x)} y1={padT} y2={H - padB} stroke="hsl(var(--border))" strokeWidth="0.5" />
@@ -304,11 +392,18 @@ function PitchLocationPanel({
         {[1, 2, 3, 4].map(z => (
           <line key={z} x1={padL} x2={W - padR} y1={zToPx(z)} y2={zToPx(z)} stroke="hsl(var(--border))" strokeWidth="0.5" />
         ))}
-        {/* Density cells */}
-        {cells.map((c, i) => c.v > 0 && (
-          <rect key={i} x={c.x} y={c.y} width={cellW + 0.5} height={cellH + 0.5}
-            fill={densityColor(c.v / Math.max(1, entry.max))} />
-        ))}
+        {/* Density cells. Skip below-cutoff cells before the blur so we don't
+            smear background noise across the frame. */}
+        <g filter={`url(#blur-${code})`}>
+          {cells.map((c, i) => {
+            const t = c.v / Math.max(1, entry.max);
+            if (t < 0.06) return null;
+            return (
+              <rect key={i} x={c.x} y={c.y} width={cellW + 0.5} height={cellH + 0.5}
+                fill={densityColor(t)} />
+            );
+          })}
+        </g>
         {/* Strike zone overlay */}
         <rect
           x={xToPx(loc.strikeZone.left)}
@@ -352,7 +447,7 @@ function RunValueSection({ data }: { data: StatcastData }) {
         subtitle="Average run value of every batted ball, by exit velocity and launch angle. Green = damage; red = outs. Linear weights (Tango)." />
       <div className="border border-border rounded-xl bg-card p-4 sm:p-6 overflow-x-auto">
         <RunValueHeatmap rv={rv} magnitude={Math.abs(magnitude)} />
-        <Legend min={-0.5} max={0.9} steps={9} />
+        <Legend min={-0.5} max={0.9} />
       </div>
     </section>
   );
@@ -376,21 +471,32 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
-      {/* Cells */}
-      {rv.grid.map((row, ai) =>
-        row.map((c, si) => {
-          if (c.avg == null || c.count < 2) return null;
-          const x = padL + si * cellW;
-          // ai=0 is the lowest angle bin (most negative). Higher ai → higher angle → smaller y.
-          const y = padT + (rv.laBins - 1 - ai) * cellH;
-          return (
-            <rect key={`${ai}-${si}`} x={x} y={y} width={cellW + 0.5} height={cellH + 0.5}
-              fill={divergingColor(c.avg, magnitude)}>
-              <title>{`launch ${(rv.lsMin + (si + 0.5) * (rv.lsMax - rv.lsMin) / rv.lsBins).toFixed(0)} mph · ${(rv.laMin + (ai + 0.5) * (rv.laMax - rv.laMin) / rv.laBins).toFixed(0)}°\nrun value ${c.avg >= 0 ? '+' : ''}${c.avg.toFixed(2)} · n=${c.count}`}</title>
-            </rect>
-          );
-        })
-      )}
+      <defs>
+        <filter id="rv-blur" x="-3%" y="-3%" width="106%" height="106%">
+          {/* Subtle blur — keeps the barrel-zone peak crisp and avoids fog. */}
+          <feGaussianBlur stdDeviation="2.0" />
+        </filter>
+        {/* Clip the blurred field to the heatmap rect so it doesn't bleed onto axes. */}
+        <clipPath id="rv-clip">
+          <rect x={padL} y={padT} width={innerW} height={innerH} />
+        </clipPath>
+      </defs>
+      {/* Cells, Gaussian-smoothed for a contour feel. */}
+      <g filter="url(#rv-blur)" clipPath="url(#rv-clip)">
+        {rv.grid.map((row, ai) =>
+          row.map((c, si) => {
+            if (c.avg == null || c.count < 2) return null;
+            const x = padL + si * cellW;
+            const y = padT + (rv.laBins - 1 - ai) * cellH;
+            return (
+              <rect key={`${ai}-${si}`} x={x} y={y} width={cellW + 0.5} height={cellH + 0.5}
+                fill={divergingColor(c.avg, magnitude)}>
+                <title>{`launch ${(rv.lsMin + (si + 0.5) * (rv.lsMax - rv.lsMin) / rv.lsBins).toFixed(0)} mph · ${(rv.laMin + (ai + 0.5) * (rv.laMax - rv.laMin) / rv.laBins).toFixed(0)}°\nrun value ${c.avg >= 0 ? '+' : ''}${c.avg.toFixed(2)} · n=${c.count}`}</title>
+              </rect>
+            );
+          })
+        )}
+      </g>
       {/* Reference lines: 0° launch angle, 90 mph */}
       <line x1={padL} x2={W - padR} y1={laToPx(0)} y2={laToPx(0)} stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.25" strokeDasharray="3 3" />
       <line x1={lsToPx(95)} x2={lsToPx(95)} y1={padT} y2={H - padB} stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.25" strokeDasharray="3 3" />
@@ -416,24 +522,46 @@ function RunValueHeatmap({ rv, magnitude }: { rv: StatcastData['battedBallRunVal
   );
 }
 
-function Legend({ min, max, steps }: { min: number; max: number; steps: number }) {
-  const W = 280, H = 36;
-  const padL = 8, padR = 8, padT = 4, padB = 16;
+function Legend({ min, max }: { min: number; max: number }) {
+  // Smooth gradient bar with labeled tick marks at sensible run-value cutoffs.
+  const W = 360, H = 44;
+  const padL = 12, padR = 12, padT = 4, padB = 22;
   const innerW = W - padL - padR;
-  const cellW = innerW / steps;
-  const stepValues = Array.from({ length: steps }, (_, i) => min + (i / (steps - 1)) * (max - min));
   const magnitude = Math.max(Math.abs(min), Math.abs(max));
+  const valueToPx = (v: number) => padL + ((v - min) / (max - min)) * innerW;
+
+  // Build a smooth gradient with ~21 colored stops so the diverging palette
+  // appears continuous rather than stepped.
+  const stops = Array.from({ length: 21 }, (_, i) => {
+    const t = i / 20;
+    const v = min + t * (max - min);
+    return { offset: `${t * 100}%`, color: divergingColor(v, magnitude) };
+  });
+  const ticks = [-0.5, -0.25, 0, 0.25, 0.5, 0.75].filter(t => t >= min && t <= max);
+
   return (
     <div className="mt-3 flex items-center gap-3 text-[11px] text-muted-foreground">
-      <span>run value →</span>
-      <svg viewBox={`0 0 ${W} ${H}`} width="280" height="36">
-        {stepValues.map((v, i) => (
-          <rect key={i} x={padL + i * cellW} y={padT} width={cellW + 0.5} height={H - padT - padB} fill={divergingColor(v, magnitude)} stroke="hsl(var(--border))" strokeWidth="0.25" />
-        ))}
-        <text x={padL} y={H - 3} textAnchor="start" fontSize="9" fill="hsl(var(--muted-foreground))" className="tabular-nums">{min.toFixed(1)}</text>
-        <text x={padL + innerW / 2} y={H - 3} textAnchor="middle" fontSize="9" fill="hsl(var(--muted-foreground))" className="tabular-nums">0</text>
-        <text x={W - padR} y={H - 3} textAnchor="end" fontSize="9" fill="hsl(var(--muted-foreground))" className="tabular-nums">+{max.toFixed(1)}</text>
+      <span className="font-medium">Run value</span>
+      <svg viewBox={`0 0 ${W} ${H}`} width="360" height="44">
+        <defs>
+          <linearGradient id="rv-scale" x1="0" x2="1" y1="0" y2="0">
+            {stops.map((s, i) => <stop key={i} offset={s.offset} stopColor={s.color} />)}
+          </linearGradient>
+        </defs>
+        <rect x={padL} y={padT} width={innerW} height={H - padT - padB} fill="url(#rv-scale)" stroke="hsl(var(--border))" strokeWidth="0.5" rx="2" />
+        {ticks.map(t => {
+          const x = valueToPx(t);
+          return (
+            <g key={t}>
+              <line x1={x} x2={x} y1={padT} y2={H - padB + 2} stroke="hsl(var(--foreground))" strokeWidth="0.6" strokeOpacity="0.45" />
+              <text x={x} y={H - 6} textAnchor="middle" fontSize="9" fill="hsl(var(--muted-foreground))" className="tabular-nums">
+                {t > 0 ? `+${t}` : t.toString()}
+              </text>
+            </g>
+          );
+        })}
       </svg>
+      <span className="text-muted-foreground/70">runs / batted ball</span>
     </div>
   );
 }

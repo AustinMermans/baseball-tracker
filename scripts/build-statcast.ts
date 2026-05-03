@@ -141,6 +141,19 @@ function buildSeason(season: number) {
     }
   }
 
+  // Velocity histogram bins for the /nerds violin plot. 1 mph bins from 30..110.
+  const HIST_MIN = 30, HIST_MAX = 110, HIST_BIN = 1;
+  const histBins = Math.round((HIST_MAX - HIST_MIN) / HIST_BIN);
+  function histogram(values: number[]): number[] {
+    const h = new Array(histBins).fill(0);
+    for (const v of values) {
+      if (v < HIST_MIN || v >= HIST_MAX) continue;
+      const i = Math.floor((v - HIST_MIN) / HIST_BIN);
+      h[i]++;
+    }
+    return h;
+  }
+
   const pitchMix = Array.from(byType.entries())
     .map(([code, e]) => {
       const sorted = e.velocities.slice().sort((a, b) => a - b);
@@ -150,9 +163,11 @@ function buildSeason(season: number) {
         count: e.count,
         velocityQuartiles: quartiles(sorted),
         avgVelocity: sorted.length ? sorted.reduce((s, v) => s + v, 0) / sorted.length : null,
+        velocityHistogram: histogram(sorted),
       };
     })
     .sort((a, b) => b.count - a.count);
+  const velocityHist = { min: HIST_MIN, max: HIST_MAX, binSize: HIST_BIN };
   const totalPitches = pitchMix.reduce((s, x) => s + x.count, 0);
 
   // ---- Pitch-location density grid by pitch type (top-N for payload size) ----
@@ -214,6 +229,7 @@ function buildSeason(season: number) {
     battedBalls,
     knownOutcomes,
     pitchMix,
+    velocityHist,
     pitchLocation: {
       xMin: X_MIN, xMax: X_MAX, xBins: X_BINS,
       zMin: Z_MIN, zMax: Z_MAX, zBins: Z_BINS,
