@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T20:48:53.697Z",
+  "generatedAt": "2026-05-03T21:30:36.821Z",
   "seasonStart": "2026-03-26",
   "endDate": "2026-05-17",
   "games": [
@@ -14128,10 +14128,10 @@
         "abbr": "BOS",
         "name": "Red Sox"
       },
-      "awayScore": 1,
+      "awayScore": 3,
       "homeScore": 1,
-      "status": "I",
-      "detailedState": "In Progress",
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-03T17:35:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14186,8 +14186,8 @@
       },
       "awayScore": 3,
       "homeScore": 11,
-      "status": "I",
-      "detailedState": "In Progress",
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-03T17:35:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14298,8 +14298,8 @@
       },
       "awayScore": 4,
       "homeScore": 1,
-      "status": "O",
-      "detailedState": "Game Over",
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-03T18:15:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14324,10 +14324,10 @@
         "abbr": "CHC",
         "name": "Cubs"
       },
-      "awayScore": 2,
+      "awayScore": 4,
       "homeScore": 8,
-      "status": "I",
-      "detailedState": "In Progress",
+      "status": "F",
+      "detailedState": "Final",
       "gameTimeISO": "2026-05-03T18:20:00Z",
       "doubleHeader": null,
       "awayPitcher": {
@@ -14352,8 +14352,8 @@
         "abbr": "COL",
         "name": "Rockies"
       },
-      "awayScore": 4,
-      "homeScore": 4,
+      "awayScore": 8,
+      "homeScore": 5,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T19:10:00Z",
@@ -14380,8 +14380,8 @@
         "abbr": "ATH",
         "name": "Athletics"
       },
-      "awayScore": 0,
-      "homeScore": 1,
+      "awayScore": 1,
+      "homeScore": 4,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T20:05:00Z",
@@ -14408,7 +14408,7 @@
         "abbr": "LAA",
         "name": "Angels"
       },
-      "awayScore": 0,
+      "awayScore": 2,
       "homeScore": 1,
       "status": "I",
       "detailedState": "In Progress",
@@ -14436,8 +14436,8 @@
         "abbr": "SEA",
         "name": "Mariners"
       },
-      "awayScore": 0,
-      "homeScore": 0,
+      "awayScore": 3,
+      "homeScore": 1,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T20:10:00Z",
@@ -14465,7 +14465,7 @@
         "name": "Padres"
       },
       "awayScore": 1,
-      "homeScore": 0,
+      "homeScore": 3,
       "status": "I",
       "detailedState": "In Progress",
       "gameTimeISO": "2026-05-03T20:10:00Z",
@@ -14720,7 +14720,10 @@
         "id": 808967,
         "name": "Yoshinobu Yamamoto"
       },
-      "homePitcher": null
+      "homePitcher": {
+        "id": 595345,
+        "name": "Steven Okert"
+      }
     },
     {
       "date": "2026-05-05",
