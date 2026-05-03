@@ -496,6 +496,9 @@ function PitchLocationPanel({
   const cells: { x: number; y: number; v: number }[] = [];
   let totalCount = 0;
   let inZoneCount = 0;
+  // Track count-weighted centroid in raw plate coordinates, so we can drop a
+  // small dot on the panel marking each pitch type's average location.
+  let cxAccum = 0, czAccum = 0;
   const xBinW = (loc.xMax - loc.xMin) / loc.xBins;
   const zBinH = (loc.zMax - loc.zMin) / loc.zBins;
   for (let zi = 0; zi < loc.zBins; zi++) {
@@ -507,6 +510,8 @@ function PitchLocationPanel({
       totalCount += v;
       const cx = loc.xMin + (xi + 0.5) * xBinW;
       const cz = loc.zMin + (zi + 0.5) * zBinH;
+      cxAccum += cx * v;
+      czAccum += cz * v;
       if (cx >= loc.strikeZone.left && cx <= loc.strikeZone.right
           && cz >= loc.strikeZone.bottom && cz <= loc.strikeZone.top) {
         inZoneCount += v;
@@ -514,6 +519,9 @@ function PitchLocationPanel({
     }
   }
   const pctInZone = totalCount > 0 ? (inZoneCount / totalCount) * 100 : 0;
+  const centroid = totalCount > 0
+    ? { x: cxAccum / totalCount, z: czAccum / totalCount }
+    : null;
 
   return (
     <div className="border border-border rounded-lg bg-card p-3">
@@ -560,9 +568,17 @@ function PitchLocationPanel({
           height={zToPx(loc.strikeZone.bottom) - zToPx(loc.strikeZone.top)}
           fill="none"
           stroke="hsl(var(--foreground))"
-          strokeWidth="1.25"
-          strokeOpacity="0.7"
+          strokeWidth="1.5"
+          strokeOpacity="0.85"
         />
+        {/* Centroid marker — count-weighted average location for this pitch type */}
+        {centroid && (
+          <g pointerEvents="none">
+            <circle cx={xToPx(centroid.x)} cy={zToPx(centroid.z)} r={4.5} fill="white" stroke={pitchColor(code)} strokeWidth="2" />
+            <circle cx={xToPx(centroid.x)} cy={zToPx(centroid.z)} r={1.5} fill={pitchColor(code)} />
+            <title>{`Avg location: x=${centroid.x.toFixed(2)} ft, z=${centroid.z.toFixed(2)} ft`}</title>
+          </g>
+        )}
         {/* Axis ticks */}
         {[-2, -1, 0, 1, 2].map(x => (
           <text key={x} x={xToPx(x)} y={H - padB + 10} textAnchor="middle" fontSize="8" fill="hsl(var(--muted-foreground))" className="tabular-nums">{x}</text>
