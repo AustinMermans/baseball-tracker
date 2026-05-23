@@ -2,306 +2,6 @@
   "standings": [
     {
       "team": {
-        "id": 7,
-        "name": "Austin"
-      },
-      "periods": [
-        {
-          "periodId": 1,
-          "periodName": "First Third",
-          "bestBallScore": 1100,
-          "countingPlayerIds": [
-            79,
-            80,
-            89,
-            84,
-            82,
-            86,
-            91,
-            88,
-            85,
-            90
-          ],
-          "benchPlayerIds": [
-            83,
-            87,
-            81
-          ]
-        },
-        {
-          "periodId": 2,
-          "periodName": "Second Third",
-          "bestBallScore": 0,
-          "countingPlayerIds": [
-            79,
-            80,
-            81,
-            82,
-            83,
-            84,
-            85,
-            86,
-            87,
-            88
-          ],
-          "benchPlayerIds": [
-            89,
-            90,
-            91
-          ]
-        },
-        {
-          "periodId": 3,
-          "periodName": "Third Third",
-          "bestBallScore": 0,
-          "countingPlayerIds": [
-            79,
-            80,
-            81,
-            82,
-            83,
-            84,
-            85,
-            86,
-            87,
-            88
-          ],
-          "benchPlayerIds": [
-            89,
-            90,
-            91
-          ]
-        }
-      ],
-      "cumulativeScore": 1100
-    },
-    {
-      "team": {
-        "id": 8,
-        "name": "Bobby"
-      },
-      "periods": [
-        {
-          "periodId": 1,
-          "periodName": "First Third",
-          "bestBallScore": 1090,
-          "countingPlayerIds": [
-            94,
-            99,
-            96,
-            103,
-            92,
-            93,
-            95,
-            98,
-            97,
-            104
-          ],
-          "benchPlayerIds": [
-            101,
-            102,
-            100
-          ]
-        },
-        {
-          "periodId": 2,
-          "periodName": "Second Third",
-          "bestBallScore": 0,
-          "countingPlayerIds": [
-            92,
-            93,
-            94,
-            95,
-            96,
-            97,
-            98,
-            99,
-            100,
-            101
-          ],
-          "benchPlayerIds": [
-            102,
-            103,
-            104
-          ]
-        },
-        {
-          "periodId": 3,
-          "periodName": "Third Third",
-          "bestBallScore": 0,
-          "countingPlayerIds": [
-            92,
-            93,
-            94,
-            95,
-            96,
-            97,
-            98,
-            99,
-            100,
-            101
-          ],
-          "benchPlayerIds": [
-            102,
-            103,
-            104
-          ]
-        }
-      ],
-      "cumulativeScore": 1090
-    },
-    {
-      "team": {
-        "id": 1,
-        "name": "Cole"
-      },
-      "periods": [
-        {
-          "periodId": 1,
-          "periodName": "First Third",
-          "bestBallScore": 1089,
-          "countingPlayerIds": [
-            4,
-            1,
-            2,
-            11,
-            12,
-            6,
-            9,
-            7,
-            8,
-            5
-          ],
-          "benchPlayerIds": [
-            10,
-            13,
-            3
-          ]
-        },
-        {
-          "periodId": 2,
-          "periodName": "Second Third",
-          "bestBallScore": 0,
-          "countingPlayerIds": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10
-          ],
-          "benchPlayerIds": [
-            11,
-            12,
-            13
-          ]
-        },
-        {
-          "periodId": 3,
-          "periodName": "Third Third",
-          "bestBallScore": 0,
-          "countingPlayerIds": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10
-          ],
-          "benchPlayerIds": [
-            11,
-            12,
-            13
-          ]
-        }
-      ],
-      "cumulativeScore": 1089
-    },
-    {
-      "team": {
-        "id": 5,
-        "name": "Joey"
-      },
-      "periods": [
-        {
-          "periodId": 1,
-          "periodName": "First Third",
-          "bestBallScore": 1086,
-          "countingPlayerIds": [
-            53,
-            57,
-            59,
-            61,
-            56,
-            54,
-            63,
-            55,
-            58,
-            60
-          ],
-          "benchPlayerIds": [
-            64,
-            65,
-            62
-          ]
-        },
-        {
-          "periodId": 2,
-          "periodName": "Second Third",
-          "bestBallScore": 0,
-          "countingPlayerIds": [
-            53,
-            54,
-            55,
-            56,
-            57,
-            58,
-            59,
-            60,
-            61,
-            62
-          ],
-          "benchPlayerIds": [
-            63,
-            64,
-            65
-          ]
-        },
-        {
-          "periodId": 3,
-          "periodName": "Third Third",
-          "bestBallScore": 0,
-          "countingPlayerIds": [
-            53,
-            54,
-            55,
-            56,
-            57,
-            58,
-            59,
-            60,
-            61,
-            62
-          ],
-          "benchPlayerIds": [
-            63,
-            64,
-            65
-          ]
-        }
-      ],
-      "cumulativeScore": 1086
-    },
-    {
-      "team": {
         "id": 2,
         "name": "Markus"
       },
@@ -309,7 +9,7 @@
         {
           "periodId": 1,
           "periodName": "First Third",
-          "bestBallScore": 1077,
+          "bestBallScore": 1113,
           "countingPlayerIds": [
             14,
             16,
@@ -373,7 +73,307 @@
           ]
         }
       ],
-      "cumulativeScore": 1077
+      "cumulativeScore": 1113
+    },
+    {
+      "team": {
+        "id": 5,
+        "name": "Joey"
+      },
+      "periods": [
+        {
+          "periodId": 1,
+          "periodName": "First Third",
+          "bestBallScore": 1113,
+          "countingPlayerIds": [
+            53,
+            57,
+            59,
+            61,
+            63,
+            56,
+            55,
+            54,
+            58,
+            60
+          ],
+          "benchPlayerIds": [
+            64,
+            65,
+            62
+          ]
+        },
+        {
+          "periodId": 2,
+          "periodName": "Second Third",
+          "bestBallScore": 0,
+          "countingPlayerIds": [
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62
+          ],
+          "benchPlayerIds": [
+            63,
+            64,
+            65
+          ]
+        },
+        {
+          "periodId": 3,
+          "periodName": "Third Third",
+          "bestBallScore": 0,
+          "countingPlayerIds": [
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62
+          ],
+          "benchPlayerIds": [
+            63,
+            64,
+            65
+          ]
+        }
+      ],
+      "cumulativeScore": 1113
+    },
+    {
+      "team": {
+        "id": 7,
+        "name": "Austin"
+      },
+      "periods": [
+        {
+          "periodId": 1,
+          "periodName": "First Third",
+          "bestBallScore": 1112,
+          "countingPlayerIds": [
+            79,
+            89,
+            80,
+            84,
+            82,
+            86,
+            91,
+            88,
+            85,
+            90
+          ],
+          "benchPlayerIds": [
+            83,
+            87,
+            81
+          ]
+        },
+        {
+          "periodId": 2,
+          "periodName": "Second Third",
+          "bestBallScore": 0,
+          "countingPlayerIds": [
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88
+          ],
+          "benchPlayerIds": [
+            89,
+            90,
+            91
+          ]
+        },
+        {
+          "periodId": 3,
+          "periodName": "Third Third",
+          "bestBallScore": 0,
+          "countingPlayerIds": [
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88
+          ],
+          "benchPlayerIds": [
+            89,
+            90,
+            91
+          ]
+        }
+      ],
+      "cumulativeScore": 1112
+    },
+    {
+      "team": {
+        "id": 8,
+        "name": "Bobby"
+      },
+      "periods": [
+        {
+          "periodId": 1,
+          "periodName": "First Third",
+          "bestBallScore": 1108,
+          "countingPlayerIds": [
+            94,
+            99,
+            96,
+            103,
+            92,
+            95,
+            93,
+            98,
+            97,
+            104
+          ],
+          "benchPlayerIds": [
+            101,
+            102,
+            100
+          ]
+        },
+        {
+          "periodId": 2,
+          "periodName": "Second Third",
+          "bestBallScore": 0,
+          "countingPlayerIds": [
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101
+          ],
+          "benchPlayerIds": [
+            102,
+            103,
+            104
+          ]
+        },
+        {
+          "periodId": 3,
+          "periodName": "Third Third",
+          "bestBallScore": 0,
+          "countingPlayerIds": [
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101
+          ],
+          "benchPlayerIds": [
+            102,
+            103,
+            104
+          ]
+        }
+      ],
+      "cumulativeScore": 1108
+    },
+    {
+      "team": {
+        "id": 1,
+        "name": "Cole"
+      },
+      "periods": [
+        {
+          "periodId": 1,
+          "periodName": "First Third",
+          "bestBallScore": 1101,
+          "countingPlayerIds": [
+            4,
+            1,
+            2,
+            11,
+            12,
+            9,
+            6,
+            7,
+            8,
+            5
+          ],
+          "benchPlayerIds": [
+            10,
+            13,
+            3
+          ]
+        },
+        {
+          "periodId": 2,
+          "periodName": "Second Third",
+          "bestBallScore": 0,
+          "countingPlayerIds": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "benchPlayerIds": [
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "periodId": 3,
+          "periodName": "Third Third",
+          "bestBallScore": 0,
+          "countingPlayerIds": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "benchPlayerIds": [
+            11,
+            12,
+            13
+          ]
+        }
+      ],
+      "cumulativeScore": 1101
     },
     {
       "team": {
@@ -384,12 +384,12 @@
         {
           "periodId": 1,
           "periodName": "First Third",
-          "bestBallScore": 984,
+          "bestBallScore": 992,
           "countingPlayerIds": [
             40,
+            42,
             47,
             49,
-            42,
             48,
             50,
             44,
@@ -448,7 +448,7 @@
           ]
         }
       ],
-      "cumulativeScore": 984
+      "cumulativeScore": 992
     },
     {
       "team": {
@@ -459,7 +459,7 @@
         {
           "periodId": 1,
           "periodName": "First Third",
-          "bestBallScore": 972,
+          "bestBallScore": 984,
           "countingPlayerIds": [
             72,
             67,
@@ -523,7 +523,7 @@
           ]
         }
       ],
-      "cumulativeScore": 972
+      "cumulativeScore": 984
     },
     {
       "team": {
@@ -534,7 +534,7 @@
         {
           "periodId": 1,
           "periodName": "First Third",
-          "bestBallScore": 953,
+          "bestBallScore": 979,
           "countingPlayerIds": [
             31,
             32,
@@ -598,7 +598,7 @@
           ]
         }
       ],
-      "cumulativeScore": 953
+      "cumulativeScore": 979
     }
   ],
   "periods": [
